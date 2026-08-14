@@ -138,11 +138,13 @@ function createDefaultState() {
             "Turnamen PD AMPG Banten",
 
         teams:
+            
             Array.from(
-                { length: 20 },
-                (_, i) =>
-                    `PAIR ${i + 1}`
-            ),
+    {
+        length: 20
+    },
+    (_, i) => "PAIR " + (i + 1)
+)
 
         matches: {
 
