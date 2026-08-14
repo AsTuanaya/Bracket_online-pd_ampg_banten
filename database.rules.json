@@ -1,0 +1,8 @@
+{
+ "rules":{
+  "tournament":{
+   ".read":true,
+   ".write":"auth != null && auth.token.email == 'PANITIA_EMAIL_ANDA'"
+  }
+ }
+}

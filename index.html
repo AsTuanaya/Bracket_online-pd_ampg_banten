@@ -1,79 +1,19 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bracket Turnamen - PD AMPG Banten</title>
-  <meta name="description" content="Bracket turnamen PD AMPG Banten - dapat diakses publik melalui internet.">
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f2eadc;
-      color: #172033;
-    }
-    header {
-      text-align: center;
-      padding: 28px 16px 10px;
-    }
-    h1 {
-      margin: 0;
-      font-size: clamp(22px, 4vw, 38px);
-    }
-    p {
-      margin: 8px 0 0;
-      color: #5c6470;
-    }
-    main {
-      width: min(1200px, 94vw);
-      margin: 20px auto 40px;
-    }
-    .card {
-      background: #fff;
-      border-radius: 18px;
-      padding: 16px;
-      box-shadow: 0 10px 35px rgba(0,0,0,.12);
-      overflow: auto;
-    }
-    .bracket {
-      display: block;
-      width: 100%;
-      height: auto;
-      min-width: 800px;
-    }
-    .notice {
-      margin-top: 14px;
-      text-align: center;
-      font-size: 14px;
-    }
-    footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 13px;
-      color: #687080;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>Bracket Turnamen PD AMPG Banten</h1>
-    <p>Round 1 sampai Final</p>
-  </header>
+<!doctype html>
+<html lang="id"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bracket Turnamen — PD AMPG Banten</title>
+<link rel="stylesheet" href="styles.css">
+</head><body>
+<header><div><small>PD AMPG BANTEN</small><h1>Bracket Turnamen</h1><p>Hasil pertandingan diperbarui secara real-time.</p></div>
+<div><span id="status">Menghubungkan...</span> <button id="adminBtn">Panel Panitia</button></div></header>
+<main><section class="hero"><h2 id="title">Turnamen PD AMPG Banten</h2><p id="updated">Menunggu data...</p></section><section id="bracket"></section></main>
 
-  <main>
-    <div class="card">
-      <img class="bracket" src="assets/bracket.jpg"
-           alt="Bracket Turnamen PD AMPG Banten">
-    </div>
-    <div class="notice">
-      Halaman ini dibuat agar bracket dapat dibuka dari HP, laptop, atau tablet.
-    </div>
-  </main>
-
-  <footer>
-    &copy; 2026 PD AMPG Banten
-  </footer>
-</body>
-</html>
+<div id="modal" class="modal hidden"><div class="panel"><button id="close" class="x">×</button>
+<div id="login"><h2>Login Panitia</h2><input id="email" type="email" placeholder="Email panitia"><input id="password" type="password" placeholder="Password"><button id="loginBtn">Masuk</button><p id="error"></p></div>
+<div id="admin" class="hidden"><div class="adminhead"><h2>Panel Panitia</h2><button id="logout">Keluar</button></div>
+<label>Nama Turnamen<input id="titleInput"></label><h3>Peserta / Pair — Round 1</h3><div id="teams"></div>
+<h3>Hasil Pertandingan</h3><p class="muted">Isi skor dan pilih pemenang. Pemenang otomatis masuk ke babak berikutnya.</p><div id="matches"></div>
+<button id="save">Simpan Perubahan</button><button id="reset" class="danger">Reset Bracket</button><p id="message"></p></div>
+</div></div>
+<script type="module" src="app.js"></script>
+</body></html>
