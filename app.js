@@ -1,6 +1,11 @@
+// =====================================================
+// FIREBASE IMPORT
+// =====================================================
+
 import {
     initializeApp
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
 
 import {
     getDatabase,
@@ -9,6 +14,7 @@ import {
     set
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
 
+
 import {
     getAuth,
     signInWithEmailAndPassword,
@@ -16,413 +22,607 @@ import {
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
+
 import {
     firebaseConfig
 } from "./firebase-config.js";
 
 
-// ======================================================
-// ELEMENT
-// ======================================================
+// =====================================================
+// FIREBASE INITIALIZATION
+// =====================================================
 
-const $ = (id) => document.getElementById(id);
-
-const modal = $("modal");
-const adminBtn = $("adminBtn");
-const closeBtn = $("close");
-
-const loginView = $("login");
-const adminView = $("admin");
-
-const loginBtn = $("loginBtn");
-const logoutBtn = $("logout");
-
-const saveBtn = $("save");
-const resetBtn = $("reset");
-
-const statusEl = $("status");
-const errorEl = $("error");
-const messageEl = $("message");
-
-const titleInput = $("titleInput");
-const teamsEl = $("teams");
-const matchesEl = $("matches");
-
-const titleEl = $("title");
-const updatedEl = $("updated");
-const bracketEl = $("bracket");
+const app =
+    initializeApp(firebaseConfig);
 
 
-// ======================================================
-// FIREBASE
-// ======================================================
-
-const app = initializeApp(firebaseConfig);
-
-const db = getDatabase(app);
-
-const auth = getAuth(app);
-
-const dbRef = ref(db, "tournament");
+const db =
+    getDatabase(app);
 
 
-// ======================================================
-// BRACKET CONFIG
-// ======================================================
+const auth =
+    getAuth(app);
 
-const ROUND_INFO = [
-    ["r1", "ROUND 1"],
-    ["r2", "ROUND 2"],
-    ["r3", "ROUND 3"],
-    ["r4", "SEMIFINAL"],
-    ["r5", "FINAL"]
-];
 
-const COUNT = {
+const tournamentRef =
+    ref(db, "tournament");
+
+
+// =====================================================
+// DOM HELPER
+// =====================================================
+
+const $ = (id) =>
+    document.getElementById(id);
+
+
+// =====================================================
+// DOM ELEMENTS
+// =====================================================
+
+const statusEl =
+    $("status");
+
+const titleEl =
+    $("title");
+
+const updatedEl =
+    $("updated");
+
+const bracketEl =
+    $("bracket");
+
+const modalEl =
+    $("modal");
+
+const loginEl =
+    $("login");
+
+const adminEl =
+    $("admin");
+
+const emailEl =
+    $("email");
+
+const passwordEl =
+    $("password");
+
+const loginBtn =
+    $("loginBtn");
+
+const logoutBtn =
+    $("logout");
+
+const errorEl =
+    $("error");
+
+const titleInput =
+    $("titleInput");
+
+const teamsEl =
+    $("teams");
+
+const matchesEl =
+    $("matches");
+
+const saveBtn =
+    $("save");
+
+const resetBtn =
+    $("reset");
+
+const messageEl =
+    $("message");
+
+
+// =====================================================
+// BRACKET CONFIGURATION
+// =====================================================
+
+const ROUNDS = {
+
     r1: 20,
+
     r2: 10,
+
     r3: 5,
+
     r4: 2,
+
     r5: 1
+
 };
 
 
-let state = null;
+const ROUND_NAMES = {
+
+    r1: "ROUND 1",
+
+    r2: "ROUND 2",
+
+    r3: "ROUND 3",
+
+    r4: "SEMIFINAL",
+
+    r5: "FINAL"
+
+};
 
 
-// ======================================================
-// DEFAULT DATA
-// ======================================================
+// =====================================================
+// APPLICATION STATE
+// =====================================================
+
+let state =
+    createDefaultState();
+
+
+// =====================================================
+// DEFAULT STATE
+// =====================================================
 
 function createDefaultState() {
 
     return {
 
-        title: "Turnamen PD AMPG Banten",
+        title:
+            "Turnamen PD AMPG Banten",
 
-        teams: Array.from(
-            { length: 20 },
-            (_, i) => `PAIR ${i + 1}`
-        ),
+
+        teams:
+            Array.from(
+                {
+                    length: 20
+                },
+                (_, index) =>
+                    `PAIR ${index + 1}`
+            ),
+
 
         matches: {
 
-            r1: Array.from(
-                { length: 20 },
-                () => ({
-                    sa: "",
-                    sb: "",
-                    winner: null
-                })
-            ),
+            r1:
+                createMatches(20),
 
-            r2: Array.from(
-                { length: 10 },
-                () => ({
-                    sa: "",
-                    sb: "",
-                    winner: null
-                })
-            ),
+            r2:
+                createMatches(10),
 
-            r3: Array.from(
-                { length: 5 },
-                () => ({
-                    sa: "",
-                    sb: "",
-                    winner: null
-                })
-            ),
+            r3:
+                createMatches(5),
 
-            r4: Array.from(
-                { length: 2 },
-                () => ({
-                    sa: "",
-                    sb: "",
-                    winner: null
-                })
-            ),
+            r4:
+                createMatches(2),
 
-            r5: [
-                {
-                    sa: "",
-                    sb: "",
-                    winner: null
-                }
-            ]
+            r5:
+                createMatches(1)
+
         },
 
-        updatedAt: null
+
+        updatedAt:
+            null
+
     };
+
 }
 
 
-// ======================================================
-// NORMALIZE DATA
-// ======================================================
+// =====================================================
+// CREATE MATCHES
+// =====================================================
 
-function normalize(data) {
+function createMatches(count) {
 
-    const result = data || createDefaultState();
+    return Array.from(
+        {
+            length: count
+        },
+        () => ({
+
+            sa: "",
+
+            sb: "",
+
+            winner: null
+
+        })
+    );
+
+}
+
+
+// =====================================================
+// NORMALIZE DATABASE DATA
+// =====================================================
+
+function normalizeData(data) {
+
+    const result =
+        data || createDefaultState();
+
 
     result.title =
         result.title ||
         "Turnamen PD AMPG Banten";
 
 
-    result.teams = Array.from(
-        { length: 20 },
-        (_, i) =>
-            result.teams?.[i] ||
-            `PAIR ${i + 1}`
-    );
+    result.teams =
+        Array.from(
+            {
+                length: 20
+            },
+            (_, index) => {
+
+                return (
+                    result.teams?.[index] ||
+                    `PAIR ${index + 1}`
+                );
+
+            }
+        );
 
 
     result.matches =
         result.matches || {};
 
 
-    for (const [round, count] of Object.entries(COUNT)) {
+    for (
+        const [round, count]
+        of Object.entries(ROUNDS)
+    ) {
 
         result.matches[round] =
             Array.from(
-                { length: count },
-                (_, i) => ({
+                {
+                    length: count
+                },
+                (_, index) => {
 
-                    sa:
-                        result.matches[round]?.[i]?.sa ??
-                        "",
+                    const old =
+                        result.matches?.[round]?.[index];
 
-                    sb:
-                        result.matches[round]?.[i]?.sb ??
-                        "",
 
-                    winner:
-                        result.matches[round]?.[i]?.winner ??
-                        null
-                })
+                    return {
+
+                        sa:
+                            old?.sa ?? "",
+
+                        sb:
+                            old?.sb ?? "",
+
+                        winner:
+                            old?.winner ?? null
+
+                    };
+
+                }
             );
+
     }
 
+
     return result;
+
 }
 
 
-// ======================================================
+// =====================================================
+// ESCAPE HTML
+// =====================================================
+
+function escapeHtml(value) {
+
+    return String(
+        value ?? ""
+    ).replace(
+        /[&<>"']/g,
+        character => {
+
+            const map = {
+
+                "&": "&amp;",
+
+                "<": "&lt;",
+
+                ">": "&gt;",
+
+                '"': "&quot;",
+
+                "'": "&#39;"
+
+            };
+
+            return map[character];
+
+        }
+    );
+
+}
+
+
+// =====================================================
 // GET PARTICIPANT
-// ======================================================
+// =====================================================
 
-function getParticipant(round, index, side) {
+function getParticipant(
+    round,
+    matchIndex,
+    side
+) {
 
-    if (round === "r1") {
+
+    // -----------------------------------------------
+    // ROUND 1
+    // -----------------------------------------------
+
+    if (
+        round === "r1"
+    ) {
 
         const teamIndex =
-            index * 2 +
-            (side === "a" ? 0 : 1);
+            matchIndex * 2 +
+            (
+                side === "a"
+                    ? 0
+                    : 1
+            );
+
 
         return (
             state.teams[teamIndex] ||
             "—"
         );
+
     }
 
+
+    // -----------------------------------------------
+    // PREVIOUS ROUND
+    // -----------------------------------------------
 
     const previousRound = {
 
         r2: "r1",
+
         r3: "r2",
+
         r4: "r3",
+
         r5: "r4"
 
     }[round];
 
 
-    const sourceIndex =
-        index * 2 +
-        (side === "a" ? 0 : 1);
+    const previousMatch =
+        matchIndex * 2 +
+        (
+            side === "a"
+                ? 0
+                : 1
+        );
 
 
-    const source =
-        state.matches[previousRound]?.[sourceIndex];
+    const match =
+        state
+            .matches
+            ?.[
+                previousRound
+            ]
+            ?.[previousMatch];
 
 
-    if (!source?.winner) {
+    if (
+        !match ||
+        !match.winner
+    ) {
 
         return "—";
+
     }
 
 
     return getParticipant(
-
         previousRound,
-
-        sourceIndex,
-
-        source.winner === "a"
-            ? "a"
-            : "b"
+        previousMatch,
+        match.winner
     );
+
 }
 
 
-// ======================================================
-// ESCAPE HTML
-// ======================================================
-
-function escapeHtml(value) {
-
-    return String(value ?? "")
-        .replace(
-            /[&<>"']/g,
-            (character) => ({
-
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': "&quot;",
-                "'": "&#39;"
-
-            }[character])
-        );
-}
-
-
-// ======================================================
+// =====================================================
 // RENDER PUBLIC BRACKET
-// ======================================================
+// =====================================================
 
 function renderPublic() {
 
-    if (!state) {
+    if (!bracketEl) {
         return;
     }
 
 
-    titleEl.textContent =
-        state.title;
+    if (titleEl) {
+
+        titleEl.textContent =
+            state.title;
+
+    }
 
 
-    updatedEl.textContent =
-        state.updatedAt
+    if (updatedEl) {
 
-            ? "Terakhir diperbarui: " +
-              new Date(
-                  state.updatedAt
-              ).toLocaleString("id-ID")
+        if (
+            state.updatedAt
+        ) {
 
-            : "Belum ada pembaruan.";
+            updatedEl.textContent =
+                "Terakhir diperbarui: " +
+                new Date(
+                    state.updatedAt
+                ).toLocaleString(
+                    "id-ID"
+                );
+
+        } else {
+
+            updatedEl.textContent =
+                "Belum ada pembaruan.";
+
+        }
+
+    }
+
+
+    let html = "";
+
+
+    for (
+        const [round, roundName]
+        of Object.entries(ROUND_NAMES)
+    ) {
+
+
+        html += `
+
+        <section
+            class="round"
+            data-round="${round}"
+        >
+
+            <div class="round-header">
+
+                <h3>
+                    ${roundName}
+                </h3>
+
+                <span>
+                    ${ROUNDS[round]} Match
+                </span>
+
+            </div>
+
+
+            <div class="matches">
+
+        `;
+
+
+        state.matches[round]
+            .forEach(
+                (match, index) => {
+
+                    const teamA =
+                        getParticipant(
+                            round,
+                            index,
+                            "a"
+                        );
+
+
+                    const teamB =
+                        getParticipant(
+                            round,
+                            index,
+                            "b"
+                        );
+
+
+                    html += `
+
+                    <article class="match">
+
+                        <div class="match-number">
+                            Match ${index + 1}
+                        </div>
+
+
+                        <div class="
+                            team
+                            ${
+                                match.winner === "a"
+                                    ? "win"
+                                    : ""
+                            }
+                        ">
+
+                            <span
+                                class="
+                                    team-name
+                                    ${
+                                        teamA === "—"
+                                            ? "empty"
+                                            : ""
+                                    }
+                                "
+                            >
+                                ${escapeHtml(teamA)}
+                            </span>
+
+
+                            <strong>
+                                ${escapeHtml(match.sa)}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="
+                            team
+                            ${
+                                match.winner === "b"
+                                    ? "win"
+                                    : ""
+                            }
+                        ">
+
+                            <span
+                                class="
+                                    team-name
+                                    ${
+                                        teamB === "—"
+                                            ? "empty"
+                                            : ""
+                                    }
+                                "
+                            >
+                                ${escapeHtml(teamB)}
+                            </span>
+
+
+                            <strong>
+                                ${escapeHtml(match.sb)}
+                            </strong>
+
+                        </div>
+
+                    </article>
+
+                    `;
+
+                }
+            );
+
+
+        html += `
+
+            </div>
+
+        </section>
+
+        `;
+
+    }
 
 
     bracketEl.innerHTML =
-        ROUND_INFO.map(
-            ([round, label]) => {
+        html;
 
-                return `
-
-                <section class="round">
-
-                    <h3>
-                        ${label}
-                    </h3>
-
-                    <div class="matches">
-
-                        ${
-                            state.matches[round]
-                                .map(
-                                    (match, index) => {
-
-                                        const teamA =
-                                            getParticipant(
-                                                round,
-                                                index,
-                                                "a"
-                                            );
-
-                                        const teamB =
-                                            getParticipant(
-                                                round,
-                                                index,
-                                                "b"
-                                            );
-
-
-                                        return `
-
-                                        <article class="match">
-
-                                            <div class="meta">
-                                                Match ${index + 1}
-                                            </div>
-
-
-                                            <div class="team ${
-                                                match.winner === "a"
-                                                    ? "win"
-                                                    : ""
-                                            }">
-
-                                                <span class="${
-                                                    teamA === "—"
-                                                        ? "empty"
-                                                        : ""
-                                                }">
-
-                                                    ${escapeHtml(teamA)}
-
-                                                </span>
-
-                                                <b>
-                                                    ${escapeHtml(match.sa)}
-                                                </b>
-
-                                            </div>
-
-
-                                            <div class="team ${
-                                                match.winner === "b"
-                                                    ? "win"
-                                                    : ""
-                                            }">
-
-                                                <span class="${
-                                                    teamB === "—"
-                                                        ? "empty"
-                                                        : ""
-                                                }">
-
-                                                    ${escapeHtml(teamB)}
-
-                                                </span>
-
-                                                <b>
-                                                    ${escapeHtml(match.sb)}
-                                                </b>
-
-                                            </div>
-
-                                        </article>
-
-                                        `;
-                                    }
-                                )
-                                .join("")
-                        }
-
-                    </div>
-
-                </section>
-
-                `;
-            }
-        )
-        .join("");
 }
 
 
-// ======================================================
-// RENDER ADMIN
-// ======================================================
+// =====================================================
+// RENDER ADMIN PANEL
+// =====================================================
 
 function renderAdmin() {
 
@@ -431,483 +631,767 @@ function renderAdmin() {
     }
 
 
-    titleInput.value =
-        state.title;
+    if (titleInput) {
+
+        titleInput.value =
+            state.title;
+
+    }
 
 
-    // --------------------------------------------------
+    // =================================================
     // TEAMS
-    // --------------------------------------------------
+    // =================================================
 
-    teamsEl.innerHTML =
-        state.teams
-            .map(
-                (team, index) => {
+    if (teamsEl) {
 
-                    return `
+        teamsEl.innerHTML =
+            state.teams
+                .map(
+                    (team, index) => {
 
-                    <div class="teamedit">
+                        return `
 
-                        <b>
-                            ${index + 1}
-                        </b>
+                        <div class="team-edit">
 
-                        <input
-                            data-team="${index}"
-                            value="${escapeHtml(team)}"
-                        >
-
-                    </div>
-
-                    `;
-                }
-            )
-            .join("");
+                            <span class="team-number">
+                                ${index + 1}
+                            </span>
 
 
-    // --------------------------------------------------
-    // MATCHES
-    // --------------------------------------------------
+                            <input
+                                type="text"
+                                data-team="${index}"
+                                value="${escapeHtml(team)}"
+                                placeholder="PAIR ${index + 1}"
+                            >
 
-    let html = "";
+                        </div>
+
+                        `;
+
+                    }
+                )
+                .join("");
+
+    }
 
 
-    for (
-        const [round, count]
-        of Object.entries(COUNT)
-    ) {
+    // =================================================
+    // MATCH EDITOR
+    // =================================================
+
+    if (matchesEl) {
+
+        let html = "";
+
 
         for (
-            let index = 0;
-            index < count;
-            index++
+            const [round, count]
+            of Object.entries(ROUNDS)
         ) {
-
-            const match =
-                state.matches[round][index];
-
-
-            const teamA =
-                getParticipant(
-                    round,
-                    index,
-                    "a"
-                );
-
-
-            const teamB =
-                getParticipant(
-                    round,
-                    index,
-                    "b"
-                );
-
 
             html += `
 
-            <div class="editor">
+            <div class="editor-round">
 
-                <b>
-                    ${round.toUpperCase()}
-                    —
-                    Match ${index + 1}
-                </b>
+                <div class="editor-round-title">
 
-
-                <div class="row">
+                    <strong>
+                        ${ROUND_NAMES[round]}
+                    </strong>
 
                     <span>
-                        ${escapeHtml(teamA)}
+                        ${count} Match
                     </span>
 
-                    <input
-                        data-score="${round}.${index}.sa"
-                        value="${escapeHtml(match.sa)}"
-                        placeholder="Skor"
-                    >
-
                 </div>
-
-
-                <div class="row">
-
-                    <span>
-                        ${escapeHtml(teamB)}
-                    </span>
-
-                    <input
-                        data-score="${round}.${index}.sb"
-                        value="${escapeHtml(match.sb)}"
-                        placeholder="Skor"
-                    >
-
-                </div>
-
-
-                <select
-                    data-winner="${round}.${index}"
-                >
-
-                    <option value="">
-                        Belum dipilih
-                    </option>
-
-
-                    <option
-                        value="a"
-                        ${
-                            match.winner === "a"
-                                ? "selected"
-                                : ""
-                        }
-                    >
-                        ${escapeHtml(teamA)}
-                    </option>
-
-
-                    <option
-                        value="b"
-                        ${
-                            match.winner === "b"
-                                ? "selected"
-                                : ""
-                        }
-                    >
-                        ${escapeHtml(teamB)}
-                    </option>
-
-                </select>
-
-            </div>
 
             `;
+
+
+            for (
+                let index = 0;
+                index < count;
+                index++
+            ) {
+
+                const match =
+                    state.matches[round][index];
+
+
+                const teamA =
+                    getParticipant(
+                        round,
+                        index,
+                        "a"
+                    );
+
+
+                const teamB =
+                    getParticipant(
+                        round,
+                        index,
+                        "b"
+                    );
+
+
+                html += `
+
+                <div class="editor">
+
+                    <div class="editor-title">
+
+                        <strong>
+                            Match ${index + 1}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="score-row">
+
+                        <div class="player">
+
+                            <span>
+                                ${escapeHtml(teamA)}
+                            </span>
+
+                            <input
+                                type="number"
+                                min="0"
+                                data-score="${round}.${index}.sa"
+                                value="${escapeHtml(match.sa)}"
+                                placeholder="0"
+                            >
+
+                        </div>
+
+
+                        <div class="vs">
+                            VS
+                        </div>
+
+
+                        <div class="player">
+
+                            <input
+                                type="number"
+                                min="0"
+                                data-score="${round}.${index}.sb"
+                                value="${escapeHtml(match.sb)}"
+                                placeholder="0"
+                            >
+
+                            <span>
+                                ${escapeHtml(teamB)}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="winner-row">
+
+                        <label>
+                            Pemenang
+                        </label>
+
+
+                        <select
+                            data-winner="${round}.${index}"
+                        >
+
+                            <option value="">
+                                Belum dipilih
+                            </option>
+
+
+                            <option
+                                value="a"
+                                ${
+                                    match.winner === "a"
+                                        ? "selected"
+                                        : ""
+                                }
+                            >
+                                ${escapeHtml(teamA)}
+                            </option>
+
+
+                            <option
+                                value="b"
+                                ${
+                                    match.winner === "b"
+                                        ? "selected"
+                                        : ""
+                                }
+                            >
+                                ${escapeHtml(teamB)}
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                `;
+
+            }
+
+
+            html += `
+            </div>
+            `;
+
         }
+
+
+        matchesEl.innerHTML =
+            html;
+
     }
 
-
-    matchesEl.innerHTML =
-        html;
 }
 
 
-// ======================================================
-// OPEN ADMIN PANEL
-// ======================================================
+// =====================================================
+// OPEN / CLOSE
+// =====================================================
 
-function openAdminPanel() {
+function closeModalAfterLogin() {
 
-    console.log(
-        "Panel Panitia dibuka"
-    );
+    if (modalEl) {
 
-    modal.classList.remove(
-        "hidden"
-    );
+        modalEl.classList.add(
+            "hidden"
+        );
 
-    errorEl.textContent = "";
-}
+        document.body.classList.remove(
+            "modal-open"
+        );
 
-
-// ======================================================
-// CLOSE ADMIN PANEL
-// ======================================================
-
-function closeAdminPanel() {
-
-    modal.classList.add(
-        "hidden"
-    );
-}
-
-
-// ======================================================
-// BUTTON EVENTS
-// ======================================================
-
-adminBtn.addEventListener(
-    "click",
-    openAdminPanel
-);
-
-
-closeBtn.addEventListener(
-    "click",
-    closeAdminPanel
-);
-
-
-modal.addEventListener(
-    "click",
-    (event) => {
-
-        if (
-            event.target === modal
-        ) {
-
-            closeAdminPanel();
-        }
     }
-);
+
+}
 
 
-// ======================================================
+// =====================================================
 // LOGIN
-// ======================================================
+// =====================================================
 
-loginBtn.addEventListener(
-    "click",
-    async () => {
+if (loginBtn) {
 
-        errorEl.textContent = "";
+    loginBtn.addEventListener(
+        "click",
+        async () => {
 
-        const email =
-            $("email").value.trim();
+            if (errorEl) {
 
-        const password =
-            $("password").value;
+                errorEl.textContent =
+                    "";
+
+            }
 
 
-        if (!email || !password) {
+            const email =
+                emailEl?.value.trim();
 
-            errorEl.textContent =
-                "Email dan password wajib diisi.";
 
+            const password =
+                passwordEl?.value;
+
+
+            if (
+                !email ||
+                !password
+            ) {
+
+                if (errorEl) {
+
+                    errorEl.textContent =
+                        "Email dan password wajib diisi.";
+
+                }
+
+                return;
+
+            }
+
+
+            loginBtn.disabled =
+                true;
+
+
+            loginBtn.textContent =
+                "⏳ Memproses...";
+
+
+            try {
+
+                await signInWithEmailAndPassword(
+                    auth,
+                    email,
+                    password
+                );
+
+
+                if (emailEl) {
+                    emailEl.value = "";
+                }
+
+
+                if (passwordEl) {
+                    passwordEl.value = "";
+                }
+
+
+                closeModalAfterLogin();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Login error:",
+                    error
+                );
+
+
+                if (errorEl) {
+
+                    switch (
+                        error.code
+                    ) {
+
+                        case "auth/invalid-credential":
+
+                            errorEl.textContent =
+                                "Email atau password salah.";
+
+                            break;
+
+
+                        case "auth/invalid-email":
+
+                            errorEl.textContent =
+                                "Format email tidak valid.";
+
+                            break;
+
+
+                        case "auth/user-not-found":
+
+                            errorEl.textContent =
+                                "Akun panitia tidak ditemukan.";
+
+                            break;
+
+
+                        case "auth/wrong-password":
+
+                            errorEl.textContent =
+                                "Password salah.";
+
+                            break;
+
+
+                        default:
+
+                            errorEl.textContent =
+                                "Login gagal. Periksa konfigurasi Firebase.";
+
+                    }
+
+                }
+
+            }
+
+
+            loginBtn.disabled =
+                false;
+
+
+            loginBtn.textContent =
+                "🔐 Masuk";
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// ENTER KEY LOGIN
+// =====================================================
+
+[
+    emailEl,
+    passwordEl
+]
+.forEach(
+    input => {
+
+        if (!input) {
             return;
         }
 
 
-        try {
+        input.addEventListener(
+            "keydown",
+            event => {
 
-            await signInWithEmailAndPassword(
-                auth,
-                email,
-                password
-            );
+                if (
+                    event.key === "Enter"
+                ) {
 
-        } catch (error) {
+                    loginBtn?.click();
 
-            console.error(error);
+                }
 
-            errorEl.textContent =
-                "Login gagal. Periksa email/password Firebase.";
-        }
+            }
+        );
+
     }
 );
 
 
-// ======================================================
+// =====================================================
 // LOGOUT
-// ======================================================
+// =====================================================
 
-logoutBtn.addEventListener(
-    "click",
-    async () => {
+if (logoutBtn) {
 
-        await signOut(auth);
-    }
-);
+    logoutBtn.addEventListener(
+        "click",
+        async () => {
+
+            try {
+
+                await signOut(auth);
+
+            } catch (error) {
+
+                console.error(
+                    "Logout error:",
+                    error
+                );
+
+            }
+
+        }
+    );
+
+}
 
 
-// ======================================================
+// =====================================================
 // SAVE
-// ======================================================
+// =====================================================
 
-saveBtn.addEventListener(
-    "click",
-    async () => {
+if (saveBtn) {
 
-        try {
+    saveBtn.addEventListener(
+        "click",
+        async () => {
 
-            const next =
-                JSON.parse(
-                    JSON.stringify(state)
+            if (
+                !auth.currentUser
+            ) {
+
+                showMessage(
+                    "Anda belum login sebagai panitia.",
+                    true
+                );
+
+                return;
+
+            }
+
+
+            try {
+
+                const next =
+                    JSON.parse(
+                        JSON.stringify(state)
+                    );
+
+
+                // -------------------------------------
+                // TITLE
+                // -------------------------------------
+
+                next.title =
+                    titleInput.value.trim() ||
+                    "Turnamen PD AMPG Banten";
+
+
+                // -------------------------------------
+                // TEAMS
+                // -------------------------------------
+
+                document
+                    .querySelectorAll(
+                        "[data-team]"
+                    )
+                    .forEach(
+                        element => {
+
+                            const index =
+                                Number(
+                                    element.dataset.team
+                                );
+
+
+                            next.teams[index] =
+                                element.value.trim() ||
+                                `PAIR ${index + 1}`;
+
+                        }
+                    );
+
+
+                // -------------------------------------
+                // SCORE
+                // -------------------------------------
+
+                document
+                    .querySelectorAll(
+                        "[data-score]"
+                    )
+                    .forEach(
+                        element => {
+
+                            const [
+                                round,
+                                index,
+                                side
+                            ] =
+                                element.dataset.score
+                                    .split(".");
+
+
+                            next.matches[
+                                round
+                            ][
+                                Number(index)
+                            ][side] =
+                                element.value;
+
+                        }
+                    );
+
+
+                // -------------------------------------
+                // WINNER
+                // -------------------------------------
+
+                document
+                    .querySelectorAll(
+                        "[data-winner]"
+                    )
+                    .forEach(
+                        element => {
+
+                            const [
+                                round,
+                                index
+                            ] =
+                                element.dataset.winner
+                                    .split(".");
+
+
+                            next.matches[
+                                round
+                            ][
+                                Number(index)
+                            ].winner =
+                                element.value ||
+                                null;
+
+                        }
+                    );
+
+
+                // -------------------------------------
+                // TIMESTAMP
+                // -------------------------------------
+
+                next.updatedAt =
+                    Date.now();
+
+
+                // -------------------------------------
+                // FIREBASE
+                // -------------------------------------
+
+                await set(
+                    tournamentRef,
+                    next
                 );
 
 
-            next.title =
-                titleInput.value.trim() ||
-                "Turnamen PD AMPG Banten";
+                state =
+                    next;
 
 
-            // ------------------------------------------
-            // TEAMS
-            // ------------------------------------------
+                renderPublic();
 
-            document
-                .querySelectorAll(
-                    "[data-team]"
-                )
-                .forEach(
-                    (element) => {
-
-                        const index =
-                            Number(
-                                element.dataset.team
-                            );
+                renderAdmin();
 
 
-                        next.teams[index] =
-                            element.value.trim() ||
-                            `PAIR ${index + 1}`;
-                    }
+                showMessage(
+                    "✓ Tersimpan. Perubahan langsung terlihat oleh publik."
                 );
 
 
-            // ------------------------------------------
-            // SCORE
-            // ------------------------------------------
+            } catch (error) {
 
-            document
-                .querySelectorAll(
-                    "[data-score]"
-                )
-                .forEach(
-                    (element) => {
-
-                        const [
-                            round,
-                            index,
-                            key
-                        ] =
-                            element.dataset.score
-                                .split(".");
-
-
-                        next.matches[round][
-                            Number(index)
-                        ][key] =
-                            element.value;
-                    }
+                console.error(
+                    "Save error:",
+                    error
                 );
 
 
-            // ------------------------------------------
-            // WINNER
-            // ------------------------------------------
-
-            document
-                .querySelectorAll(
-                    "[data-winner]"
-                )
-                .forEach(
-                    (element) => {
-
-                        const [
-                            round,
-                            index
-                        ] =
-                            element.dataset.winner
-                                .split(".");
-
-
-                        next.matches[round][
-                            Number(index)
-                        ].winner =
-                            element.value ||
-                            null;
-                    }
+                showMessage(
+                    "Gagal menyimpan. Periksa Firebase Database Rules.",
+                    true
                 );
 
+            }
 
-            next.updatedAt =
-                Date.now();
-
-
-            await set(
-                dbRef,
-                next
-            );
-
-
-            state =
-                next;
-
-
-            renderPublic();
-
-            renderAdmin();
-
-
-            messageEl.textContent =
-                "Tersimpan — publik langsung melihat perubahan.";
-
-
-            setTimeout(
-                () => {
-
-                    messageEl.textContent =
-                        "";
-
-                },
-                3000
-            );
-
-        } catch (error) {
-
-            console.error(error);
-
-            messageEl.textContent =
-                "Gagal menyimpan. Periksa Firebase Rules.";
         }
-    }
-);
+    );
+
+}
 
 
-// ======================================================
+// =====================================================
 // RESET
-// ======================================================
+// =====================================================
 
-resetBtn.addEventListener(
-    "click",
-    async () => {
+if (resetBtn) {
 
-        if (
-            !confirm(
-                "Reset seluruh bracket?"
-            )
-        ) {
+    resetBtn.addEventListener(
+        "click",
+        async () => {
 
-            return;
+            if (
+                !auth.currentUser
+            ) {
+
+                showMessage(
+                    "Anda belum login.",
+                    true
+                );
+
+                return;
+
+            }
+
+
+            const confirmed =
+                confirm(
+                    "Yakin ingin mereset seluruh bracket?"
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            try {
+
+                const next =
+                    createDefaultState();
+
+
+                next.updatedAt =
+                    Date.now();
+
+
+                await set(
+                    tournamentRef,
+                    next
+                );
+
+
+                showMessage(
+                    "✓ Bracket berhasil direset."
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Reset error:",
+                    error
+                );
+
+
+                showMessage(
+                    "Reset gagal.",
+                    true
+                );
+
+            }
+
         }
+    );
+
+}
 
 
-        try {
+// =====================================================
+// MESSAGE
+// =====================================================
 
-            const next =
-                createDefaultState();
+function showMessage(
+    text,
+    isError = false
+) {
+
+    if (!messageEl) {
+        return;
+    }
 
 
-            next.updatedAt =
-                Date.now();
+    messageEl.textContent =
+        text;
 
 
-            await set(
-                dbRef,
-                next
-            );
+    messageEl.className =
+        isError
+            ? "message error-message"
+            : "message success-message";
 
-        } catch (error) {
 
-            console.error(error);
+    setTimeout(
+        () => {
 
             messageEl.textContent =
-                "Reset gagal. Periksa Firebase Rules.";
-        }
-    }
-);
+                "";
+
+        },
+        4000
+    );
+
+}
 
 
-// ======================================================
-// FIREBASE REALTIME
-// ======================================================
+// =====================================================
+// REALTIME DATABASE
+// =====================================================
 
 onValue(
-    dbRef,
+    tournamentRef,
 
-    (snapshot) => {
+    snapshot => {
 
         state =
-            normalize(
+            normalizeData(
                 snapshot.val()
             );
 
@@ -920,82 +1404,122 @@ onValue(
         ) {
 
             renderAdmin();
+
         }
 
 
-        statusEl.textContent =
-            "● LIVE";
+        if (statusEl) {
 
+            statusEl.textContent =
+                "● LIVE";
 
-        statusEl.className =
-            "online";
+            statusEl.className =
+                "status online";
+
+        }
+
     },
 
-
-    (error) => {
+    error => {
 
         console.error(
-            "Firebase Database Error:",
+            "Firebase Database error:",
             error
         );
 
 
-        statusEl.textContent =
-            "DATABASE ERROR";
+        state =
+            createDefaultState();
 
 
-        statusEl.className =
-            "";
+        renderPublic();
 
 
-        errorEl.textContent =
-            "Database Firebase tidak dapat diakses.";
+        if (statusEl) {
+
+            statusEl.textContent =
+                "● OFFLINE";
+
+            statusEl.className =
+                "status offline";
+
+        }
+
     }
 );
 
 
-// ======================================================
+// =====================================================
 // AUTH STATE
-// ======================================================
+// =====================================================
 
 onAuthStateChanged(
     auth,
-
-    (user) => {
+    user => {
 
         if (user) {
 
-            loginView.classList.add(
-                "hidden"
-            );
+            // -----------------------------------------
+            // USER LOGIN
+            // -----------------------------------------
 
-            adminView.classList.remove(
-                "hidden"
-            );
+            if (loginEl) {
+
+                loginEl.classList.add(
+                    "hidden"
+                );
+
+            }
+
+
+            if (adminEl) {
+
+                adminEl.classList.remove(
+                    "hidden"
+                );
+
+            }
 
 
             renderAdmin();
 
+
         } else {
 
-            loginView.classList.remove(
-                "hidden"
-            );
+            // -----------------------------------------
+            // USER LOGOUT
+            // -----------------------------------------
 
-            adminView.classList.add(
-                "hidden"
-            );
+            if (loginEl) {
+
+                loginEl.classList.remove(
+                    "hidden"
+                );
+
+            }
+
+
+            if (adminEl) {
+
+                adminEl.classList.add(
+                    "hidden"
+                );
+
+            }
+
         }
+
     }
 );
 
 
-// ======================================================
-// INITIAL
-// ======================================================
-
-state =
-    normalize(null);
-
+// =====================================================
+// INITIAL RENDER
+// =====================================================
 
 renderPublic();
+
+
+console.log(
+    "✓ Bracket Online PD AMPG Banten aktif."
+);
