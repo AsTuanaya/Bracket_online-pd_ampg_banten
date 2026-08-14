@@ -1283,3 +1283,33 @@ console.log(
 console.log(
     "======================================"
 );
+
+
+// ============================================================
+// REDRAW CONNECTOR SAAT RESIZE
+// ============================================================
+
+let resizeTimer;
+
+
+window.addEventListener(
+    "resize",
+    () => {
+
+        clearTimeout(
+            resizeTimer
+        );
+
+
+        resizeTimer =
+            setTimeout(
+                () => {
+
+                    drawBracketLines();
+
+                },
+                100
+            );
+
+    }
+);
