@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Login Panitia - PD AMPG Banten</title>
+
+    <link
+        rel="stylesheet"
+        href="styles.css"
+    >
+
+</head>
+
+
+<body class="admin-login-page">
+
+
+<div class="admin-login-card">
+
+    <div class="login-icon">
+        🔐
+    </div>
+
+
+    <h1>
+        Login Panitia
+    </h1>
+
+
+    <p>
+        Panel Pengelola Bracket
+        PD AMPG Banten
+    </p>
+
+
+    <label>
+        Email Panitia
+    </label>
+
+    <input
+        id="email"
+        type="email"
+        placeholder="Email panitia"
+        autocomplete="username"
+    >
+
+
+    <label>
+        Password
+    </label>
+
+    <input
+        id="password"
+        type="password"
+        placeholder="Password"
+        autocomplete="current-password"
+    >
+
+
+    <button
+        id="loginBtn"
+        type="button"
+    >
+        🔐 Masuk sebagai Panitia
+    </button>
+
+
+    <div
+        id="error"
+        class="error"
+    ></div>
+
+
+    <a href="index.html">
+        ← Kembali ke Bracket
+    </a>
+
+</div>
+
+
+<script type="module">
+
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+
+import {
+    getAuth,
+    signInWithEmailAndPassword
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+import {
+    firebaseConfig
+} from "./firebase-config.js";
+
+
+const app =
+    initializeApp(firebaseConfig);
+
+
+const auth =
+    getAuth(app);
+
+
+const email =
+    document.getElementById("email");
+
+
+const password =
+    document.getElementById("password");
+
+
+const loginBtn =
+    document.getElementById("loginBtn");
+
+
+const error =
+    document.getElementById("error");
+
+
+loginBtn.addEventListener(
+    "click",
+    async function () {
+
+        error.textContent = "";
+
+        const emailValue =
+            email.value.trim();
+
+        const passwordValue =
+            password.value;
+
+
+        if (!emailValue) {
+
+            error.textContent =
+                "Email wajib diisi.";
+
+            return;
+
+        }
+
+
+        if (!passwordValue) {
+
+            error.textContent =
+                "Password wajib diisi.";
+
+            return;
+
+        }
+
+
+        loginBtn.disabled = true;
+
+        loginBtn.textContent =
+            "⏳ Memproses...";
+
+
+        try {
+
+            await signInWithEmailAndPassword(
+                auth,
+                emailValue,
+                passwordValue
+            );
+
+
+            window.location.href =
+                "admin-panel.html";
+
+
+        } catch (err) {
+
+            console.error(err);
+
+
+            if (
+                err.code ===
+                "auth/invalid-credential"
+            ) {
+
+                error.textContent =
+                    "Email atau password salah.";
+
+            } else {
+
+                error.textContent =
+                    "Login gagal: " +
+                    err.message;
+
+            }
+
+
+            loginBtn.disabled = false;
+
+            loginBtn.textContent =
+                "🔐 Masuk sebagai Panitia";
+
+        }
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>
