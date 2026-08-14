@@ -322,6 +322,118 @@ function getParticipant(
     side
 ) {
 
+    const match =
+        state.matches?.[round]?.[matchIndex];
+
+
+    // =============================================
+    // MANUAL NAME
+    // =============================================
+
+    if (
+        match &&
+        side === "a" &&
+        match.teamA
+    ) {
+
+        return match.teamA;
+
+    }
+
+
+    if (
+        match &&
+        side === "b" &&
+        match.teamB
+    ) {
+
+        return match.teamB;
+
+    }
+
+
+    // =============================================
+    // ROUND 1
+    // =============================================
+
+    if (
+        round === "r1"
+    ) {
+
+        const index =
+            matchIndex * 2 +
+            (
+                side === "a"
+                    ? 0
+                    : 1
+            );
+
+
+        return (
+            state.teams[index] ||
+            "—"
+        );
+
+    }
+
+
+    // =============================================
+    // ROUND SEBELUMNYA
+    // =============================================
+
+    const previousRound = {
+
+        r2: "r1",
+
+        r3: "r2",
+
+        r4: "r3",
+
+        r5: "r4"
+
+    }[round];
+
+
+    if (!previousRound) {
+
+        return "—";
+
+    }
+
+
+    const previousMatch =
+        matchIndex * 2 +
+        (
+            side === "a"
+                ? 0
+                : 1
+        );
+
+
+    const previous =
+        state.matches
+            ?.[previousRound]
+            ?.[previousMatch];
+
+
+    if (
+        !previous ||
+        !previous.winner
+    ) {
+
+        return "—";
+
+    }
+
+
+    return getParticipant(
+        previousRound,
+        previousMatch,
+        previous.winner
+    );
+
+}
+
     if (
         round === "r1"
     ) {
