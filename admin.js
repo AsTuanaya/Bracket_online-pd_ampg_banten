@@ -380,7 +380,7 @@ function getWinner(
 
 
 // ============================================================
-// GET PARTICIPANT
+// AUTO ADVANCE - GET PARTICIPANT
 // ============================================================
 
 function getParticipant(
@@ -389,175 +389,226 @@ function getParticipant(
     side
 ) {
 
-    // --------------------------------------------------------
+    // ========================================================
     // ROUND 1
-    // --------------------------------------------------------
+    // ========================================================
 
     if (round === "r1") {
 
-        return getRound1Team(
-            matchIndex,
-            side
+        const teamIndex =
+            matchIndex * 2 +
+            (
+                side === "a"
+                    ? 0
+                    : 1
+            );
+
+
+        if (
+            teamIndex >= 20
+        ) {
+
+            return "—";
+
+        }
+
+
+        return (
+            state.teams?.[teamIndex] ||
+            `PAIR ${teamIndex + 1}`
         );
 
     }
 
 
-    // --------------------------------------------------------
+    // ========================================================
     // ROUND 2
-    // --------------------------------------------------------
+    //
+    // R1 M1 + R1 M2 → R2 M1
+    // R1 M3 + R1 M4 → R2 M2
+    // dst.
+    // ========================================================
 
     if (round === "r2") {
 
-        const sourceMatch =
-            matchIndex;
-
-
-        const participant =
-            side === "a"
-                ? getWinner(
-                    "r1",
-                    sourceMatch * 2
-                )
-                : getWinner(
-                    "r1",
-                    sourceMatch * 2 + 1
-                );
-
-
-        if (!participant) {
-
-            return "—";
-
-        }
-
-
         const sourceIndex =
-            side === "a"
-                ? sourceMatch * 2
-                : sourceMatch * 2 + 1;
-
-
-        const winnerMatch =
-            state.matches.r1[
-                sourceIndex
-            ];
-
-
-        return participant === "a"
-            ? getRound1Team(
-                sourceIndex,
-                "a"
-            )
-            : getRound1Team(
-                sourceIndex,
-                "b"
+            matchIndex * 2 +
+            (
+                side === "a"
+                    ? 0
+                    : 1
             );
-
-    }
-
-
-    // --------------------------------------------------------
-    // ROUND 3
-    // --------------------------------------------------------
-
-    if (round === "r3") {
-
-        const sourceA =
-            matchIndex * 2;
-
-        const sourceB =
-            matchIndex * 2 + 1;
-
-
-        if (
-            sourceA >= 5
-        ) {
-
-            return "—";
-
-        }
-
-
-        const winnerA =
-            state.matches.r2?.[
-                sourceA
-            ]?.winner;
-
-
-        const winnerB =
-            state.matches.r2?.[
-                sourceB
-            ]?.winner;
-
-
-        if (
-            side === "a" &&
-            winnerA
-        ) {
-
-            return getWinnerName(
-                "r2",
-                sourceA
-            );
-
-        }
-
-
-        if (
-            side === "b" &&
-            winnerB
-        ) {
-
-            return getWinnerName(
-                "r2",
-                sourceB
-            );
-
-        }
-
-
-        return "—";
-
-    }
-
-
-    // --------------------------------------------------------
-    // ROUND 4
-    // --------------------------------------------------------
-
-    if (round === "r4") {
-
-        const sourceA =
-            matchIndex * 2;
-
-        const sourceB =
-            matchIndex * 2 + 1;
-
-
-        if (
-            side === "a"
-        ) {
-
-            return getWinnerName(
-                "r3",
-                sourceA
-            );
-
-        }
 
 
         return getWinnerName(
-            "r3",
-            sourceB
+            "r1",
+            sourceIndex
         );
 
     }
 
 
-    // --------------------------------------------------------
-    // ROUND 5
-    // --------------------------------------------------------
+    // ========================================================
+    // ROUND 3
+    //
+    // R2 M1 + R2 M2 → R3 M1
+    // R2 M3 + R2 M4 → R3 M2
+    // R2 M5 → R3 M3
+    // ========================================================
+
+    if (round === "r3") {
+
+        // --------------------------------------------
+        // Match 1
+        // --------------------------------------------
+
+        if (matchIndex === 0) {
+
+            if (side === "a") {
+
+                return getWinnerName(
+                    "r2",
+                    0
+                );
+
+            }
+
+            return getWinnerName(
+                "r2",
+                1
+            );
+
+        }
+
+
+        // --------------------------------------------
+        // Match 2
+        // --------------------------------------------
+
+        if (matchIndex === 1) {
+
+            if (side === "a") {
+
+                return getWinnerName(
+                    "r2",
+                    2
+                );
+
+            }
+
+            return getWinnerName(
+                "r2",
+                3
+            );
+
+        }
+
+
+        // --------------------------------------------
+        // Match 3
+        // --------------------------------------------
+
+        if (matchIndex === 2) {
+
+            if (side === "a") {
+
+                return getWinnerName(
+                    "r2",
+                    4
+                );
+
+            }
+
+            return "BYE";
+
+        }
+
+
+        // --------------------------------------------
+        // Match 4
+        // --------------------------------------------
+
+        if (matchIndex === 3) {
+
+            return "—";
+
+        }
+
+
+        // --------------------------------------------
+        // Match 5
+        // --------------------------------------------
+
+        if (matchIndex === 4) {
+
+            return "—";
+
+        }
+
+    }
+
+
+    // ========================================================
+    // ROUND 4 - SEMIFINAL
+    // ========================================================
+
+    if (round === "r4") {
+
+        // ----------------------------------------------------
+        // SEMIFINAL 1
+        //
+        // R3 M1 vs R3 M2
+        // ----------------------------------------------------
+
+        if (matchIndex === 0) {
+
+            if (side === "a") {
+
+                return getWinnerName(
+                    "r3",
+                    0
+                );
+
+            }
+
+            return getWinnerName(
+                "r3",
+                1
+            );
+
+        }
+
+
+        // ----------------------------------------------------
+        // SEMIFINAL 2
+        //
+        // R3 M3 + BYE
+        //
+        // Slot ini dapat digunakan panitia
+        // untuk menentukan peserta kedua.
+        // ----------------------------------------------------
+
+        if (matchIndex === 1) {
+
+            if (side === "a") {
+
+                return getWinnerName(
+                    "r3",
+                    2
+                );
+
+            }
+
+            return "BYE";
+
+        }
+
+    }
+
+
+    // ========================================================
+    // ROUND 5 - FINAL
+    // ========================================================
 
     if (round === "r5") {
 
