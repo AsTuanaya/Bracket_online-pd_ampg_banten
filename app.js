@@ -507,15 +507,31 @@ function renderBracket(state) {
 
                 <div class="round-header">
 
-                    <h3>
-                        ${roundName}
-                    </h3>
+    <div class="round-title">
 
-                    <span>
-                        ${ROUNDS[round]} Match
-                    </span>
+        <h3>
+            ${roundName}
+        </h3>
 
-                </div>
+        <span class="round-subtitle">
+
+            ${
+                round === "r1"
+                    ? "20 PAIR"
+                    : round === "r2"
+                    ? "10 PAIR"
+                    : round === "r3"
+                    ? "5 PAIR"
+                    : round === "r4"
+                    ? "SEMI FINAL"
+                    : "FINAL"
+            }
+
+        </span>
+
+    </div>
+
+</div>
 
 
                 <div class="matches">
