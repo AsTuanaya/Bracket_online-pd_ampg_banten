@@ -60,9 +60,9 @@ const ROUND_NAMES = {
 
     r3: "ROUND 3",
 
-    r4: "SEMIFINAL",
+    r4: "ROUND 4",
 
-    r5: "FINAL"
+    r5: "ROUND 5"
 
 };
 
