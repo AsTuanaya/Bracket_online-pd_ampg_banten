@@ -39,30 +39,35 @@ const tournamentRef = ref(
 
 const ROUND_CONFIG = {
 
+    // 20 PAIR = 10 pertandingan
     r1: {
         title: "ROUND 1",
         subtitle: "20 PAIR",
-        matches: 20
-    },
-
-    r2: {
-        title: "ROUND 2",
-        subtitle: "10 PAIR",
         matches: 10
     },
 
+    // 10 pemenang = 5 pertandingan
+    r2: {
+        title: "ROUND 2",
+        subtitle: "10 PAIR",
+        matches: 5
+    },
+
+    // 5 pemenang
     r3: {
         title: "ROUND 3",
         subtitle: "5 PAIR",
         matches: 5
     },
 
+    // SEMI FINAL
     r4: {
         title: "ROUND 4",
         subtitle: "SEMI FINAL",
         matches: 2
     },
 
+    // FINAL
     r5: {
         title: "ROUND 5",
         subtitle: "FINAL",
