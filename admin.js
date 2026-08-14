@@ -8,7 +8,6 @@ import {
     initializeApp
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
-
 import {
     getDatabase,
     ref,
@@ -16,13 +15,11 @@ import {
     set
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
 
-
 import {
     getAuth,
     onAuthStateChanged,
     signOut
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-
 
 import {
     firebaseConfig
@@ -33,138 +30,105 @@ import {
 // FIREBASE
 // =====================================================
 
-const app =
-    initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
+const db = getDatabase(app);
 
-const db =
-    getDatabase(app);
+const auth = getAuth(app);
 
-
-const auth =
-    getAuth(app);
-
-
-const tournamentRef =
-    ref(db, "tournament");
+const tournamentRef = ref(db, "tournament");
 
 
 // =====================================================
-// CONFIG
+// KONFIGURASI BRACKET
 // =====================================================
 
 const ROUNDS = {
-
     r1: 20,
-
     r2: 10,
-
     r3: 5,
-
     r4: 2,
-
     r5: 1
-
 };
 
-
 const ROUND_NAMES = {
-
     r1: "ROUND 1",
-
     r2: "ROUND 2",
-
     r3: "ROUND 3",
-
     r4: "SEMIFINAL",
-
     r5: "FINAL"
-
 };
 
 
 // =====================================================
-// ELEMENTS
+// ELEMENT HTML
 // =====================================================
 
 const titleInput =
-    document.getElementById(
-        "titleInput"
-    );
-
+    document.getElementById("titleInput");
 
 const teamsEl =
-    document.getElementById(
-        "teams"
-    );
-
+    document.getElementById("teams");
 
 const matchesEl =
-    document.getElementById(
-        "matches"
-    );
-
+    document.getElementById("matches");
 
 const saveBtn =
-    document.getElementById(
-        "saveBtn"
-    );
-
+    document.getElementById("saveBtn");
 
 const resetBtn =
-    document.getElementById(
-        "resetBtn"
-    );
-
+    document.getElementById("resetBtn");
 
 const logoutBtn =
-    document.getElementById(
-        "logoutBtn"
-    );
-
+    document.getElementById("logoutBtn");
 
 const messageEl =
-    document.getElementById(
-        "message"
-    );
+    document.getElementById("message");
 
 
 // =====================================================
 // STATE
 // =====================================================
 
-let state =
-    createDefaultState();
+let state = createDefaultState();
 
-
-let authenticated =
-    false;
+let authenticated = false;
 
 
 // =====================================================
-// DEFAULT STATE
+// DEFAULT MATCH
+// =====================================================
+
+function createMatch() {
+
+    return {
+        teamA: "",
+        teamB: "",
+        sa: "",
+        sb: "",
+        winner: null
+    };
+
+}
+
+
+// =====================================================
+// DEFAULT MATCHES
 // =====================================================
 
 function createMatches(count) {
 
     return Array.from(
         { length: count },
-        () => ({
-
-            teamA: "",
-
-            teamB: "",
-
-            sa: "",
-
-            sb: "",
-
-            winner: null
-
-        })
+        () => createMatch()
     );
 
 }
+
+
+// =====================================================
+// DEFAULT STATE
+// =====================================================
 
 function createDefaultState() {
 
@@ -182,20 +146,15 @@ function createDefaultState() {
 
         matches: {
 
-            r1:
-                createMatches(20),
+            r1: createMatches(20),
 
-            r2:
-                createMatches(10),
+            r2: createMatches(10),
 
-            r3:
-                createMatches(5),
+            r3: createMatches(5),
 
-            r4:
-                createMatches(2),
+            r4: createMatches(2),
 
-            r5:
-                createMatches(1)
+            r5: createMatches(1)
 
         },
 
@@ -207,7 +166,7 @@ function createDefaultState() {
 
 
 // =====================================================
-// NORMALIZE
+// NORMALIZE DATA
 // =====================================================
 
 function normalizeData(data) {
@@ -250,22 +209,22 @@ function normalizeData(data) {
 
                     return {
 
-    teamA:
-        old?.teamA ?? "",
+                        teamA:
+                            old?.teamA ?? "",
 
-    teamB:
-        old?.teamB ?? "",
+                        teamB:
+                            old?.teamB ?? "",
 
-    sa:
-        old?.sa ?? "",
+                        sa:
+                            old?.sa ?? "",
 
-    sb:
-        old?.sb ?? "",
+                        sb:
+                            old?.sb ?? "",
 
-    winner:
-        old?.winner ?? null
+                        winner:
+                            old?.winner ?? null
 
-};
+                    };
 
                 }
             );
@@ -284,81 +243,51 @@ function normalizeData(data) {
 
 function escapeHtml(value) {
 
-    return String(
-        value ?? ""
-    ).replace(
-        /[&<>"']/g,
-        char => {
+    return String(value ?? "")
+        .replace(
+            /[&<>"']/g,
+            char => {
 
-            const map = {
+                const map = {
 
-                "&": "&amp;",
+                    "&": "&amp;",
 
-                "<": "&lt;",
+                    "<": "&lt;",
 
-                ">": "&gt;",
+                    ">": "&gt;",
 
-                '"': "&quot;",
+                    '"': "&quot;",
 
-                "'": "&#39;"
+                    "'": "&#39;"
 
-            };
+                };
 
-            return map[char];
+                return map[char];
 
-        }
-    );
+            }
+        );
 
 }
 
 
 // =====================================================
-// GET PARTICIPANT
+// GET AUTOMATIC PARTICIPANT
+//
+// Hanya mengambil nama dari ronde sebelumnya.
+// Tidak memperhatikan teamA/teamB manual.
 // =====================================================
 
-function getParticipant(
+function getAutomaticParticipant(
     round,
     matchIndex,
     side
 ) {
 
-    const match =
-        state.matches?.[round]?.[matchIndex];
-
-
-    // =============================================
-    // MANUAL NAME
-    // =============================================
-
-    if (
-        match &&
-        side === "a" &&
-        match.teamA
-    ) {
-
-        return match.teamA;
-
-    }
-
-
-    if (
-        match &&
-        side === "b" &&
-        match.teamB
-    ) {
-
-        return match.teamB;
-
-    }
-
-
     // =============================================
     // ROUND 1
     // =============================================
 
-    if (
-        round === "r1"
-    ) {
+    if (round === "r1") {
 
         const index =
             matchIndex * 2 +
@@ -371,14 +300,14 @@ function getParticipant(
 
         return (
             state.teams[index] ||
-            "—"
+            `PAIR ${index + 1}`
         );
 
     }
 
 
     // =============================================
-    // ROUND SEBELUMNYA
+    // RONDE SEBELUMNYA
     // =============================================
 
     const previousRound = {
@@ -401,7 +330,7 @@ function getParticipant(
     }
 
 
-    const previousMatch =
+    const previousMatchIndex =
         matchIndex * 2 +
         (
             side === "a"
@@ -410,15 +339,17 @@ function getParticipant(
         );
 
 
-    const previous =
+    const previousMatch =
         state.matches
-            ?.[previousRound]
-            ?.[previousMatch];
+            ?.[
+                previousRound
+            ]
+            ?.[previousMatchIndex];
 
 
     if (
-        !previous ||
-        !previous.winner
+        !previousMatch ||
+        !previousMatch.winner
     ) {
 
         return "—";
@@ -428,82 +359,69 @@ function getParticipant(
 
     return getParticipant(
         previousRound,
-        previousMatch,
-        previous.winner
-    );
-
-}
-
-    if (
-        round === "r1"
-    ) {
-
-        const index =
-            matchIndex * 2 +
-            (
-                side === "a"
-                    ? 0
-                    : 1
-            );
-
-
-        return (
-            state.teams[index] ||
-            "—"
-        );
-
-    }
-
-
-    const previousRound = {
-
-        r2: "r1",
-
-        r3: "r2",
-
-        r4: "r3",
-
-        r5: "r4"
-
-    }[round];
-
-
-    const previousMatch =
-        matchIndex * 2 +
-        (
-            side === "a"
-                ? 0
-                : 1
-        );
-
-
-    const previous =
-        state.matches
-            ?.[previousRound]
-            ?.[previousMatch];
-
-
-    if (
-        !previous ||
-        !previous.winner
-    ) {
-
-        return "—";
-
-    }
-
-
-    return getParticipant(
-        previousRound,
-        previousMatch,
-        previous.winner
+        previousMatchIndex,
+        previousMatch.winner
     );
 
 }
 
 
 // =====================================================
-// RENDER TEAMS
+// GET PARTICIPANT
+//
+// teamA/teamB manual mempunyai prioritas.
+// Jika kosong → otomatis dari ronde sebelumnya.
+// =====================================================
+
+function getParticipant(
+    round,
+    matchIndex,
+    side
+) {
+
+    const match =
+        state.matches
+            ?.[
+                round
+            ]
+            ?.[matchIndex];
+
+
+    if (match) {
+
+        if (
+            side === "a" &&
+            match.teamA?.trim()
+        ) {
+
+            return match.teamA.trim();
+
+        }
+
+
+        if (
+            side === "b" &&
+            match.teamB?.trim()
+        ) {
+
+            return match.teamB.trim();
+
+        }
+
+    }
+
+
+    return getAutomaticParticipant(
+        round,
+        matchIndex,
+        side
+    );
+
+}
+
+
+// =====================================================
+// RENDER DAFTAR PAIR ROUND 1
 // =====================================================
 
 function renderTeams() {
@@ -511,25 +429,33 @@ function renderTeams() {
     teamsEl.innerHTML =
         state.teams
             .map(
-                (team, index) => `
+                (team, index) => {
 
-                <div class="admin-team-row">
+                    return `
 
-                    <span class="admin-team-number">
-                        ${index + 1}
-                    </span>
+                        <div
+                            class="admin-team-row"
+                        >
+
+                            <span
+                                class="admin-team-number"
+                            >
+                                ${index + 1}
+                            </span>
 
 
-                    <input
-                        type="text"
-                        data-team="${index}"
-                        value="${escapeHtml(team)}"
-                        placeholder="PAIR ${index + 1}"
-                    >
+                            <input
+                                type="text"
+                                data-team="${index}"
+                                value="${escapeHtml(team)}"
+                                placeholder="PAIR ${index + 1}"
+                            >
 
-                </div>
+                        </div>
 
-            `
+                    `;
+
+                }
             )
             .join("");
 
@@ -554,7 +480,9 @@ function renderMatches() {
 
             <div class="admin-round">
 
-                <div class="admin-round-header">
+                <div
+                    class="admin-round-header"
+                >
 
                     <strong>
                         ${ROUND_NAMES[round]}
@@ -579,6 +507,22 @@ function renderMatches() {
                 state.matches[round][i];
 
 
+            const automaticA =
+                getAutomaticParticipant(
+                    round,
+                    i,
+                    "a"
+                );
+
+
+            const automaticB =
+                getAutomaticParticipant(
+                    round,
+                    i,
+                    "b"
+                );
+
+
             const teamA =
                 getParticipant(
                     round,
@@ -597,105 +541,159 @@ function renderMatches() {
 
             html += `
 
-                <div class="admin-match">
+                <div
+                    class="admin-match"
+                >
 
-                    <div class="admin-match-title">
-                        Match ${i + 1}
+                    <div
+                        class="admin-match-title"
+                    >
+                        ${ROUND_NAMES[round]}
+                        — Match ${i + 1}
                     </div>
 
 
-                    <div class="admin-score-grid">
+                    <!-- =================================
+                         PEMAIN KIRI
+                    ================================== -->
+
+                    <div
+                        class="admin-score-grid"
+                    >
+
+                        <div
+                            class="admin-player"
+                        >
+
+                            <input
+                                type="text"
+                                data-participant="${round}.${i}.teamA"
+                                value="${escapeHtml(teamA)}"
+                                placeholder="Nama Pair kiri"
+                            >
 
 
-    <!-- =========================================
-         PLAYER / PAIR KIRI
-    ========================================== -->
+                            <input
+                                type="number"
+                                min="0"
+                                data-score="${round}.${i}.sa"
+                                value="${escapeHtml(match.sa)}"
+                                placeholder="0"
+                            >
 
-    <div class="admin-player">
-
-        ${
-            round === "r1"
-
-            ? `
-                <input
-                    type="text"
-                    value="${escapeHtml(teamA)}"
-                    data-team-r1="${i * 2}"
-                    placeholder="Nama Pair"
-                >
-            `
-
-            : `
-                <input
-                    type="text"
-                    value="${escapeHtml(match.teamA || teamA)}"
-                    data-participant="${round}.${i}.teamA"
-                    placeholder="Nama Pair kiri"
-                >
-            `
-        }
+                        </div>
 
 
-        <input
-            type="number"
-            min="0"
-            data-score="${round}.${i}.sa"
-            value="${escapeHtml(match.sa)}"
-            placeholder="0"
-        >
+                        <!-- VS -->
 
-    </div>
+                        <div
+                            class="admin-vs"
+                        >
+                            VS
+                        </div>
 
 
-    <!-- =========================================
-         VS
-    ========================================== -->
+                        <!-- =================================
+                             PEMAIN KANAN
+                        ================================== -->
 
-    <div class="admin-vs">
-        VS
-    </div>
+                        <div
+                            class="admin-player"
+                        >
 
-
-    <!-- =========================================
-         PLAYER / PAIR KANAN
-    ========================================== -->
-
-    <div class="admin-player">
-
-        <input
-            type="number"
-            min="0"
-            data-score="${round}.${i}.sb"
-            value="${escapeHtml(match.sb)}"
-            placeholder="0"
-        >
+                            <input
+                                type="number"
+                                min="0"
+                                data-score="${round}.${i}.sb"
+                                value="${escapeHtml(match.sb)}"
+                                placeholder="0"
+                            >
 
 
-        ${
-            round === "r1"
+                            <input
+                                type="text"
+                                data-participant="${round}.${i}.teamB"
+                                value="${escapeHtml(teamB)}"
+                                placeholder="Nama Pair kanan"
+                            >
 
-            ? `
-                <input
-                    type="text"
-                    value="${escapeHtml(teamB)}"
-                    data-team-r1="${i * 2 + 1}"
-                    placeholder="Nama Pair"
-                >
-            `
+                        </div>
 
-            : `
-                <input
-                    type="text"
-                    value="${escapeHtml(match.teamB || teamB)}"
-                    data-participant="${round}.${i}.teamB"
-                    placeholder="Nama Pair kanan"
-                >
-            `
-        }
+                    </div>
 
-    </div>
 
-</div>
+                    <!-- =================================
+                         INFO OTOMATIS
+                    ================================== -->
+
+                    ${
+                        round !== "r1"
+                        ? `
+
+                            <div
+                                class="automatic-info"
+                            >
+                                Otomatis:
+                                ${escapeHtml(automaticA)}
+                                vs
+                                ${escapeHtml(automaticB)}
+                            </div>
+
+                        `
+                        : ""
+                    }
+
+
+                    <!-- =================================
+                         PEMENANG
+                    ================================== -->
+
+                    <div
+                        class="admin-winner"
+                    >
+
+                        <label>
+                            Pemenang
+                        </label>
+
+
+                        <select
+                            data-winner="${round}.${i}"
+                        >
+
+                            <option value="">
+                                Belum dipilih
+                            </option>
+
+
+                            <option
+                                value="a"
+                                ${
+                                    match.winner === "a"
+                                        ? "selected"
+                                        : ""
+                                }
+                            >
+                                ${escapeHtml(teamA)}
+                            </option>
+
+
+                            <option
+                                value="b"
+                                ${
+                                    match.winner === "b"
+                                        ? "selected"
+                                        : ""
+                                }
+                            >
+                                ${escapeHtml(teamB)}
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
 
             `;
 
@@ -703,7 +701,9 @@ function renderMatches() {
 
 
         html += `
+
             </div>
+
         `;
 
     }
@@ -716,10 +716,15 @@ function renderMatches() {
 
 
 // =====================================================
-// RENDER
+// RENDER SEMUA
 // =====================================================
 
 function render() {
+
+    if (!titleInput) {
+        return;
+    }
+
 
     titleInput.value =
         state.title;
@@ -733,13 +738,18 @@ function render() {
 
 
 // =====================================================
-// SHOW MESSAGE
+// PESAN
 // =====================================================
 
 function showMessage(
     text,
     error = false
 ) {
+
+    if (!messageEl) {
+        return;
+    }
+
 
     messageEl.textContent =
         text;
@@ -765,266 +775,421 @@ function showMessage(
 
 
 // =====================================================
+// AMBIL NILAI INPUT
+// =====================================================
+
+function collectFormData() {
+
+    const next =
+        normalizeData(
+            JSON.parse(
+                JSON.stringify(state)
+            )
+        );
+
+
+    // =============================================
+    // TITLE
+    // =============================================
+
+    next.title =
+        titleInput.value.trim() ||
+        "Turnamen PD AMPG Banten";
+
+
+    // =============================================
+    // ROUND 1 TEAMS
+    // =============================================
+
+    document
+        .querySelectorAll(
+            "[data-team]"
+        )
+        .forEach(
+            input => {
+
+                const index =
+                    Number(
+                        input.dataset.team
+                    );
+
+
+                next.teams[index] =
+                    input.value.trim() ||
+                    `PAIR ${index + 1}`;
+
+            }
+        );
+
+
+    // =============================================
+    // SCORES
+    // =============================================
+
+    document
+        .querySelectorAll(
+            "[data-score]"
+        )
+        .forEach(
+            input => {
+
+                const [
+                    round,
+                    index,
+                    side
+                ] =
+                    input.dataset.score
+                        .split(".");
+
+
+                next.matches[
+                    round
+                ][
+                    Number(index)
+                ][side] =
+                    input.value.trim();
+
+            }
+        );
+
+
+    // =============================================
+    // NAMA PESERTA
+    //
+    // Jika nama input sama dengan nama otomatis,
+    // simpan sebagai kosong agar tetap otomatis.
+    //
+    // Jika berbeda → simpan manual.
+    // =============================================
+
+    document
+        .querySelectorAll(
+            "[data-participant]"
+        )
+        .forEach(
+            input => {
+
+                const [
+                    round,
+                    index,
+                    side
+                ] =
+                    input.dataset
+                        .participant
+                        .split(".");
+
+
+                const matchIndex =
+                    Number(index);
+
+
+                const value =
+                    input.value.trim();
+
+
+                const automatic =
+                    getAutomaticParticipant(
+                        round,
+                        matchIndex,
+                        side
+                    );
+
+
+                if (
+                    round === "r1"
+                ) {
+
+                    next.matches[
+                        round
+                    ][
+                        matchIndex
+                    ][
+                        side === "teamA"
+                            ? "teamA"
+                            : "teamB"
+                    ] = "";
+
+                    return;
+
+                }
+
+
+                const key =
+                    side === "teamA"
+                        ? "teamA"
+                        : "teamB";
+
+
+                if (
+                    !value ||
+                    value === automatic
+                ) {
+
+                    next.matches[
+                        round
+                    ][
+                        matchIndex
+                    ][key] = "";
+
+                } else {
+
+                    next.matches[
+                        round
+                    ][
+                        matchIndex
+                    ][key] = value;
+
+                }
+
+            }
+        );
+
+
+    // =============================================
+    // WINNERS
+    // =============================================
+
+    document
+        .querySelectorAll(
+            "[data-winner]"
+        )
+        .forEach(
+            select => {
+
+                const [
+                    round,
+                    index
+                ] =
+                    select.dataset
+                        .winner
+                        .split(".");
+
+
+                next.matches[
+                    round
+                ][
+                    Number(index)
+                ].winner =
+                    select.value ||
+                    null;
+
+            }
+        );
+
+
+    // =============================================
+    // UPDATE TIME
+    // =============================================
+
+    next.updatedAt =
+        Date.now();
+
+
+    return next;
+
+}
+
+
+// =====================================================
 // SAVE
 // =====================================================
 
-saveBtn.addEventListener(
-    "click",
-    async () => {
+if (saveBtn) {
 
-        if (!authenticated) {
+    saveBtn.addEventListener(
+        "click",
+        async () => {
 
-            showMessage(
-                "Sesi panitia tidak aktif.",
-                true
-            );
+            if (!authenticated) {
 
-            return;
+                showMessage(
+                    "Sesi panitia tidak aktif.",
+                    true
+                );
+
+                return;
+
+            }
+
+
+            try {
+
+                saveBtn.disabled = true;
+
+                saveBtn.textContent =
+                    "⏳ MENYIMPAN...";
+
+
+                const next =
+                    collectFormData();
+
+
+                await set(
+                    tournamentRef,
+                    next
+                );
+
+
+                state =
+                    normalizeData(next);
+
+
+                render();
+
+
+                showMessage(
+                    "✓ Berhasil disimpan. Bracket publik langsung diperbarui."
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "SAVE ERROR:",
+                    error
+                );
+
+
+                showMessage(
+                    "❌ Gagal menyimpan ke Firebase.",
+                    true
+                );
+
+            } finally {
+
+                saveBtn.disabled = false;
+
+                saveBtn.textContent =
+                    "💾 SIMPAN PERUBAHAN";
+
+            }
 
         }
+    );
 
-
-        try {
-
-            const next =
-                JSON.parse(
-                    JSON.stringify(state)
-                );
-
-
-            // TITLE
-
-            next.title =
-                titleInput.value.trim() ||
-                "Turnamen PD AMPG Banten";
-
-
-            // TEAMS
-
-            document
-                .querySelectorAll(
-                    "[data-team]"
-                )
-                .forEach(
-                    input => {
-
-                        const index =
-                            Number(
-                                input.dataset.team
-                            );
-
-
-                        next.teams[index] =
-                            input.value.trim() ||
-                            `PAIR ${index + 1}`;
-
-                    }
-                );
-
-
-            // SCORES
-
-            document
-                .querySelectorAll(
-                    "[data-score]"
-                )
-                .forEach(
-                    input => {
-
-                        const [
-                            round,
-                            index,
-                            side
-                        ] =
-                            input.dataset.score
-                                .split(".");
-
-
-                        next.matches[
-                            round
-                        ][
-                            Number(index)
-                        ][side] =
-                            input.value;
-
-                    }
-                );
-
-
-            // WINNERS
-
-            document
-                .querySelectorAll(
-                    "[data-winner]"
-                )
-                .forEach(
-                    select => {
-
-                        const [
-                            round,
-                            index
-                        ] =
-                            select.dataset.winner
-                                .split(".");
-
-
-                        next.matches[
-                            round
-                        ][
-                            Number(index)
-                        ].winner =
-                            select.value ||
-                            null;
-
-                    }
-                );
-
-
-            next.updatedAt =
-                Date.now();
-
-
-            await set(
-                tournamentRef,
-                next
-            );
-
-
-            state =
-                next;
-
-
-            render();
-
-
-            showMessage(
-                "✓ Perubahan berhasil disimpan. Publik akan melihat update secara realtime."
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "Save error:",
-                error
-            );
-
-
-            showMessage(
-                "Gagal menyimpan data Firebase.",
-                true
-            );
-
-        }
-
-    }
-);
+}
 
 
 // =====================================================
 // RESET
 // =====================================================
 
-resetBtn.addEventListener(
-    "click",
-    async () => {
+if (resetBtn) {
 
-        if (!authenticated) {
+    resetBtn.addEventListener(
+        "click",
+        async () => {
 
-            showMessage(
-                "Sesi panitia tidak aktif.",
-                true
-            );
+            if (!authenticated) {
 
-            return;
+                showMessage(
+                    "Sesi panitia tidak aktif.",
+                    true
+                );
+
+                return;
+
+            }
+
+
+            const confirmed =
+                confirm(
+                    "Yakin ingin mereset seluruh bracket?"
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            try {
+
+                resetBtn.disabled = true;
+
+
+                const next =
+                    createDefaultState();
+
+
+                next.updatedAt =
+                    Date.now();
+
+
+                await set(
+                    tournamentRef,
+                    next
+                );
+
+
+                state =
+                    next;
+
+
+                render();
+
+
+                showMessage(
+                    "✓ Seluruh bracket berhasil direset."
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "RESET ERROR:",
+                    error
+                );
+
+
+                showMessage(
+                    "❌ Gagal melakukan reset.",
+                    true
+                );
+
+            } finally {
+
+                resetBtn.disabled = false;
+
+            }
 
         }
+    );
 
-
-        const confirmReset =
-            confirm(
-                "Yakin ingin mereset seluruh bracket?"
-            );
-
-
-        if (!confirmReset) {
-            return;
-        }
-
-
-        try {
-
-            const next =
-                createDefaultState();
-
-
-            next.updatedAt =
-                Date.now();
-
-
-            await set(
-                tournamentRef,
-                next
-            );
-
-
-            state =
-                next;
-
-
-            render();
-
-
-            showMessage(
-                "✓ Bracket berhasil direset."
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                error
-            );
-
-
-            showMessage(
-                "Gagal melakukan reset.",
-                true
-            );
-
-        }
-
-    }
-);
+}
 
 
 // =====================================================
 // LOGOUT
 // =====================================================
 
-logoutBtn.addEventListener(
-    "click",
-    async () => {
+if (logoutBtn) {
 
-        try {
+    logoutBtn.addEventListener(
+        "click",
+        async () => {
 
-            await signOut(auth);
+            try {
+
+                await signOut(auth);
 
 
-            window.location.href =
-                "admin.html";
+                window.location.href =
+                    "admin.html";
 
-        } catch (error) {
+            } catch (error) {
 
-            console.error(
-                "Logout error:",
-                error
-            );
+                console.error(
+                    "LOGOUT ERROR:",
+                    error
+                );
+
+            }
 
         }
+    );
 
-    }
-);
+}
 
 
 // =====================================================
@@ -1041,12 +1206,6 @@ onAuthStateChanged(
                 false;
 
 
-            /*
-             * Kalau belum login,
-             * jangan biarkan panel admin
-             * digunakan.
-             */
-
             window.location.href =
                 "admin.html";
 
@@ -1061,7 +1220,7 @@ onAuthStateChanged(
 
 
         console.log(
-            "Panitia login:",
+            "✓ Panitia login:",
             user.email
         );
 
@@ -1073,11 +1232,13 @@ onAuthStateChanged(
 
 
 // =====================================================
-// REALTIME DATABASE
+// FIREBASE REALTIME
 // =====================================================
 
 onValue(
+
     tournamentRef,
+
     snapshot => {
 
         state =
@@ -1093,22 +1254,29 @@ onValue(
         }
 
     },
+
     error => {
 
         console.error(
-            "Database error:",
+            "DATABASE ERROR:",
             error
         );
 
+
         showMessage(
-            "Tidak dapat membaca Firebase Database.",
+            "❌ Tidak dapat membaca Firebase Database.",
             true
         );
 
     }
+
 );
 
 
+// =====================================================
+// START
+// =====================================================
+
 console.log(
-    "✓ admin.js — Panel Panitia aktif."
+    "✓ admin.js berhasil dimuat."
 );
