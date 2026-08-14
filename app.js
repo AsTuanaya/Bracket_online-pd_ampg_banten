@@ -309,6 +309,13 @@ function getRound1Team(
         (side === "a" ? 0 : 1);
 
 
+    if (teamIndex >= 20) {
+
+        return "—";
+
+    }
+
+
     return (
         tournament.teams?.[teamIndex] ||
         `PAIR ${teamIndex + 1}`
