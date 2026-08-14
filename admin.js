@@ -151,6 +151,10 @@ function createMatches(count) {
         { length: count },
         () => ({
 
+            teamA: "",
+
+            teamB: "",
+
             sa: "",
 
             sb: "",
@@ -161,7 +165,6 @@ function createMatches(count) {
     );
 
 }
-
 
 function createDefaultState() {
 
