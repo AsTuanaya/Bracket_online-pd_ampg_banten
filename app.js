@@ -1,8 +1,8 @@
-// =====================================================
+// ============================================================
 // APP.JS
-// BRACKET PUBLIK
-// PD AMPG BANTEN
-// =====================================================
+// TURNAMEN PD AMPG BANTEN
+// PUBLIC BRACKET - FIREBASE REALTIME DATABASE
+// ============================================================
 
 import {
     initializeApp
@@ -19,236 +19,259 @@ import {
 } from "./firebase-config.js";
 
 
-// =====================================================
+// ============================================================
 // FIREBASE
-// =====================================================
+// ============================================================
 
-const app =
-    initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-const db =
-    getDatabase(app);
+const db = getDatabase(app);
 
-const tournamentRef =
-    ref(db, "tournament");
+const tournamentRef = ref(
+    db,
+    "tournament"
+);
 
 
-// =====================================================
-// KONFIGURASI
-// =====================================================
+// ============================================================
+// KONFIGURASI ROUND
+// ============================================================
 
-const ROUNDS = {
+const ROUND_CONFIG = {
 
-    r1: 20,
+    r1: {
+        title: "ROUND 1",
+        subtitle: "20 PAIR",
+        matches: 20
+    },
 
-    r2: 10,
+    r2: {
+        title: "ROUND 2",
+        subtitle: "10 PAIR",
+        matches: 10
+    },
 
-    r3: 5,
+    r3: {
+        title: "ROUND 3",
+        subtitle: "5 PAIR",
+        matches: 5
+    },
 
-    r4: 2,
+    r4: {
+        title: "ROUND 4",
+        subtitle: "SEMI FINAL",
+        matches: 2
+    },
 
-    r5: 1
+    r5: {
+        title: "ROUND 5",
+        subtitle: "FINAL",
+        matches: 1
+    }
 
 };
 
 
-const ROUND_NAMES = {
+// ============================================================
+// DEFAULT DATA
+// ============================================================
 
-    r1: "ROUND 1",
+const DEFAULT_DATA = {
 
-    r2: "ROUND 2",
+    title: "TURNAMEN PD AMPG BANTEN",
 
-    r3: "ROUND 3",
-
-    r4: "ROUND 4",
-
-    r5: "ROUND 5"
-
-};
-
-
-// =====================================================
-// DEFAULT MATCH
-// =====================================================
-
-function createMatch() {
-
-    return {
-
-        teamA: "",
-
-        teamB: "",
-
-        sa: "",
-
-        sb: "",
-
-        winner: null
-
-    };
-
-}
-
-
-// =====================================================
-// DEFAULT MATCHES
-// =====================================================
-
-function createMatches(count) {
-
-    return Array.from(
-        { length: count },
-        () => createMatch()
-    );
-
-}
-
-
-// =====================================================
-// DEFAULT STATE
-// =====================================================
-
-function defaultState() {
-
-    return {
-
-        title:
-            "Turnamen PD AMPG Banten",
-
-        teams:
-            Array.from(
-                { length: 20 },
-                (_, i) =>
-                    `PAIR ${i + 1}`
-            ),
-
-        matches: {
-
-            r1:
-                createMatches(20),
-
-            r2:
-                createMatches(10),
-
-            r3:
-                createMatches(5),
-
-            r4:
-                createMatches(2),
-
-            r5:
-                createMatches(1)
-
+    teams: Array.from(
+        {
+            length: 20
         },
+        (_, index) => `PAIR ${index + 1}`
+    ),
 
-        updatedAt: null
+    matches: {
 
-    };
+        r1: Array.from(
+            {
+                length: 20
+            },
+            () => ({
+                sa: "",
+                sb: "",
+                winner: null
+            })
+        ),
 
-}
+        r2: Array.from(
+            {
+                length: 10
+            },
+            () => ({
+                sa: "",
+                sb: "",
+                winner: null
+            })
+        ),
+
+        r3: Array.from(
+            {
+                length: 5
+            },
+            () => ({
+                sa: "",
+                sb: "",
+                winner: null
+            })
+        ),
+
+        r4: Array.from(
+            {
+                length: 2
+            },
+            () => ({
+                sa: "",
+                sb: "",
+                winner: null
+            })
+        ),
+
+        r5: Array.from(
+            {
+                length: 1
+            },
+            () => ({
+                sa: "",
+                sb: "",
+                winner: null
+            })
+        )
+
+    },
+
+    updatedAt: null
+
+};
 
 
-// =====================================================
-// NORMALIZE
-// =====================================================
+// ============================================================
+// DATA GLOBAL
+// ============================================================
+
+let tournament = normalizeData(null);
+
+
+// ============================================================
+// NORMALIZE DATA
+// ============================================================
 
 function normalizeData(data) {
 
-    const state =
-        data || defaultState();
+    const source = data || {};
+
+    const result = {
+
+        title:
+            source.title ||
+            DEFAULT_DATA.title,
+
+        teams:
+            [],
+
+        matches:
+            {},
+
+        updatedAt:
+            source.updatedAt || null
+
+    };
 
 
-    state.title =
-        state.title ||
-        "Turnamen PD AMPG Banten";
+    // --------------------------------------------------------
+    // TEAMS
+    // --------------------------------------------------------
+
+    result.teams = Array.from(
+        {
+            length: 20
+        },
+        (_, index) => {
+
+            return (
+                source.teams?.[index] ||
+                `PAIR ${index + 1}`
+            );
+
+        }
+    );
 
 
-    state.teams =
-        Array.from(
-            { length: 20 },
-            (_, i) =>
-                state.teams?.[i] ||
-                `PAIR ${i + 1}`
-        );
-
-
-    state.matches =
-        state.matches || {};
-
+    // --------------------------------------------------------
+    // MATCHES
+    // --------------------------------------------------------
 
     for (
-        const [round, count]
-        of Object.entries(ROUNDS)
+        const [round, config]
+        of Object.entries(ROUND_CONFIG)
     ) {
 
-        state.matches[round] =
-            Array.from(
-                { length: count },
-                (_, i) => {
+        result.matches[round] = Array.from(
+            {
+                length: config.matches
+            },
+            (_, index) => {
 
-                    const old =
-                        state.matches
-                            ?.[round]
-                            ?.[i];
+                const match =
+                    source.matches?.[round]?.[index] ||
+                    {};
 
+                return {
 
-                    return {
+                    sa:
+                        match.sa ??
+                        "",
 
-                        teamA:
-                            old?.teamA ?? "",
+                    sb:
+                        match.sb ??
+                        "",
 
-                        teamB:
-                            old?.teamB ?? "",
+                    winner:
+                        match.winner ??
+                        null
 
-                        sa:
-                            old?.sa ?? "",
+                };
 
-                        sb:
-                            old?.sb ?? "",
-
-                        winner:
-                            old?.winner ?? null
-
-                    };
-
-                }
-            );
+            }
+        );
 
     }
 
 
-    return state;
+    return result;
 
 }
 
 
-// =====================================================
+// ============================================================
 // ESCAPE HTML
-// =====================================================
+// ============================================================
 
-function escapeHtml(value) {
+function escapeHTML(value) {
 
     return String(
         value ?? ""
     ).replace(
         /[&<>"']/g,
-        char => {
+        character => {
 
             const map = {
 
                 "&": "&amp;",
-
                 "<": "&lt;",
-
                 ">": "&gt;",
-
                 '"': "&quot;",
-
-                "'": "&#39;"
+                "'": "&#039;"
 
             };
 
-            return map[char];
+            return map[character];
 
         }
     );
@@ -256,57 +279,159 @@ function escapeHtml(value) {
 }
 
 
-// =====================================================
-// PARTICIPANT OTOMATIS
-// =====================================================
+// ============================================================
+// GET ELEMENT
+// ============================================================
 
-function getAutomaticParticipant(
-    state,
+function getElement(id) {
+
+    return document.getElementById(id);
+
+}
+
+
+// ============================================================
+// GET TEAM NAME ROUND 1
+// ============================================================
+
+function getRound1Team(
+    matchIndex,
+    side
+) {
+
+    const teamIndex =
+        matchIndex * 2 +
+        (side === "a" ? 0 : 1);
+
+
+    return (
+        tournament.teams?.[teamIndex] ||
+        `PAIR ${teamIndex + 1}`
+    );
+
+}
+
+
+// ============================================================
+// GET WINNER FROM PREVIOUS ROUND
+// ============================================================
+
+function getWinner(
+    round,
+    matchIndex
+) {
+
+    const match =
+        tournament.matches?.[round]?.[matchIndex];
+
+
+    if (!match) {
+
+        return null;
+
+    }
+
+
+    if (
+        match.winner !== "a" &&
+        match.winner !== "b"
+    ) {
+
+        return null;
+
+    }
+
+
+    const scoreA =
+        match.sa ?? "";
+
+    const scoreB =
+        match.sb ?? "";
+
+
+    // --------------------------------------------------------
+    // Jika nama peserta berasal dari ronde sebelumnya
+    // --------------------------------------------------------
+
+    const participantA =
+        getParticipant(
+            round,
+            matchIndex,
+            "a"
+        );
+
+    const participantB =
+        getParticipant(
+            round,
+            matchIndex,
+            "b"
+        );
+
+
+    if (match.winner === "a") {
+
+        return {
+
+            name: participantA,
+
+            score: scoreA
+
+        };
+
+    }
+
+
+    return {
+
+        name: participantB,
+
+        score: scoreB
+
+    };
+
+}
+
+
+// ============================================================
+// GET PARTICIPANT
+// ============================================================
+
+function getParticipant(
     round,
     matchIndex,
     side
 ) {
 
-    // =============================================
+    // --------------------------------------------------------
     // ROUND 1
-    // =============================================
+    // --------------------------------------------------------
 
-    if (
-        round === "r1"
-    ) {
+    if (round === "r1") {
 
-        const index =
-            matchIndex * 2 +
-            (
-                side === "a"
-                    ? 0
-                    : 1
-            );
-
-
-        return (
-            state.teams[index] ||
-            `PAIR ${index + 1}`
+        return getRound1Team(
+            matchIndex,
+            side
         );
 
     }
 
 
-    // =============================================
-    // PREVIOUS ROUND
-    // =============================================
+    // --------------------------------------------------------
+    // ROUND 2
+    // --------------------------------------------------------
 
-    const previousRound = {
+    const previousRoundMap = {
 
         r2: "r1",
-
         r3: "r2",
-
         r4: "r3",
-
         r5: "r4"
 
-    }[round];
+    };
+
+
+    const previousRound =
+        previousRoundMap[round];
 
 
     if (!previousRound) {
@@ -318,374 +443,146 @@ function getAutomaticParticipant(
 
     const previousMatchIndex =
         matchIndex * 2 +
-        (
-            side === "a"
-                ? 0
-                : 1
+        (side === "a" ? 0 : 1);
+
+
+    const winner =
+        getWinner(
+            previousRound,
+            previousMatchIndex
         );
 
 
-    const previousMatch =
-        state.matches
-            ?.[
-                previousRound
-            ]
-            ?.[previousMatchIndex];
-
-
-    if (
-        !previousMatch ||
-        !previousMatch.winner
-    ) {
+    if (!winner) {
 
         return "—";
 
     }
 
 
-    return getParticipant(
-        state,
-        previousRound,
-        previousMatchIndex,
-        previousMatch.winner
-    );
+    return winner.name || "—";
 
 }
 
 
-// =====================================================
-// PARTICIPANT FINAL
-//
-// Manual teamA/teamB lebih utama.
-// Jika kosong → otomatis.
-// =====================================================
+// ============================================================
+// GET CURRENT WINNER
+// ============================================================
 
-function getParticipant(
-    state,
+function isWinner(
     round,
     matchIndex,
     side
 ) {
 
     const match =
-        state.matches
-            ?.[
-                round
-            ]
-            ?.[matchIndex];
+        tournament.matches?.[round]?.[matchIndex];
 
 
-    // =============================================
-    // MANUAL
-    // =============================================
+    if (!match) {
 
-    if (match) {
-
-        if (
-            side === "a" &&
-            match.teamA?.trim()
-        ) {
-
-            return match.teamA.trim();
-
-        }
-
-
-        if (
-            side === "b" &&
-            match.teamB?.trim()
-        ) {
-
-            return match.teamB.trim();
-
-        }
+        return false;
 
     }
 
 
-    // =============================================
-    // OTOMATIS
-    // =============================================
-
-    return getAutomaticParticipant(
-        state,
-        round,
-        matchIndex,
-        side
-    );
+    return match.winner === side;
 
 }
 
 
-// =====================================================
-// RENDER HEADER
-// =====================================================
+// ============================================================
+// RENDER TITLE
+// ============================================================
 
-function renderHeader(state) {
+function renderTitle() {
 
-    const title =
-        document.getElementById(
-            "title"
-        );
+    const titleElement =
+        getElement("title");
 
 
-    const updated =
-        document.getElementById(
-            "updated"
-        );
+    if (titleElement) {
 
-
-    if (title) {
-
-        title.textContent =
-            state.title;
+        titleElement.textContent =
+            tournament.title ||
+            "TURNAMEN PD AMPG BANTEN";
 
     }
 
 
-    if (updated) {
-
-        if (state.updatedAt) {
-
-            updated.textContent =
-                "Terakhir diperbarui: " +
-                new Date(
-                    state.updatedAt
-                ).toLocaleString(
-                    "id-ID"
-                );
-
-        } else {
-
-            updated.textContent =
-                "Belum ada pembaruan.";
-
-        }
-
-    }
-
-}
+    const updatedElement =
+        getElement("updated");
 
 
-// =====================================================
-// RENDER BRACKET
-// =====================================================
-
-function renderBracket(state) {
-
-    const bracket =
-        document.getElementById(
-            "bracket"
-        );
-
-
-    if (!bracket) {
-
-        console.error(
-            "Element #bracket tidak ditemukan."
-        );
+    if (!updatedElement) {
 
         return;
 
     }
 
 
-    let html = "";
+    if (!tournament.updatedAt) {
 
+        updatedElement.textContent =
+            "Belum ada pembaruan.";
 
-    for (
-        const [round, roundName]
-        of Object.entries(ROUND_NAMES)
-    ) {
-
-        html += `
-
-            <section
-                class="round"
-                data-round="${round}"
-            >
-
-                <div class="round-header">
-
-    <div class="round-title">
-
-        <h3>
-            ${roundName}
-        </h3>
-
-        <span class="round-subtitle">
-
-            ${
-                round === "r1"
-                    ? "20 PAIR"
-                    : round === "r2"
-                    ? "10 PAIR"
-                    : round === "r3"
-                    ? "5 PAIR"
-                    : round === "r4"
-                    ? "SEMI FINAL"
-                    : "FINAL"
-            }
-
-        </span>
-
-    </div>
-
-</div>
-
-
-                <div class="matches">
-
-        `;
-
-
-        state.matches[round]
-            .forEach(
-                (match, index) => {
-
-                    const teamA =
-                        getParticipant(
-                            state,
-                            round,
-                            index,
-                            "a"
-                        );
-
-
-                    const teamB =
-                        getParticipant(
-                            state,
-                            round,
-                            index,
-                            "b"
-                        );
-
-
-                    const winnerA =
-                        match.winner === "a";
-
-
-                    const winnerB =
-                        match.winner === "b";
-
-
-                    html += `
-
-                        <article
-                            class="match"
-                        >
-
-                            <div
-                                class="match-number"
-                            >
-                                Match ${index + 1}
-                            </div>
-
-
-                            <!-- =================================
-                                 TEAM A
-                            ================================== -->
-
-                            <div
-                                class="
-                                    team
-                                    ${winnerA ? "win" : ""}
-                                "
-                            >
-
-                                <span
-                                    class="
-                                        team-name
-                                        ${
-                                            teamA === "—"
-                                                ? "empty"
-                                                : ""
-                                        }
-                                    "
-                                >
-                                    ${escapeHtml(teamA)}
-                                </span>
-
-
-                                <strong>
-                                    ${escapeHtml(match.sa)}
-                                </strong>
-
-                            </div>
-
-
-                            <!-- =================================
-                                 TEAM B
-                            ================================== -->
-
-                            <div
-                                class="
-                                    team
-                                    ${winnerB ? "win" : ""}
-                                "
-                            >
-
-                                <span
-                                    class="
-                                        team-name
-                                        ${
-                                            teamB === "—"
-                                                ? "empty"
-                                                : ""
-                                        }
-                                    "
-                                >
-                                    ${escapeHtml(teamB)}
-                                </span>
-
-
-                                <strong>
-                                    ${escapeHtml(match.sb)}
-                                </strong>
-
-                            </div>
-
-                        </article>
-
-                    `;
-
-                }
-            );
-
-
-        html += `
-
-                </div>
-
-            </section>
-
-        `;
+        return;
 
     }
 
 
-    bracket.innerHTML =
-        html;
+    const date =
+        new Date(
+            tournament.updatedAt
+        );
+
+
+    if (
+        Number.isNaN(
+            date.getTime()
+        )
+    ) {
+
+        updatedElement.textContent =
+            "Belum ada pembaruan.";
+
+        return;
+
+    }
+
+
+    updatedElement.textContent =
+        "Terakhir diperbarui: " +
+        date.toLocaleString(
+            "id-ID",
+            {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+            }
+        );
 
 }
 
 
-// =====================================================
-// LIVE STATUS
-// =====================================================
+// ============================================================
+// RENDER STATUS
+// ============================================================
 
-function setStatus(
-    online
+function setLiveStatus(
+    online = true
 ) {
 
     const status =
-        document.getElementById(
-            "status"
-        );
+        getElement("status");
 
 
     if (!status) {
+
         return;
+
     }
 
 
@@ -710,71 +607,362 @@ function setStatus(
 }
 
 
-// =====================================================
-// RENDER SEMUA
-// =====================================================
+// ============================================================
+// RENDER MATCH
+// ============================================================
 
-function render(state) {
+function renderMatch(
+    round,
+    matchIndex
+) {
 
-    renderHeader(state);
+    const match =
+        tournament.matches?.[round]?.[matchIndex] ||
+        {};
 
-    renderBracket(state);
+
+    const teamA =
+        getParticipant(
+            round,
+            matchIndex,
+            "a"
+        );
+
+
+    const teamB =
+        getParticipant(
+            round,
+            matchIndex,
+            "b"
+        );
+
+
+    const winnerA =
+        isWinner(
+            round,
+            matchIndex,
+            "a"
+        );
+
+
+    const winnerB =
+        isWinner(
+            round,
+            matchIndex,
+            "b"
+        );
+
+
+    const scoreA =
+        match.sa ?? "";
+
+
+    const scoreB =
+        match.sb ?? "";
+
+
+    const emptyA =
+        teamA === "—";
+
+
+    const emptyB =
+        teamB === "—";
+
+
+    return `
+
+        <article class="match">
+
+            <div class="match-number">
+
+                MATCH ${matchIndex + 1}
+
+            </div>
+
+
+            <div
+                class="team ${winnerA ? "win" : ""}"
+            >
+
+                <span
+                    class="team-name ${
+                        emptyA
+                            ? "empty"
+                            : ""
+                    }"
+                >
+
+                    ${escapeHTML(teamA)}
+
+                </span>
+
+
+                <strong>
+
+                    ${escapeHTML(scoreA)}
+
+                </strong>
+
+            </div>
+
+
+            <div
+                class="team ${winnerB ? "win" : ""}"
+            >
+
+                <span
+                    class="team-name ${
+                        emptyB
+                            ? "empty"
+                            : ""
+                    }"
+                >
+
+                    ${escapeHTML(teamB)}
+
+                </span>
+
+
+                <strong>
+
+                    ${escapeHTML(scoreB)}
+
+                </strong>
+
+            </div>
+
+        </article>
+
+    `;
 
 }
 
 
-// =====================================================
-// FIREBASE REALTIME
-// =====================================================
+// ============================================================
+// RENDER ROUND
+// ============================================================
 
-onValue(
+function renderRound(
+    round
+) {
 
-    tournamentRef,
+    const config =
+        ROUND_CONFIG[round];
 
-    snapshot => {
 
-        const state =
-            normalizeData(
-                snapshot.val()
+    if (!config) {
+
+        return "";
+
+    }
+
+
+    let matchesHTML = "";
+
+
+    for (
+        let index = 0;
+        index < config.matches;
+        index++
+    ) {
+
+        matchesHTML +=
+            renderMatch(
+                round,
+                index
             );
 
-
-        render(state);
-
-        setStatus(true);
+    }
 
 
-        console.log(
-            "✓ Data bracket diperbarui."
+    return `
+
+        <section
+            class="round round-${round}"
+        >
+
+            <div class="round-header">
+
+                <div class="round-title">
+
+                    <h3>
+
+                        ${config.title}
+
+                    </h3>
+
+
+                    <span class="round-subtitle">
+
+                        ${config.subtitle}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="matches">
+
+                ${matchesHTML}
+
+            </div>
+
+        </section>
+
+    `;
+
+}
+
+
+// ============================================================
+// RENDER BRACKET
+// ============================================================
+
+function renderBracket() {
+
+    const bracket =
+        getElement("bracket");
+
+
+    if (!bracket) {
+
+        console.error(
+            "Element #bracket tidak ditemukan."
         );
+
+        return;
+
+    }
+
+
+    bracket.innerHTML = `
+
+        ${renderRound("r1")}
+
+        ${renderRound("r2")}
+
+        ${renderRound("r3")}
+
+        ${renderRound("r4")}
+
+        ${renderRound("r5")}
+
+    `;
+
+}
+
+
+// ============================================================
+// RENDER SEMUA
+// ============================================================
+
+function render() {
+
+    renderTitle();
+
+    renderBracket();
+
+}
+
+
+// ============================================================
+// FIREBASE REALTIME LISTENER
+// ============================================================
+
+onValue(
+    tournamentRef,
+    snapshot => {
+
+        try {
+
+            const data =
+                snapshot.val();
+
+
+            tournament =
+                normalizeData(
+                    data
+                );
+
+
+            render();
+
+            setLiveStatus(true);
+
+
+            console.log(
+                "Firebase data diterima:",
+                tournament
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Gagal membaca data Firebase:",
+                error
+            );
+
+            setLiveStatus(false);
+
+        }
 
     },
 
     error => {
 
         console.error(
-            "FIREBASE DATABASE ERROR:",
+            "Firebase Realtime Database error:",
             error
         );
 
-
-        const state =
-            defaultState();
-
-
-        render(state);
-
-        setStatus(false);
+        setLiveStatus(false);
 
     }
-
 );
 
 
-// =====================================================
-// START
-// =====================================================
+// ============================================================
+// ERROR HANDLER
+// ============================================================
+
+window.addEventListener(
+    "error",
+    event => {
+
+        console.error(
+            "Application Error:",
+            event.error
+        );
+
+    }
+);
+
+
+// ============================================================
+// INITIAL RENDER
+// ============================================================
+
+render();
+
+
+// ============================================================
+// DEBUG
+// ============================================================
 
 console.log(
-    "✓ app.js — Bracket Publik LIVE aktif."
+    "======================================"
+);
+
+console.log(
+    "PD AMPG BANTEN - PUBLIC BRACKET"
+);
+
+console.log(
+    "Firebase Realtime Database aktif"
+);
+
+console.log(
+    "======================================"
 );
