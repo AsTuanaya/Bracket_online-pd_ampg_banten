@@ -10,14 +10,19 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>
-        Turnamen PD AMPG Banten
-    </title>
+    <meta
+        name="theme-color"
+        content="#092957"
+    >
 
     <meta
         name="description"
-        content="Turnamen PD AMPG Banten - Bracket Turnamen Online"
+        content="Bracket Turnamen Online PD AMPG Banten"
     >
+
+    <title>
+        Turnamen PD AMPG Banten
+    </title>
 
     <link
         rel="stylesheet"
@@ -52,19 +57,21 @@
         </div>
 
 
-        <!-- JUDUL -->
+        <!-- TITLE -->
 
         <div class="main-heading">
+
+            <div class="eyebrow">
+                BRACKET TURNAMEN ONLINE
+            </div>
 
             <h1>
                 TURNAMEN PD AMPG BANTEN
             </h1>
 
-            <hr style="border: none; border-top: 2px solid #ccc; width: 50%; margin: 15px auto;">
-                <div class="subtitle" style="text-align: center;"> BRACKET TURNAMEN ONLINE </div>
-            <hr style="border: none; border-top: 2px solid #ccc; width: 50%; margin: 15px auto;">
-
-
+            <p>
+                Perjalanan 20 Pair Menuju Juara
+            </p>
 
         </div>
 
@@ -75,10 +82,9 @@
 
             <div
                 id="status"
-                class="live-status"
+                class="status online"
             >
-                <span class="live-dot"></span>
-                LIVE
+                ● LIVE
             </div>
 
 
@@ -87,7 +93,9 @@
                 class="admin-button"
             >
                 ⚙
-                <span>Panel Panitia</span>
+                <span>
+                    Panel Panitia
+                </span>
             </a>
 
         </div>
@@ -99,16 +107,38 @@
 
 
 <!-- =====================================================
-     INFORMASI TURNAMEN
+     INFO TURNAMEN
 ====================================================== -->
 
 <section class="tournament-card">
+
+    <div class="tournament-card-title">
+
+        <div class="trophy">
+            🏆
+        </div>
+
+        <div>
+
+            <h2 id="title">
+                TURNAMEN PD AMPG BANTEN
+            </h2>
+
+            <p>
+                Bracket Turnamen Online
+            </p>
+
+        </div>
+
+    </div>
+
 
     <div
         id="updated"
         class="updated"
     >
         Terakhir diperbarui:
+        menunggu data...
     </div>
 
 </section>
@@ -121,26 +151,14 @@
 
 <main class="bracket-container">
 
-    <div
-        id="bracket-wrapper"
-        class="bracket-wrapper"
-    >
-
-        <!-- GARIS CONNECTOR -->
-
-        <svg
-            id="bracket-lines"
-            class="bracket-lines"
-            aria-hidden="true"
-        ></svg>
-
-
-        <!-- KOLOM BRACKET -->
+    <div class="bracket-scroll">
 
         <div
             id="bracket"
             class="bracket"
         >
+
+            <!-- APP.JS AKAN MENGISI DI SINI -->
 
         </div>
 
@@ -149,20 +167,31 @@
 </main>
 
 
+
 <!-- =====================================================
      FOOTER
 ====================================================== -->
 
 <footer class="site-footer">
 
-    Turnamen PD AMPG Banten
+    <strong>
+        PD AMPG Banten
+    </strong>
+
+    <span>•</span>
+
+    Bracket Turnamen Online
+
+    <span>•</span>
+
+    Live Realtime
 
 </footer>
 
 
 
 <!-- =====================================================
-     APP
+     FIREBASE APP
 ====================================================== -->
 
 <script
