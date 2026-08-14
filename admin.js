@@ -1,8 +1,7 @@
-// =====================================================
+// ============================================================
 // ADMIN.JS
-// PANEL PANITIA
-// PD AMPG BANTEN
-// =====================================================
+// PANEL PANITIA - TURNAMEN PD AMPG BANTEN
+// ============================================================
 
 import {
     initializeApp
@@ -17,8 +16,9 @@ import {
 
 import {
     getAuth,
-    onAuthStateChanged,
-    signOut
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
 import {
@@ -26,9 +26,9 @@ import {
 } from "./firebase-config.js";
 
 
-// =====================================================
+// ============================================================
 // FIREBASE
-// =====================================================
+// ============================================================
 
 const app = initializeApp(firebaseConfig);
 
@@ -36,101 +36,69 @@ const db = getDatabase(app);
 
 const auth = getAuth(app);
 
-const tournamentRef = ref(db, "tournament");
+const tournamentRef =
+    ref(db, "tournament");
 
 
-// =====================================================
+// ============================================================
 // KONFIGURASI BRACKET
-// =====================================================
+// ============================================================
 
-const R = {
-    r1: 10,
-    r2: 5,
-    r3: 5,
-    r4: 2,
-    r5: 1
+const ROUND_CONFIG = {
+
+    r1: {
+        title: "ROUND 1",
+        subtitle: "20 PAIR",
+        matches: 10
+    },
+
+    r2: {
+        title: "ROUND 2",
+        subtitle: "10 PAIR",
+        matches: 5
+    },
+
+    r3: {
+        title: "ROUND 3",
+        subtitle: "5 PAIR",
+        matches: 5
+    },
+
+    r4: {
+        title: "ROUND 4",
+        subtitle: "SEMI FINAL",
+        matches: 2
+    },
+
+    r5: {
+        title: "ROUND 5",
+        subtitle: "FINAL",
+        matches: 1
+    }
+
 };
 
-const ROUND_NAMES = {
-    r1: "ROUND 1",
-    r2: "ROUND 2",
-    r3: "ROUND 3",
-    r4: "SEMIFINAL",
-    r5: "FINAL"
-};
 
-
-// =====================================================
-// ELEMENT HTML
-// =====================================================
-
-const titleInput =
-    document.getElementById("titleInput");
-
-const teamsEl =
-    document.getElementById("teams");
-
-const matchesEl =
-    document.getElementById("matches");
-
-const saveBtn =
-    document.getElementById("saveBtn");
-
-const resetBtn =
-    document.getElementById("resetBtn");
-
-const logoutBtn =
-    document.getElementById("logoutBtn");
-
-const messageEl =
-    document.getElementById("message");
-
-
-// =====================================================
-// STATE
-// =====================================================
-
-let state = createDefaultState();
-
-let authenticated = false;
-
-
-// =====================================================
-// DEFAULT MATCH
-// =====================================================
+// ============================================================
+// DATA DEFAULT
+// ============================================================
 
 function createMatch() {
 
     return {
-        teamA: "",
-        teamB: "",
+
         sa: "",
+
         sb: "",
+
         winner: null
+
     };
 
 }
 
 
-// =====================================================
-// DEFAULT MATCHES
-// =====================================================
-
-function createMatches(count) {
-
-    return Array.from(
-        { length: count },
-        () => createMatch()
-    );
-
-}
-
-
-// =====================================================
-// DEFAULT STATE
-// =====================================================
-
-function createDefaultState() {
+function createDefaultData() {
 
     return {
 
@@ -138,25 +106,55 @@ function createDefaultState() {
             "Turnamen PD AMPG Banten",
 
         teams:
-            
             Array.from(
-    {
-        length: 20
-    },
-    (_, i) => "PAIR " + (i + 1)
-)
+                {
+                    length: 20
+                },
+                (_, index) =>
+                    `PAIR ${index + 1}`
+            ),
 
         matches: {
 
-            r1: createMatches(20),
+            r1:
+                Array.from(
+                    {
+                        length: 10
+                    },
+                    createMatch
+                ),
 
-            r2: createMatches(10),
+            r2:
+                Array.from(
+                    {
+                        length: 5
+                    },
+                    createMatch
+                ),
 
-            r3: createMatches(5),
+            r3:
+                Array.from(
+                    {
+                        length: 5
+                    },
+                    createMatch
+                ),
 
-            r4: createMatches(2),
+            r4:
+                Array.from(
+                    {
+                        length: 2
+                    },
+                    createMatch
+                ),
 
-            r5: createMatches(1)
+            r5:
+                Array.from(
+                    {
+                        length: 1
+                    },
+                    createMatch
+                )
 
         },
 
@@ -167,64 +165,89 @@ function createDefaultState() {
 }
 
 
-// =====================================================
+// ============================================================
 // NORMALIZE DATA
-// =====================================================
+// ============================================================
 
 function normalizeData(data) {
 
-    const result =
-        data || createDefaultState();
+    const defaults =
+        createDefaultData();
+
+    const source =
+        data || {};
+
+    const result = {
+
+        title:
+            source.title ||
+            defaults.title,
+
+        teams: [],
+
+        matches: {},
+
+        updatedAt:
+            source.updatedAt ||
+            null
+
+    };
 
 
-    result.title =
-        result.title ||
-        "Turnamen PD AMPG Banten";
-
+    // ========================================================
+    // HANYA 20 PAIR
+    // ========================================================
 
     result.teams =
         Array.from(
-            { length: 20 },
-            (_, i) =>
-                result.teams?.[i] ||
-                `PAIR ${i + 1}`
+            {
+                length: 20
+            },
+            (_, index) => {
+
+                return (
+                    source.teams?.[index] ||
+                    `PAIR ${index + 1}`
+                );
+
+            }
         );
 
 
-    result.matches =
-        result.matches || {};
-
+    // ========================================================
+    // MATCH
+    // ========================================================
 
     for (
-        const [round, count]
-        of Object.entries(ROUNDS)
+        const [round, config]
+        of Object.entries(ROUND_CONFIG)
     ) {
 
         result.matches[round] =
             Array.from(
-                { length: count },
-                (_, i) => {
+                {
+                    length: config.matches
+                },
+                (_, index) => {
 
-                    const old =
-                        result.matches?.[round]?.[i];
-
+                    const oldMatch =
+                        source
+                            .matches
+                            ?. [round]
+                            ?. [index] ||
+                        {};
 
                     return {
 
-                        teamA:
-                            old?.teamA ?? "",
-
-                        teamB:
-                            old?.teamB ?? "",
-
                         sa:
-                            old?.sa ?? "",
+                            oldMatch.sa ?? "",
 
                         sb:
-                            old?.sb ?? "",
+                            oldMatch.sb ?? "",
 
                         winner:
-                            old?.winner ?? null
+                            oldMatch.winner ??
+                            null
 
                     };
 
@@ -239,100 +262,69 @@ function normalizeData(data) {
 }
 
 
-// =====================================================
-// ESCAPE HTML
-// =====================================================
+// ============================================================
+// STATE
+// ============================================================
 
-function escapeHtml(value) {
+let state =
+    createDefaultData();
 
-    return String(value ?? "")
-        .replace(
-            /[&<>"']/g,
-            char => {
 
-                const map = {
+// ============================================================
+// ELEMENT HELPER
+// ============================================================
 
-                    "&": "&amp;",
+function $(id) {
 
-                    "<": "&lt;",
-
-                    ">": "&gt;",
-
-                    '"': "&quot;",
-
-                    "'": "&#39;"
-
-                };
-
-                return map[char];
-
-            }
-        );
+    return document.getElementById(id);
 
 }
 
 
-// =====================================================
-// GET AUTOMATIC PARTICIPANT
-//
-// Hanya mengambil nama dari ronde sebelumnya.
-// Tidak memperhatikan teamA/teamB manual.
-// =====================================================
+// ============================================================
+// ESCAPE HTML
+// ============================================================
 
-function getAutomaticParticipant(
-    round,
+function escapeHTML(value) {
+
+    return String(
+        value ?? ""
+    ).replace(
+        /[&<>"']/g,
+        character => {
+
+            const map = {
+
+                "&": "&amp;",
+
+                "<": "&lt;",
+
+                ">": "&gt;",
+
+                '"': "&quot;",
+
+                "'": "&#039;"
+
+            };
+
+            return map[character];
+
+        }
+    );
+
+}
+
+
+// ============================================================
+// GET TEAM ROUND 1
+// ============================================================
+
+function getRound1Team(
     matchIndex,
     side
 ) {
 
-    // =============================================
-    // ROUND 1
-    // =============================================
-
-    if (round === "r1") {
-
-        const index =
-            matchIndex * 2 +
-            (
-                side === "a"
-                    ? 0
-                    : 1
-            );
-
-
-        return (
-            state.teams[index] ||
-            `PAIR ${index + 1}`
-        );
-
-    }
-
-
-    // =============================================
-    // RONDE SEBELUMNYA
-    // =============================================
-
-    const previousRound = {
-
-        r2: "r1",
-
-        r3: "r2",
-
-        r4: "r3",
-
-        r5: "r4"
-
-    }[round];
-
-
-    if (!previousRound) {
-
-        return "—";
-
-    }
-
-
-    const previousMatchIndex =
+    const index =
         matchIndex * 2 +
         (
             side === "a"
@@ -341,17 +333,283 @@ function getAutomaticParticipant(
         );
 
 
-    const previousMatch =
-        state.matches
-            ?.[
-                previousRound
-            ]
-            ?.[previousMatchIndex];
+    if (
+        index < 0 ||
+        index >= 20
+    ) {
+
+        return "—";
+
+    }
+
+
+    return (
+        state.teams[index] ||
+        `PAIR ${index + 1}`
+    );
+
+}
+
+
+// ============================================================
+// GET WINNER
+// ============================================================
+
+function getWinner(
+    round,
+    matchIndex
+) {
+
+    const match =
+        state.matches?.[round]?.[matchIndex];
 
 
     if (
-        !previousMatch ||
-        !previousMatch.winner
+        !match ||
+        !match.winner
+    ) {
+
+        return null;
+
+    }
+
+
+    return match.winner;
+
+}
+
+
+// ============================================================
+// GET PARTICIPANT
+// ============================================================
+
+function getParticipant(
+    round,
+    matchIndex,
+    side
+) {
+
+    // --------------------------------------------------------
+    // ROUND 1
+    // --------------------------------------------------------
+
+    if (round === "r1") {
+
+        return getRound1Team(
+            matchIndex,
+            side
+        );
+
+    }
+
+
+    // --------------------------------------------------------
+    // ROUND 2
+    // --------------------------------------------------------
+
+    if (round === "r2") {
+
+        const sourceMatch =
+            matchIndex;
+
+
+        const participant =
+            side === "a"
+                ? getWinner(
+                    "r1",
+                    sourceMatch * 2
+                )
+                : getWinner(
+                    "r1",
+                    sourceMatch * 2 + 1
+                );
+
+
+        if (!participant) {
+
+            return "—";
+
+        }
+
+
+        const sourceIndex =
+            side === "a"
+                ? sourceMatch * 2
+                : sourceMatch * 2 + 1;
+
+
+        const winnerMatch =
+            state.matches.r1[
+                sourceIndex
+            ];
+
+
+        return participant === "a"
+            ? getRound1Team(
+                sourceIndex,
+                "a"
+            )
+            : getRound1Team(
+                sourceIndex,
+                "b"
+            );
+
+    }
+
+
+    // --------------------------------------------------------
+    // ROUND 3
+    // --------------------------------------------------------
+
+    if (round === "r3") {
+
+        const sourceA =
+            matchIndex * 2;
+
+        const sourceB =
+            matchIndex * 2 + 1;
+
+
+        if (
+            sourceA >= 5
+        ) {
+
+            return "—";
+
+        }
+
+
+        const winnerA =
+            state.matches.r2?.[
+                sourceA
+            ]?.winner;
+
+
+        const winnerB =
+            state.matches.r2?.[
+                sourceB
+            ]?.winner;
+
+
+        if (
+            side === "a" &&
+            winnerA
+        ) {
+
+            return getWinnerName(
+                "r2",
+                sourceA
+            );
+
+        }
+
+
+        if (
+            side === "b" &&
+            winnerB
+        ) {
+
+            return getWinnerName(
+                "r2",
+                sourceB
+            );
+
+        }
+
+
+        return "—";
+
+    }
+
+
+    // --------------------------------------------------------
+    // ROUND 4
+    // --------------------------------------------------------
+
+    if (round === "r4") {
+
+        const sourceA =
+            matchIndex * 2;
+
+        const sourceB =
+            matchIndex * 2 + 1;
+
+
+        if (
+            side === "a"
+        ) {
+
+            return getWinnerName(
+                "r3",
+                sourceA
+            );
+
+        }
+
+
+        return getWinnerName(
+            "r3",
+            sourceB
+        );
+
+    }
+
+
+    // --------------------------------------------------------
+    // ROUND 5
+    // --------------------------------------------------------
+
+    if (round === "r5") {
+
+        if (side === "a") {
+
+            return getWinnerName(
+                "r4",
+                0
+            );
+
+        }
+
+
+        return getWinnerName(
+            "r4",
+            1
+        );
+
+    }
+
+
+    return "—";
+
+}
+
+
+// ============================================================
+// GET WINNER NAME
+// ============================================================
+
+function getWinnerName(
+    round,
+    matchIndex
+) {
+
+    const match =
+        state.matches?.[round]?.[matchIndex];
+
+
+    if (
+        !match ||
+        !match.winner
+    ) {
+
+        return "—";
+
+    }
+
+
+    if (
+        match.winner !== "a" &&
+        match.winner !== "b"
     ) {
 
         return "—";
@@ -360,473 +618,322 @@ function getAutomaticParticipant(
 
 
     return getParticipant(
-        previousRound,
-        previousMatchIndex,
-        previousMatch.winner
-    );
-
-}
-
-
-// =====================================================
-// GET PARTICIPANT
-//
-// teamA/teamB manual mempunyai prioritas.
-// Jika kosong → otomatis dari ronde sebelumnya.
-// =====================================================
-
-function getParticipant(
-    round,
-    matchIndex,
-    side
-) {
-
-    const match =
-        state.matches
-            ?.[
-                round
-            ]
-            ?.[matchIndex];
-
-
-    if (match) {
-
-        if (
-            side === "a" &&
-            match.teamA?.trim()
-        ) {
-
-            return match.teamA.trim();
-
-        }
-
-
-        if (
-            side === "b" &&
-            match.teamB?.trim()
-        ) {
-
-            return match.teamB.trim();
-
-        }
-
-    }
-
-
-    return getAutomaticParticipant(
         round,
         matchIndex,
-        side
+        match.winner
     );
 
 }
 
 
-// =====================================================
-// RENDER DAFTAR PAIR ROUND 1
-// =====================================================
+// ============================================================
+// RENDER TEAMS
+// ============================================================
 
 function renderTeams() {
 
-    teamsEl.innerHTML =
-        state.teams
-            .map(
-                (team, index) => {
+    const container =
+        $("teams");
 
-                    return `
+    if (!container) {
 
-                        <div
-                            class="admin-team-row"
-                        >
+        return;
 
-                            <span
-                                class="admin-team-number"
-                            >
-                                ${index + 1}
-                            </span>
+    }
 
 
-                            <input
-                                type="text"
-                                data-team="${index}"
-                                value="${escapeHtml(team)}"
-                                placeholder="PAIR ${index + 1}"
-                            >
-
-                        </div>
-
-                    `;
-
-                }
-            )
-            .join("");
-
-}
+    container.innerHTML = "";
 
 
-// =====================================================
-// RENDER MATCHES
-// =====================================================
+    state.teams.forEach(
+        (team, index) => {
 
-function renderMatches() {
+            const row =
+                document.createElement(
+                    "div"
+                );
 
-    let html = "";
+            row.className =
+                "team-edit";
 
 
-    for (
-        const [round, count]
-        of Object.entries(ROUNDS)
-    ) {
+            row.innerHTML = `
 
-        html += `
-
-            <div class="admin-round">
-
-                <div
-                    class="admin-round-header"
-                >
-
-                    <strong>
-                        ${ROUND_NAMES[round]}
-                    </strong>
-
-                    <span>
-                        ${count} Match
-                    </span>
-
+                <div class="team-number">
+                    ${index + 1}
                 </div>
 
-        `;
-
-
-        for (
-            let i = 0;
-            i < count;
-            i++
-        ) {
-
-            const match =
-                state.matches[round][i];
-
-
-            const automaticA =
-                getAutomaticParticipant(
-                    round,
-                    i,
-                    "a"
-                );
-
-
-            const automaticB =
-                getAutomaticParticipant(
-                    round,
-                    i,
-                    "b"
-                );
-
-
-            const teamA =
-                getParticipant(
-                    round,
-                    i,
-                    "a"
-                );
-
-
-            const teamB =
-                getParticipant(
-                    round,
-                    i,
-                    "b"
-                );
-
-
-            html += `
-
-                <div
-                    class="admin-match"
+                <input
+                    type="text"
+                    class="team-input"
+                    data-team-index="${index}"
+                    value="${escapeHTML(team)}"
+                    placeholder="PAIR ${index + 1}"
                 >
-
-                    <div
-                        class="admin-match-title"
-                    >
-                        ${ROUND_NAMES[round]}
-                        — Match ${i + 1}
-                    </div>
-
-
-                    <!-- =================================
-                         PEMAIN KIRI
-                    ================================== -->
-
-                    <div
-                        class="admin-score-grid"
-                    >
-
-                        <div
-                            class="admin-player"
-                        >
-
-                            <input
-                                type="text"
-                                data-participant="${round}.${i}.teamA"
-                                value="${escapeHtml(teamA)}"
-                                placeholder="Nama Pair kiri"
-                            >
-
-
-                            <input
-                                type="number"
-                                min="0"
-                                data-score="${round}.${i}.sa"
-                                value="${escapeHtml(match.sa)}"
-                                placeholder="0"
-                            >
-
-                        </div>
-
-
-                        <!-- VS -->
-
-                        <div
-                            class="admin-vs"
-                        >
-                            VS
-                        </div>
-
-
-                        <!-- =================================
-                             PEMAIN KANAN
-                        ================================== -->
-
-                        <div
-                            class="admin-player"
-                        >
-
-                            <input
-                                type="number"
-                                min="0"
-                                data-score="${round}.${i}.sb"
-                                value="${escapeHtml(match.sb)}"
-                                placeholder="0"
-                            >
-
-
-                            <input
-                                type="text"
-                                data-participant="${round}.${i}.teamB"
-                                value="${escapeHtml(teamB)}"
-                                placeholder="Nama Pair kanan"
-                            >
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- =================================
-                         INFO OTOMATIS
-                    ================================== -->
-
-                    ${
-                        round !== "r1"
-                        ? `
-
-                            <div
-                                class="automatic-info"
-                            >
-                                Otomatis:
-                                ${escapeHtml(automaticA)}
-                                vs
-                                ${escapeHtml(automaticB)}
-                            </div>
-
-                        `
-                        : ""
-                    }
-
-
-                    <!-- =================================
-                         PEMENANG
-                    ================================== -->
-
-                    <div
-                        class="admin-winner"
-                    >
-
-                        <label>
-                            Pemenang
-                        </label>
-
-
-                        <select
-                            data-winner="${round}.${i}"
-                        >
-
-                            <option value="">
-                                Belum dipilih
-                            </option>
-
-
-                            <option
-                                value="a"
-                                ${
-                                    match.winner === "a"
-                                        ? "selected"
-                                        : ""
-                                }
-                            >
-                                ${escapeHtml(teamA)}
-                            </option>
-
-
-                            <option
-                                value="b"
-                                ${
-                                    match.winner === "b"
-                                        ? "selected"
-                                        : ""
-                                }
-                            >
-                                ${escapeHtml(teamB)}
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                </div>
 
             `;
 
+
+            container.appendChild(
+                row
+            );
+
         }
-
-
-        html += `
-
-            </div>
-
-        `;
-
-    }
-
-
-    matchesEl.innerHTML =
-        html;
-
-}
-
-
-// =====================================================
-// RENDER SEMUA
-// =====================================================
-
-function render() {
-
-    if (!titleInput) {
-        return;
-    }
-
-
-    titleInput.value =
-        state.title;
-
-
-    renderTeams();
-
-    renderMatches();
-
-}
-
-
-// =====================================================
-// PESAN
-// =====================================================
-
-function showMessage(
-    text,
-    error = false
-) {
-
-    if (!messageEl) {
-        return;
-    }
-
-
-    messageEl.textContent =
-        text;
-
-
-    messageEl.className =
-        error
-            ? "dashboard-message error"
-            : "dashboard-message success";
-
-
-    setTimeout(
-        () => {
-
-            messageEl.textContent =
-                "";
-
-        },
-        4000
     );
 
 }
 
 
-// =====================================================
-// AMBIL NILAI INPUT
-// =====================================================
+// ============================================================
+// RENDER MATCHES
+// ============================================================
 
-function collectFormData() {
+function renderMatches() {
 
-    const next =
-        normalizeData(
-            JSON.parse(
-                JSON.stringify(state)
-            )
+    const container =
+        $("matches");
+
+    if (!container) {
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    for (
+        const [
+            round,
+            config
+        ]
+        of Object.entries(
+            ROUND_CONFIG
+        )
+    ) {
+
+        const roundTitle =
+            document.createElement(
+                "div"
+            );
+
+        roundTitle.className =
+            "admin-round-title";
+
+
+        roundTitle.innerHTML = `
+
+            <div>
+                ${config.title}
+            </div>
+
+            <small>
+                ${config.subtitle}
+            </small>
+
+        `;
+
+
+        container.appendChild(
+            roundTitle
         );
 
 
-    // =============================================
-    // TITLE
-    // =============================================
+        for (
+            let index = 0;
+            index < config.matches;
+            index++
+        ) {
 
-    next.title =
-        titleInput.value.trim() ||
-        "Turnamen PD AMPG Banten";
+            renderMatch(
+                container,
+                round,
+                index
+            );
+
+        }
+
+    }
+
+}
 
 
-    // =============================================
-    // ROUND 1 TEAMS
-    // =============================================
+// ============================================================
+// RENDER ONE MATCH
+// ============================================================
+
+function renderMatch(
+    container,
+    round,
+    index
+) {
+
+    const match =
+        state.matches[round][index];
+
+
+    const teamA =
+        getParticipant(
+            round,
+            index,
+            "a"
+        );
+
+
+    const teamB =
+        getParticipant(
+            round,
+            index,
+            "b"
+        );
+
+
+    const card =
+        document.createElement(
+            "div"
+        );
+
+
+    card.className =
+        "admin-match";
+
+
+    card.innerHTML = `
+
+        <div class="admin-match-header">
+
+            <strong>
+                ${ROUND_CONFIG[round].title}
+            </strong>
+
+            <span>
+                Match ${index + 1}
+            </span>
+
+        </div>
+
+
+        <div class="admin-team-row">
+
+            <div class="admin-team-name">
+                ${escapeHTML(teamA)}
+            </div>
+
+            <input
+                type="text"
+                class="score-input"
+                data-score="${round}.${index}.sa"
+                value="${escapeHTML(match.sa)}"
+                placeholder="Skor"
+            >
+
+        </div>
+
+
+        <div class="admin-team-row">
+
+            <div class="admin-team-name">
+                ${escapeHTML(teamB)}
+            </div>
+
+            <input
+                type="text"
+                class="score-input"
+                data-score="${round}.${index}.sb"
+                value="${escapeHTML(match.sb)}"
+                placeholder="Skor"
+            >
+
+        </div>
+
+
+        <div class="winner-row">
+
+            <label>
+                Pemenang
+            </label>
+
+            <select
+                data-winner="${round}.${index}"
+            >
+
+                <option
+                    value=""
+                    ${!match.winner ? "selected" : ""}
+                >
+                    Belum dipilih
+                </option>
+
+                <option
+                    value="a"
+                    ${match.winner === "a" ? "selected" : ""}
+                >
+                    ${escapeHTML(teamA)}
+                </option>
+
+                <option
+                    value="b"
+                    ${match.winner === "b" ? "selected" : ""}
+                >
+                    ${escapeHTML(teamB)}
+                </option>
+
+            </select>
+
+        </div>
+
+    `;
+
+
+    container.appendChild(
+        card
+    );
+
+}
+
+
+// ============================================================
+// UPDATE LOCAL STATE FROM FORM
+// ============================================================
+
+function collectFormData() {
+
+    // --------------------------------------------------------
+    // Teams
+    // --------------------------------------------------------
 
     document
         .querySelectorAll(
-            "[data-team]"
+            "[data-team-index]"
         )
         .forEach(
             input => {
 
                 const index =
                     Number(
-                        input.dataset.team
+                        input.dataset.teamIndex
                     );
 
 
-                next.teams[index] =
-                    input.value.trim() ||
-                    `PAIR ${index + 1}`;
+                if (
+                    index >= 0 &&
+                    index < 20
+                ) {
+
+                    state.teams[index] =
+                        input.value.trim() ||
+                        `PAIR ${index + 1}`;
+
+                }
 
             }
         );
 
 
-    // =============================================
-    // SCORES
-    // =============================================
+    // --------------------------------------------------------
+    // Scores
+    // --------------------------------------------------------
 
     document
         .querySelectorAll(
@@ -840,106 +947,19 @@ function collectFormData() {
                     index,
                     side
                 ] =
-                    input.dataset.score
+                    input
+                        .dataset
+                        .score
                         .split(".");
 
 
-                next.matches[
-                    round
-                ][
-                    Number(index)
-                ][side] =
-                    input.value.trim();
-
-            }
-        );
-
-
-    // =============================================
-    // NAMA PESERTA
-    //
-    // Jika nama input sama dengan nama otomatis,
-    // simpan sebagai kosong agar tetap otomatis.
-    //
-    // Jika berbeda → simpan manual.
-    // =============================================
-
-    document
-        .querySelectorAll(
-            "[data-participant]"
-        )
-        .forEach(
-            input => {
-
-                const [
-                    round,
-                    index,
-                    side
-                ] =
-                    input.dataset
-                        .participant
-                        .split(".");
-
-
-                const matchIndex =
-                    Number(index);
-
-
-                const value =
-                    input.value.trim();
-
-
-                const automatic =
-                    getAutomaticParticipant(
-                        round,
-                        matchIndex,
-                        side
-                    );
-
-
                 if (
-                    round === "r1"
+                    state.matches[round] &&
+                    state.matches[round][index]
                 ) {
 
-                    next.matches[
-                        round
-                    ][
-                        matchIndex
-                    ][
-                        side === "teamA"
-                            ? "teamA"
-                            : "teamB"
-                    ] = "";
-
-                    return;
-
-                }
-
-
-                const key =
-                    side === "teamA"
-                        ? "teamA"
-                        : "teamB";
-
-
-                if (
-                    !value ||
-                    value === automatic
-                ) {
-
-                    next.matches[
-                        round
-                    ][
-                        matchIndex
-                    ][key] = "";
-
-                } else {
-
-                    next.matches[
-                        round
-                    ][
-                        matchIndex
-                    ][key] = value;
+                    state.matches[round][index][side] =
+                        input.value.trim();
 
                 }
 
@@ -947,9 +967,9 @@ function collectFormData() {
         );
 
 
-    // =============================================
-    // WINNERS
-    // =============================================
+    // --------------------------------------------------------
+    // Winner
+    // --------------------------------------------------------
 
     document
         .querySelectorAll(
@@ -962,323 +982,496 @@ function collectFormData() {
                     round,
                     index
                 ] =
-                    select.dataset
+                    select
+                        .dataset
                         .winner
                         .split(".");
 
 
-                next.matches[
-                    round
-                ][
-                    Number(index)
-                ].winner =
-                    select.value ||
-                    null;
+                if (
+                    state.matches[round] &&
+                    state.matches[round][index]
+                ) {
+
+                    state.matches[round][index].winner =
+                        select.value ||
+                        null;
+
+                }
 
             }
         );
 
+}
 
-    // =============================================
-    // UPDATE TIME
-    // =============================================
 
-    next.updatedAt =
+// ============================================================
+// SAVE
+// ============================================================
+
+async function saveTournament() {
+
+    collectFormData();
+
+
+    state.updatedAt =
         Date.now();
 
 
-    return next;
-
-}
-
-
-// =====================================================
-// SAVE
-// =====================================================
-
-if (saveBtn) {
-
-    saveBtn.addEventListener(
-        "click",
-        async () => {
-
-            if (!authenticated) {
-
-                showMessage(
-                    "Sesi panitia tidak aktif.",
-                    true
-                );
-
-                return;
-
-            }
-
-
-            try {
-
-                saveBtn.disabled = true;
-
-                saveBtn.textContent =
-                    "⏳ MENYIMPAN...";
-
-
-                const next =
-                    collectFormData();
-
-
-                await set(
-                    tournamentRef,
-                    next
-                );
-
-
-                state =
-                    normalizeData(next);
-
-
-                render();
-
-
-                showMessage(
-                    "✓ Berhasil disimpan. Bracket publik langsung diperbarui."
-                );
-
-
-            } catch (error) {
-
-                console.error(
-                    "SAVE ERROR:",
-                    error
-                );
-
-
-                showMessage(
-                    "❌ Gagal menyimpan ke Firebase.",
-                    true
-                );
-
-            } finally {
-
-                saveBtn.disabled = false;
-
-                saveBtn.textContent =
-                    "💾 SIMPAN PERUBAHAN";
-
-            }
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// RESET
-// =====================================================
-
-if (resetBtn) {
-
-    resetBtn.addEventListener(
-        "click",
-        async () => {
-
-            if (!authenticated) {
-
-                showMessage(
-                    "Sesi panitia tidak aktif.",
-                    true
-                );
-
-                return;
-
-            }
-
-
-            const confirmed =
-                confirm(
-                    "Yakin ingin mereset seluruh bracket?"
-                );
-
-
-            if (!confirmed) {
-                return;
-            }
-
-
-            try {
-
-                resetBtn.disabled = true;
-
-
-                const next =
-                    createDefaultState();
-
-
-                next.updatedAt =
-                    Date.now();
-
-
-                await set(
-                    tournamentRef,
-                    next
-                );
-
-
-                state =
-                    next;
-
-
-                render();
-
-
-                showMessage(
-                    "✓ Seluruh bracket berhasil direset."
-                );
-
-
-            } catch (error) {
-
-                console.error(
-                    "RESET ERROR:",
-                    error
-                );
-
-
-                showMessage(
-                    "❌ Gagal melakukan reset.",
-                    true
-                );
-
-            } finally {
-
-                resetBtn.disabled = false;
-
-            }
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// LOGOUT
-// =====================================================
-
-if (logoutBtn) {
-
-    logoutBtn.addEventListener(
-        "click",
-        async () => {
-
-            try {
-
-                await signOut(auth);
-
-
-                window.location.href =
-                    "admin.html";
-
-            } catch (error) {
-
-                console.error(
-                    "LOGOUT ERROR:",
-                    error
-                );
-
-            }
-
-        }
-    );
-
-}
-
-
-// =====================================================
-// AUTH STATE
-// =====================================================
-
-onAuthStateChanged(
-    auth,
-    user => {
-
-        if (!user) {
-
-            authenticated =
-                false;
-
-
-            window.location.href =
-                "admin.html";
-
-
-            return;
-
-        }
-
-
-        authenticated =
-            true;
-
-
-        console.log(
-            "✓ Panitia login:",
-            user.email
+    try {
+
+        await set(
+            tournamentRef,
+            state
         );
 
 
-        render();
+        showMessage(
+            "✓ Data berhasil disimpan. Publik langsung melihat perubahan.",
+            "success"
+        );
+
+
+        renderMatches();
 
     }
-);
-
-
-// =====================================================
-// FIREBASE REALTIME
-// =====================================================
-
-onValue(
-
-    tournamentRef,
-
-    snapshot => {
-
-        state =
-            normalizeData(
-                snapshot.val()
-            );
-
-
-        if (authenticated) {
-
-            render();
-
-        }
-
-    },
-
-    error => {
+    catch (error) {
 
         console.error(
-            "DATABASE ERROR:",
             error
         );
 
 
         showMessage(
-            "❌ Tidak dapat membaca Firebase Database.",
-            true
+            "✕ Gagal menyimpan data ke Firebase.",
+            "error"
         );
 
     }
 
+}
+
+
+// ============================================================
+// RESET
+// ============================================================
+
+async function resetTournament() {
+
+    const confirmed =
+        confirm(
+            "Yakin ingin mereset seluruh bracket?\n\nSemua nama PAIR, skor, dan pemenang akan dikembalikan ke kondisi awal."
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    const newData =
+        createDefaultData();
+
+
+    newData.updatedAt =
+        Date.now();
+
+
+    try {
+
+        await set(
+            tournamentRef,
+            newData
+        );
+
+
+        state =
+            normalizeData(
+                newData
+            );
+
+
+        renderTeams();
+
+        renderMatches();
+
+
+        showMessage(
+            "✓ Bracket berhasil direset.",
+            "success"
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        showMessage(
+            "✕ Gagal melakukan reset.",
+            "error"
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// MESSAGE
+// ============================================================
+
+function showMessage(
+    message,
+    type = "success"
+) {
+
+    const element =
+        $("message");
+
+
+    if (!element) {
+
+        alert(
+            message
+        );
+
+        return;
+
+    }
+
+
+    element.textContent =
+        message;
+
+
+    element.className =
+        `message ${type}`;
+
+
+    setTimeout(
+        () => {
+
+            element.textContent =
+                "";
+
+            element.className =
+                "message";
+
+        },
+        4000
+    );
+
+}
+
+
+// ============================================================
+// LOGIN
+// ============================================================
+
+async function loginAdmin() {
+
+    const email =
+        $("email")?.value.trim();
+
+
+    const password =
+        $("password")?.value;
+
+
+    const error =
+        $("error");
+
+
+    if (!email || !password) {
+
+        if (error) {
+
+            error.textContent =
+                "Email dan password wajib diisi.";
+
+        }
+
+        return;
+
+    }
+
+
+    if (error) {
+
+        error.textContent =
+            "";
+
+    }
+
+
+    try {
+
+        await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+        );
+
+    }
+    catch (err) {
+
+        console.error(
+            err
+        );
+
+
+        let message =
+            "Login gagal.";
+
+
+        if (
+            err.code ===
+            "auth/invalid-credential"
+        ) {
+
+            message =
+                "Email atau password salah.";
+
+        }
+        else if (
+            err.code ===
+            "auth/user-not-found"
+        ) {
+
+            message =
+                "Akun panitia tidak ditemukan.";
+
+        }
+        else if (
+            err.code ===
+            "auth/wrong-password"
+        ) {
+
+            message =
+                "Password salah.";
+
+        }
+        else if (
+            err.code ===
+            "auth/invalid-email"
+        ) {
+
+            message =
+                "Format email tidak valid.";
+
+        }
+
+
+        if (error) {
+
+            error.textContent =
+                message;
+
+        }
+
+    }
+
+}
+
+
+// ============================================================
+// LOGOUT
+// ============================================================
+
+async function logoutAdmin() {
+
+    try {
+
+        await signOut(
+            auth
+        );
+
+    }
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// SHOW ADMIN PANEL
+// ============================================================
+
+function showAdminPanel() {
+
+    $("login")?.classList.add(
+        "hidden"
+    );
+
+
+    $("admin")?.classList.remove(
+        "hidden"
+    );
+
+
+    renderTeams();
+
+    renderMatches();
+
+}
+
+
+// ============================================================
+// SHOW LOGIN
+// ============================================================
+
+function showLogin() {
+
+    $("login")?.classList.remove(
+        "hidden"
+    );
+
+
+    $("admin")?.classList.add(
+        "hidden"
+    );
+
+}
+
+
+// ============================================================
+// FIREBASE REALTIME DATABASE
+// ============================================================
+
+onValue(
+    tournamentRef,
+    snapshot => {
+
+        const data =
+            snapshot.val();
+
+
+        state =
+            normalizeData(
+                data
+            );
+
+
+        renderTeams();
+
+        renderMatches();
+
+    },
+    error => {
+
+        console.error(
+            "Firebase:",
+            error
+        );
+
+
+        showMessage(
+            "Tidak dapat membaca data Firebase.",
+            "error"
+        );
+
+    }
 );
 
 
-// =====================================================
-// START
-// =====================================================
+// ============================================================
+// AUTH STATE
+// ============================================================
 
-console.log(
-    "✓ admin.js berhasil dimuat."
+onAuthStateChanged(
+    auth,
+    user => {
+
+        if (user) {
+
+            showAdminPanel();
+
+        }
+        else {
+
+            showLogin();
+
+        }
+
+    }
+);
+
+
+// ============================================================
+// EVENT LISTENERS
+// ============================================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+
+        // ----------------------------------------------------
+        // LOGIN
+        // ----------------------------------------------------
+
+        $("loginBtn")?.addEventListener(
+            "click",
+            loginAdmin
+        );
+
+
+        $("password")?.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key ===
+                    "Enter"
+                ) {
+
+                    loginAdmin();
+
+                }
+
+            }
+        );
+
+
+        // ----------------------------------------------------
+        // LOGOUT
+        // ----------------------------------------------------
+
+        $("logout")?.addEventListener(
+            "click",
+            logoutAdmin
+        );
+
+
+        // ----------------------------------------------------
+        // SAVE
+        // ----------------------------------------------------
+
+        $("save")?.addEventListener(
+            "click",
+            saveTournament
+        );
+
+
+        // ----------------------------------------------------
+        // RESET
+        // ----------------------------------------------------
+
+        $("reset")?.addEventListener(
+            "click",
+            resetTournament
+        );
+
+
+    }
 );
