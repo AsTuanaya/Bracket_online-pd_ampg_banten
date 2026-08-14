@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Panel Panitia - PD AMPG Banten
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="styles.css"
+    >
+
+</head>
+
+
+<body class="admin-dashboard-page">
+
+
+<header class="admin-dashboard-header">
+
+    <div>
+
+        <h1>
+            🏆 Panel Panitia
+        </h1>
+
+        <p>
+            PD AMPG Banten
+        </p>
+
+    </div>
+
+
+    <div class="admin-dashboard-actions">
+
+        <a
+            href="index.html"
+            class="dashboard-button"
+        >
+            👁 Lihat Bracket
+        </a>
+
+
+        <button
+            id="logoutBtn"
+            type="button"
+            class="logout-button"
+        >
+            Keluar
+        </button>
+
+    </div>
+
+</header>
+
+
+<main class="admin-dashboard-container">
+
+
+    <!-- =================================================
+         INFORMASI TURNAMEN
+    ================================================== -->
+
+    <section class="dashboard-card">
+
+        <h2>
+            🏆 Informasi Turnamen
+        </h2>
+
+
+        <label for="titleInput">
+            Nama Turnamen
+        </label>
+
+
+        <input
+            id="titleInput"
+            type="text"
+            placeholder="Nama turnamen"
+        >
+
+    </section>
+
+
+
+    <!-- =================================================
+         PESERTA
+    ================================================== -->
+
+    <section class="dashboard-card">
+
+        <h2>
+            👥 Daftar Pair
+        </h2>
+
+
+        <p class="dashboard-description">
+            Masukkan nama 20 pair peserta.
+        </p>
+
+
+        <div
+            id="teams"
+            class="admin-teams"
+        ></div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         MATCH
+    ================================================== -->
+
+    <section class="dashboard-card">
+
+        <h2>
+            📝 Hasil Pertandingan
+        </h2>
+
+
+        <p class="dashboard-description">
+            Masukkan skor dan pilih pemenang setiap pertandingan.
+        </p>
+
+
+        <div
+            id="matches"
+            class="admin-matches"
+        ></div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         SAVE
+    ================================================== -->
+
+    <section class="dashboard-save">
+
+        <button
+            id="saveBtn"
+            type="button"
+            class="save-button"
+        >
+            💾 SIMPAN PERUBAHAN
+        </button>
+
+
+        <button
+            id="resetBtn"
+            type="button"
+            class="reset-button"
+        >
+            ♻️ RESET BRACKET
+        </button>
+
+
+        <div
+            id="message"
+            class="dashboard-message"
+        ></div>
+
+    </section>
+
+
+</main>
+
+
+<script
+    type="module"
+    src="admin.js"
+></script>
+
+
+</body>
+
+</html>
