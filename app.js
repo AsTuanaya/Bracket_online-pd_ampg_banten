@@ -669,9 +669,13 @@ function renderMatch(
         teamB === "—";
 
 
-    return `
-
-        <article class="match">
+   return `
+    <article
+        class="match"
+        id="match-${round}-${matchIndex}"
+        data-round="${round}"
+        data-match="${matchIndex}"
+    >
 
             <div class="match-number">
 
