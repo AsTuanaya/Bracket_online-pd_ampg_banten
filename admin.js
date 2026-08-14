@@ -43,9 +43,9 @@ const tournamentRef = ref(db, "tournament");
 // KONFIGURASI BRACKET
 // =====================================================
 
-const ROUNDS = {
-    r1: 20,
-    r2: 10,
+const R = {
+    r1: 10,
+    r2: 5,
     r3: 5,
     r4: 2,
     r5: 1
