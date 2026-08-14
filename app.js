@@ -94,62 +94,62 @@ const DEFAULT_DATA = {
 
     matches: {
 
-        r1: Array.from(
-            {
-                length: 20
-            },
-            () => ({
-                sa: "",
-                sb: "",
-                winner: null
-            })
-        ),
+    r1: Array.from(
+        {
+            length: 10
+        },
+        () => ({
+            sa: "",
+            sb: "",
+            winner: null
+        })
+    ),
 
-        r2: Array.from(
-            {
-                length: 10
-            },
-            () => ({
-                sa: "",
-                sb: "",
-                winner: null
-            })
-        ),
+    r2: Array.from(
+        {
+            length: 5
+        },
+        () => ({
+            sa: "",
+            sb: "",
+            winner: null
+        })
+    ),
 
-        r3: Array.from(
-            {
-                length: 5
-            },
-            () => ({
-                sa: "",
-                sb: "",
-                winner: null
-            })
-        ),
+    r3: Array.from(
+        {
+            length: 5
+        },
+        () => ({
+            sa: "",
+            sb: "",
+            winner: null
+        })
+    ),
 
-        r4: Array.from(
-            {
-                length: 2
-            },
-            () => ({
-                sa: "",
-                sb: "",
-                winner: null
-            })
-        ),
+    r4: Array.from(
+        {
+            length: 2
+        },
+        () => ({
+            sa: "",
+            sb: "",
+            winner: null
+        })
+    ),
 
-        r5: Array.from(
-            {
-                length: 1
-            },
-            () => ({
-                sa: "",
-                sb: "",
-                winner: null
-            })
-        )
+    r5: Array.from(
+        {
+            length: 1
+        },
+        () => ({
+            sa: "",
+            sb: "",
+            winner: null
+        })
+    )
 
-    },
+}
 
     updatedAt: null
 
