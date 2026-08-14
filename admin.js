@@ -608,20 +608,19 @@ function renderMatches() {
 
                         <div class="admin-player">
 
-                            <span>
-                                ${escapeHtml(teamA)}
-                            </span>
+    <input
+        type="number"
+        min="0"
+        data-score="${round}.${i}.sb"
+        value="${escapeHtml(match.sb)}"
+        placeholder="0"
+    >
 
+    <span>
+        ${escapeHtml(teamB)}
+    </span>
 
-                            <input
-                                type="number"
-                                min="0"
-                                data-score="${round}.${i}.sa"
-                                value="${escapeHtml(match.sa)}"
-                                placeholder="0"
-                            >
-
-                        </div>
+</div>
 
 
                         <div class="admin-vs">
