@@ -10,11 +10,18 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Login Panitia - PD AMPG Banten</title>
+    <meta
+        name="theme-color"
+        content="#092957"
+    >
+
+    <title>
+        Login Panitia - PD AMPG Banten
+    </title>
 
     <link
         rel="stylesheet"
-        href="styles.css"
+        href="admin.css"
     >
 
 </head>
@@ -23,196 +30,181 @@
 <body class="admin-login-page">
 
 
-<div class="admin-login-card">
+    <!-- =====================================================
+         BACKGROUND DECORATION
+    ====================================================== -->
 
-    <div class="login-icon">
-        🔐
-    </div>
+    <div class="login-decoration decoration-one"></div>
 
+    <div class="login-decoration decoration-two"></div>
 
-    <h1>
-        Login Panitia
-    </h1>
 
+    <!-- =====================================================
+         LOGIN CONTAINER
+    ====================================================== -->
 
-    <p>
-        Panel Pengelola Bracket
-        PD AMPG Banten
-    </p>
+    <main class="login-wrapper">
 
 
-    <label>
-        Email Panitia
-    </label>
+        <!-- LOGO -->
 
-    <input
-        id="email"
-        type="email"
-        placeholder="Email panitia"
-        autocomplete="username"
-    >
+        <div class="login-logo">
 
+            <img
+                src="assets/logo-ampg.png"
+                alt="Logo Golongan Karya PD AMPG Banten"
+            >
 
-    <label>
-        Password
-    </label>
+        </div>
 
-    <input
-        id="password"
-        type="password"
-        placeholder="Password"
-        autocomplete="current-password"
-    >
 
+        <!-- TITLE -->
 
-    <button
-        id="loginBtn"
-        type="button"
-    >
-        🔐 Masuk sebagai Panitia
-    </button>
+        <div class="login-heading">
 
+            <div class="login-label">
+                PANEL PANITIA
+            </div>
 
-    <div
-        id="error"
-        class="error"
-    ></div>
+            <h1>
+                PD AMPG BANTEN
+            </h1>
 
+            <p>
+                Bracket Turnamen Online
+            </p>
 
-    <a href="index.html">
-        ← Kembali ke Bracket
-    </a>
+        </div>
 
-</div>
 
+        <!-- LOGIN CARD -->
 
-<script type="module">
+        <section class="login-card">
 
-import {
-    initializeApp
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
+            <div class="login-card-header">
 
-import {
-    getAuth,
-    signInWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+                <div class="login-icon">
+                    🔐
+                </div>
 
+                <div>
 
-import {
-    firebaseConfig
-} from "./firebase-config.js";
+                    <h2>
+                        Login Panitia
+                    </h2>
 
+                    <p>
+                        Masuk untuk mengelola pertandingan
+                    </p>
 
-const app =
-    initializeApp(firebaseConfig);
+                </div>
 
+            </div>
 
-const auth =
-    getAuth(app);
 
+            <!-- ERROR -->
 
-const email =
-    document.getElementById("email");
+            <div
+                id="error"
+                class="admin-error"
+            ></div>
 
 
-const password =
-    document.getElementById("password");
+            <!-- EMAIL -->
 
+            <div class="form-group">
 
-const loginBtn =
-    document.getElementById("loginBtn");
+                <label for="email">
+                    Email Panitia
+                </label>
 
+                <input
+                    type="email"
+                    id="email"
+                    autocomplete="username"
+                    placeholder="Masukkan email"
+                >
 
-const error =
-    document.getElementById("error");
+            </div>
 
 
-loginBtn.addEventListener(
-    "click",
-    async function () {
+            <!-- PASSWORD -->
 
-        error.textContent = "";
+            <div class="form-group">
 
-        const emailValue =
-            email.value.trim();
+                <label for="password">
+                    Password
+                </label>
 
-        const passwordValue =
-            password.value;
+                <input
+                    type="password"
+                    id="password"
+                    autocomplete="current-password"
+                    placeholder="Masukkan password"
+                >
 
+            </div>
 
-        if (!emailValue) {
 
-            error.textContent =
-                "Email wajib diisi.";
+            <!-- LOGIN -->
 
-            return;
+            <button
+                type="button"
+                id="loginBtn"
+                class="login-button"
+            >
 
-        }
+                <span>
+                    🔑
+                </span>
 
+                Masuk ke Panel Panitia
 
-        if (!passwordValue) {
+            </button>
 
-            error.textContent =
-                "Password wajib diisi.";
 
-            return;
+            <!-- BACK -->
 
-        }
+            <a
+                href="index.html"
+                class="back-public"
+            >
 
+                ← Kembali ke Bracket Publik
 
-        loginBtn.disabled = true;
+            </a>
 
-        loginBtn.textContent =
-            "⏳ Memproses...";
 
+        </section>
 
-        try {
 
-            await signInWithEmailAndPassword(
-                auth,
-                emailValue,
-                passwordValue
-            );
+        <!-- FOOTER -->
 
+        <footer class="login-footer">
 
-            window.location.href =
-                "admin-panel.html";
+            <strong>
+                PD AMPG Banten
+            </strong>
 
+            <span>•</span>
 
-        } catch (err) {
+            Sistem Bracket Turnamen Online
 
-            console.error(err);
+        </footer>
 
 
-            if (
-                err.code ===
-                "auth/invalid-credential"
-            ) {
+    </main>
 
-                error.textContent =
-                    "Email atau password salah.";
 
-            } else {
+    <!-- =====================================================
+         LOGIN SCRIPT
+    ====================================================== -->
 
-                error.textContent =
-                    "Login gagal: " +
-                    err.message;
-
-            }
-
-
-            loginBtn.disabled = false;
-
-            loginBtn.textContent =
-                "🔐 Masuk sebagai Panitia";
-
-        }
-
-    }
-);
-
-</script>
+    <script
+        type="module"
+        src="admin-login.js"
+    ></script>
 
 
 </body>
