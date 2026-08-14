@@ -1,18 +1,22 @@
 // ============================================================
 // APP.JS
 // TURNAMEN PD AMPG BANTEN
-// PUBLIC BRACKET - FIREBASE REALTIME DATABASE
+// PUBLIC BRACKET
+// FIREBASE REALTIME
 // ============================================================
+
 
 import {
     initializeApp
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
 
 import {
     getDatabase,
     ref,
     onValue
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-database.js";
+
 
 import {
     firebaseConfig
@@ -23,51 +27,55 @@ import {
 // FIREBASE
 // ============================================================
 
-const app = initializeApp(firebaseConfig);
+const app =
+    initializeApp(
+        firebaseConfig
+    );
 
-const db = getDatabase(app);
 
-const tournamentRef = ref(
-    db,
-    "tournament"
-);
+const db =
+    getDatabase(
+        app
+    );
+
+
+const tournamentRef =
+    ref(
+        db,
+        "tournament"
+    );
 
 
 // ============================================================
-// KONFIGURASI ROUND
+// ROUND CONFIG
 // ============================================================
 
 const ROUND_CONFIG = {
 
-    // 20 PAIR = 10 pertandingan
     r1: {
         title: "ROUND 1",
         subtitle: "20 PAIR",
         matches: 10
     },
 
-    // 10 pemenang = 5 pertandingan
     r2: {
         title: "ROUND 2",
         subtitle: "10 PAIR",
         matches: 5
     },
 
-    // 5 pemenang
     r3: {
         title: "ROUND 3",
         subtitle: "5 PAIR",
         matches: 5
     },
 
-    // SEMI FINAL
     r4: {
         title: "ROUND 4",
         subtitle: "SEMI FINAL",
         matches: 2
     },
 
-    // FINAL
     r5: {
         title: "ROUND 5",
         subtitle: "FINAL",
@@ -81,161 +89,193 @@ const ROUND_CONFIG = {
 // DEFAULT DATA
 // ============================================================
 
-const DEFAULT_DATA = {
+function createMatch() {
 
-    title: "TURNAMEN PD AMPG BANTEN",
+    return {
 
-    teams: Array.from(
-        {
-            length: 20
-        },
-        (_, index) => `PAIR ${index + 1}`
-    ),
+        sa: "",
 
-    matches: {
+        sb: "",
 
-    r1: Array.from(
-        {
-            length: 10
-        },
-        () => ({
-            sa: "",
-            sb: "",
-            winner: null
-        })
-    ),
+        winner: null
 
-    r2: Array.from(
-        {
-            length: 5
-        },
-        () => ({
-            sa: "",
-            sb: "",
-            winner: null
-        })
-    ),
-
-    r3: Array.from(
-        {
-            length: 5
-        },
-        () => ({
-            sa: "",
-            sb: "",
-            winner: null
-        })
-    ),
-
-    r4: Array.from(
-        {
-            length: 2
-        },
-        () => ({
-            sa: "",
-            sb: "",
-            winner: null
-        })
-    ),
-
-    r5: Array.from(
-        {
-            length: 1
-        },
-        () => ({
-            sa: "",
-            sb: "",
-            winner: null
-        })
-    )
+    };
 
 }
 
-    updatedAt: null
 
-};
+function createDefaultData() {
+
+    return {
+
+        title:
+            "TURNAMEN PD AMPG BANTEN",
+
+        teams:
+            Array.from(
+                {
+                    length: 20
+                },
+                (_, index) =>
+                    `PAIR ${index + 1}`
+            ),
+
+        matches: {
+
+            r1:
+                Array.from(
+                    {
+                        length: 10
+                    },
+                    createMatch
+                ),
+
+            r2:
+                Array.from(
+                    {
+                        length: 5
+                    },
+                    createMatch
+                ),
+
+            r3:
+                Array.from(
+                    {
+                        length: 5
+                    },
+                    createMatch
+                ),
+
+            r4:
+                Array.from(
+                    {
+                        length: 2
+                    },
+                    createMatch
+                ),
+
+            r5:
+                Array.from(
+                    {
+                        length: 1
+                    },
+                    createMatch
+                )
+
+        },
+
+        updatedAt:
+            null
+
+    };
+
+}
 
 
 // ============================================================
-// DATA GLOBAL
+// GLOBAL DATA
 // ============================================================
 
-let tournament = normalizeData(null);
+let tournament =
+    createDefaultData();
 
 
 // ============================================================
 // NORMALIZE DATA
 // ============================================================
 
-function normalizeData(data) {
+function normalizeData(
+    data
+) {
 
-    const source = data || {};
+    const source =
+        data || {};
+
+
+    const defaults =
+        createDefaultData();
+
 
     const result = {
 
         title:
             source.title ||
-            "Turnamen PD AMPG Banten",
+            defaults.title,
 
         teams: [],
 
         matches: {},
 
         updatedAt:
-            source.updatedAt || null
+            source.updatedAt ||
+            null
 
     };
 
 
-    // ========================================================
+    // --------------------------------------------------------
     // HANYA 20 PAIR
-    // ========================================================
+    // --------------------------------------------------------
 
-    result.teams = Array.from(
-        {
-            length: 20
-        },
-        (_, index) => {
+    result.teams =
+        Array.from(
+            {
+                length: 20
+            },
+            (_, index) => {
 
-            return (
-                source.teams?.[index] ||
-                `PAIR ${index + 1}`
-            );
+                return (
+                    source.teams?.[index] ||
+                    `PAIR ${index + 1}`
+                );
 
-        }
-    );
+            }
+        );
 
 
-    // ========================================================
+    // --------------------------------------------------------
     // MATCH
-    // ========================================================
+    // --------------------------------------------------------
 
     for (
-        const [round, config]
-        of Object.entries(ROUND_CONFIG)
+        const [
+            round,
+            config
+        ]
+        of Object.entries(
+            ROUND_CONFIG
+        )
     ) {
 
         result.matches[round] =
             Array.from(
                 {
-                    length: config.matches
+                    length:
+                        config.matches
                 },
                 (_, index) => {
 
-                    const match =
-                        source.matches?.[round]?.[index] ||
-                        {};
+                    const old =
+                        source
+                            .matches
+                            ?. [round]
+                            ?. [index]
+                        || {};
+
 
                     return {
 
                         sa:
-                            match.sa ?? "",
+                            old.sa ??
+                            "",
 
                         sb:
-                            match.sb ?? "",
+                            old.sb ??
+                            "",
 
                         winner:
-                            match.winner ?? null
+                            old.winner ??
+                            null
 
                     };
 
@@ -251,10 +291,12 @@ function normalizeData(data) {
 
 
 // ============================================================
-// ESCAPE HTML
+// HTML ESCAPE
 // ============================================================
 
-function escapeHTML(value) {
+function escapeHTML(
+    value
+) {
 
     return String(
         value ?? ""
@@ -264,15 +306,26 @@ function escapeHTML(value) {
 
             const map = {
 
-                "&": "&amp;",
-                "<": "&lt;",
-                ">": "&gt;",
-                '"': "&quot;",
-                "'": "&#039;"
+                "&":
+                    "&amp;",
+
+                "<":
+                    "&lt;",
+
+                ">":
+                    "&gt;",
+
+                '"':
+                    "&quot;",
+
+                "'":
+                    "&#039;"
 
             };
 
-            return map[character];
+            return map[
+                character
+            ];
 
         }
     );
@@ -284,15 +337,20 @@ function escapeHTML(value) {
 // GET ELEMENT
 // ============================================================
 
-function getElement(id) {
+function getElement(
+    id
+) {
 
-    return document.getElementById(id);
+    return document.getElementById(
+        id
+    );
 
 }
 
 
 // ============================================================
-// GET TEAM NAME ROUND 1
+// ROUND 1
+// PAIR 1 - PAIR 20
 // ============================================================
 
 function getRound1Team(
@@ -302,10 +360,17 @@ function getRound1Team(
 
     const teamIndex =
         matchIndex * 2 +
-        (side === "a" ? 0 : 1);
+        (
+            side === "a"
+                ? 0
+                : 1
+        );
 
 
-    if (teamIndex >= 20) {
+    if (
+        teamIndex < 0 ||
+        teamIndex >= 20
+    ) {
 
         return "—";
 
@@ -313,7 +378,9 @@ function getRound1Team(
 
 
     return (
-        tournament.teams?.[teamIndex] ||
+        tournament.teams?.[
+            teamIndex
+        ] ||
         `PAIR ${teamIndex + 1}`
     );
 
@@ -321,87 +388,7 @@ function getRound1Team(
 
 
 // ============================================================
-// GET WINNER FROM PREVIOUS ROUND
-// ============================================================
-
-function getWinner(
-    round,
-    matchIndex
-) {
-
-    const match =
-        tournament.matches?.[round]?.[matchIndex];
-
-
-    if (!match) {
-
-        return null;
-
-    }
-
-
-    if (
-        match.winner !== "a" &&
-        match.winner !== "b"
-    ) {
-
-        return null;
-
-    }
-
-
-    const scoreA =
-        match.sa ?? "";
-
-    const scoreB =
-        match.sb ?? "";
-
-
-    // --------------------------------------------------------
-    // Jika nama peserta berasal dari ronde sebelumnya
-    // --------------------------------------------------------
-
-    const participantA =
-        getParticipant(
-            round,
-            matchIndex,
-            "a"
-        );
-
-    const participantB =
-        getParticipant(
-            round,
-            matchIndex,
-            "b"
-        );
-
-
-    if (match.winner === "a") {
-
-        return {
-
-            name: participantA,
-
-            score: scoreA
-
-        };
-
-    }
-
-
-    return {
-
-        name: participantB,
-
-        score: scoreB
-
-    };
-
-}
-
-
-// ============================================================
-// GET PARTICIPANT
+// GET PARTICIPANT ROUND 1
 // ============================================================
 
 function getParticipant(
@@ -410,11 +397,14 @@ function getParticipant(
     side
 ) {
 
-    // --------------------------------------------------------
-    // ROUND 1
-    // --------------------------------------------------------
 
-    if (round === "r1") {
+    // ========================================================
+    // ROUND 1
+    // ========================================================
+
+    if (
+        round === "r1"
+    ) {
 
         return getRound1Team(
             matchIndex,
@@ -424,57 +414,266 @@ function getParticipant(
     }
 
 
-    // --------------------------------------------------------
+    // ========================================================
     // ROUND 2
-    // --------------------------------------------------------
+    //
+    // R1 M1 + M2 → R2 M1
+    // R1 M3 + M4 → R2 M2
+    // ========================================================
 
-    const previousRoundMap = {
+    if (
+        round === "r2"
+    ) {
 
-        r2: "r1",
-        r3: "r2",
-        r4: "r3",
-        r5: "r4"
-
-    };
-
-
-    const previousRound =
-        previousRoundMap[round];
-
-
-    if (!previousRound) {
-
-        return "—";
-
-    }
+        const sourceIndex =
+            matchIndex * 2 +
+            (
+                side === "a"
+                    ? 0
+                    : 1
+            );
 
 
-    const previousMatchIndex =
-        matchIndex * 2 +
-        (side === "a" ? 0 : 1);
-
-
-    const winner =
-        getWinner(
-            previousRound,
-            previousMatchIndex
+        return getWinnerName(
+            "r1",
+            sourceIndex
         );
 
+    }
 
-    if (!winner) {
+
+    // ========================================================
+    // ROUND 3
+    //
+    // Lima peserta dari ROUND 2
+    //
+    // R3 M1 = Winner R2 M1
+    // R3 M2 = Winner R2 M2
+    // R3 M3 = Winner R2 M3
+    // R3 M4 = Winner R2 M4
+    // R3 M5 = Winner R2 M5
+    // ========================================================
+
+    if (
+        round === "r3"
+    ) {
+
+        const participant =
+            getWinnerName(
+                "r2",
+                matchIndex
+            );
+
+
+        if (
+            side === "a"
+        ) {
+
+            return participant;
+
+        }
+
 
         return "—";
 
     }
 
 
-    return winner.name || "—";
+    // ========================================================
+    // SEMIFINAL
+    //
+    // SEMI 1
+    // R3 M1 vs R3 M2
+    //
+    // SEMI 2
+    // R3 M3 vs R3 M4
+    // ========================================================
+
+    if (
+        round === "r4"
+    ) {
+
+        const sourceIndex =
+            matchIndex * 2 +
+            (
+                side === "a"
+                    ? 0
+                    : 1
+            );
+
+
+        return getWinnerName(
+            "r3",
+            sourceIndex
+        );
+
+    }
+
+
+    // ========================================================
+    // FINAL
+    //
+    // Winner Semi 1
+    // vs
+    // Winner Semi 2
+    // ========================================================
+
+    if (
+        round === "r5"
+    ) {
+
+        const sourceIndex =
+            side === "a"
+                ? 0
+                : 1;
+
+
+        return getWinnerName(
+            "r4",
+            sourceIndex
+        );
+
+    }
+
+
+    return "—";
 
 }
 
 
 // ============================================================
-// GET CURRENT WINNER
+// GET WINNER
+// ============================================================
+
+function getWinnerName(
+    round,
+    matchIndex
+) {
+
+    const match =
+        tournament
+            .matches
+            ?. [round]
+            ?. [matchIndex];
+
+
+    if (
+        !match
+    ) {
+
+        return "—";
+
+    }
+
+
+    if (
+        match.winner !== "a" &&
+        match.winner !== "b"
+    ) {
+
+        return "—";
+
+    }
+
+
+    // --------------------------------------------------------
+    // ROUND 1
+    // --------------------------------------------------------
+
+    if (
+        round === "r1"
+    ) {
+
+        return getRound1Team(
+            matchIndex,
+            match.winner
+        );
+
+    }
+
+
+    // --------------------------------------------------------
+    // ROUND 2
+    // --------------------------------------------------------
+
+    if (
+        round === "r2"
+    ) {
+
+        const participant =
+            getParticipant(
+                "r2",
+                matchIndex,
+                match.winner
+            );
+
+
+        return participant;
+
+    }
+
+
+    // --------------------------------------------------------
+    // ROUND 3
+    //
+    // Karena R3 adalah daftar 5 peserta,
+    // gunakan peserta sisi A.
+    // --------------------------------------------------------
+
+    if (
+        round === "r3"
+    ) {
+
+        return getParticipant(
+            "r3",
+            matchIndex,
+            "a"
+        );
+
+    }
+
+
+    // --------------------------------------------------------
+    // ROUND 4
+    // --------------------------------------------------------
+
+    if (
+        round === "r4"
+    ) {
+
+        return getParticipant(
+            "r4",
+            matchIndex,
+            match.winner
+        );
+
+    }
+
+
+    // --------------------------------------------------------
+    // ROUND 5
+    // --------------------------------------------------------
+
+    if (
+        round === "r5"
+    ) {
+
+        return getParticipant(
+            "r5",
+            matchIndex,
+            match.winner
+        );
+
+    }
+
+
+    return "—";
+
+}
+
+
+// ============================================================
+// CHECK WINNER
 // ============================================================
 
 function isWinner(
@@ -484,17 +683,24 @@ function isWinner(
 ) {
 
     const match =
-        tournament.matches?.[round]?.[matchIndex];
+        tournament
+            .matches
+            ?. [round]
+            ?. [matchIndex];
 
 
-    if (!match) {
+    if (
+        !match
+    ) {
 
         return false;
 
     }
 
 
-    return match.winner === side;
+    return (
+        match.winner === side
+    );
 
 }
 
@@ -505,34 +711,44 @@ function isWinner(
 
 function renderTitle() {
 
-    const titleElement =
-        getElement("title");
+    const title =
+        getElement(
+            "title"
+        );
 
 
-    if (titleElement) {
+    if (
+        title
+    ) {
 
-        titleElement.textContent =
+        title.textContent =
             tournament.title ||
             "TURNAMEN PD AMPG BANTEN";
 
     }
 
 
-    const updatedElement =
-        getElement("updated");
+    const updated =
+        getElement(
+            "updated"
+        );
 
 
-    if (!updatedElement) {
+    if (
+        !updated
+    ) {
 
         return;
 
     }
 
 
-    if (!tournament.updatedAt) {
+    if (
+        !tournament.updatedAt
+    ) {
 
-        updatedElement.textContent =
-            "Belum ada pembaruan.";
+        updated.textContent =
+            "Terakhir diperbarui: belum ada pembaruan";
 
         return;
 
@@ -551,15 +767,15 @@ function renderTitle() {
         )
     ) {
 
-        updatedElement.textContent =
-            "Belum ada pembaruan.";
+        updated.textContent =
+            "Terakhir diperbarui: belum ada pembaruan";
 
         return;
 
     }
 
 
-    updatedElement.textContent =
+    updated.textContent =
         "Terakhir diperbarui: " +
         date.toLocaleString(
             "id-ID",
@@ -576,25 +792,31 @@ function renderTitle() {
 
 
 // ============================================================
-// RENDER STATUS
+// STATUS LIVE
 // ============================================================
 
 function setLiveStatus(
-    online = true
+    online
 ) {
 
     const status =
-        getElement("status");
+        getElement(
+            "status"
+        );
 
 
-    if (!status) {
+    if (
+        !status
+    ) {
 
         return;
 
     }
 
 
-    if (online) {
+    if (
+        online
+    ) {
 
         status.textContent =
             "● LIVE";
@@ -602,7 +824,8 @@ function setLiveStatus(
         status.className =
             "status online";
 
-    } else {
+    }
+    else {
 
         status.textContent =
             "● OFFLINE";
@@ -621,18 +844,21 @@ function setLiveStatus(
 
 function renderMatch(
     round,
-    matchIndex
+    index
 ) {
 
     const match =
-        tournament.matches?.[round]?.[matchIndex] ||
-        {};
+        tournament
+            .matches
+            ?. [round]
+            ?. [index]
+        || {};
 
 
     const teamA =
         getParticipant(
             round,
-            matchIndex,
+            index,
             "a"
         );
 
@@ -640,7 +866,7 @@ function renderMatch(
     const teamB =
         getParticipant(
             round,
-            matchIndex,
+            index,
             "b"
         );
 
@@ -648,7 +874,7 @@ function renderMatch(
     const winnerA =
         isWinner(
             round,
-            matchIndex,
+            index,
             "a"
         );
 
@@ -656,17 +882,17 @@ function renderMatch(
     const winnerB =
         isWinner(
             round,
-            matchIndex,
+            index,
             "b"
         );
 
 
     const scoreA =
-        match.sa ?? "";
+        match.sa || "";
 
 
     const scoreB =
-        match.sb ?? "";
+        match.sb || "";
 
 
     const emptyA =
@@ -677,31 +903,33 @@ function renderMatch(
         teamB === "—";
 
 
-   return `
-    <article
-        class="match"
-        id="match-${round}-${matchIndex}"
-        data-round="${round}"
-        data-match="${matchIndex}"
-    >
+    return `
+
+        <article
+            class="match"
+            data-round="${round}"
+            data-match="${index}"
+        >
 
             <div class="match-number">
 
-                MATCH ${matchIndex + 1}
+                MATCH ${index + 1}
 
             </div>
 
 
             <div
-                class="team ${winnerA ? "win" : ""}"
+                class="
+                    team
+                    ${winnerA ? "win" : ""}
+                "
             >
 
                 <span
-                    class="team-name ${
-                        emptyA
-                            ? "empty"
-                            : ""
-                    }"
+                    class="
+                        team-name
+                        ${emptyA ? "empty" : ""}
+                    "
                 >
 
                     ${escapeHTML(teamA)}
@@ -719,15 +947,17 @@ function renderMatch(
 
 
             <div
-                class="team ${winnerB ? "win" : ""}"
+                class="
+                    team
+                    ${winnerB ? "win" : ""}
+                "
             >
 
                 <span
-                    class="team-name ${
-                        emptyB
-                            ? "empty"
-                            : ""
-                    }"
+                    class="
+                        team-name
+                        ${emptyB ? "empty" : ""}
+                    "
                 >
 
                     ${escapeHTML(teamB)}
@@ -759,71 +989,74 @@ function renderRound(
 ) {
 
     const config =
-        ROUND_CONFIG[round];
+        ROUND_CONFIG[
+            round
+        ];
 
 
-    if (!config) {
-
-        return "";
-
-    }
+    let html = "";
 
 
-    let matchesHTML = "";
+    // --------------------------------------------------------
+    // HEADER
+    // --------------------------------------------------------
 
-
-    for (
-        let index = 0;
-        index < config.matches;
-        index++
-    ) {
-
-        matchesHTML +=
-            renderMatch(
-                round,
-                index
-            );
-
-    }
-
-
-    return `
+    html += `
 
         <section
-            class="round round-${round}"
+            class="
+                round
+                round-${round}
+            "
         >
 
             <div class="round-header">
 
-                <div class="round-title">
+                <h3>
+                    ${config.title}
+                </h3>
 
-                    <h3>
-
-                        ${config.title}
-
-                    </h3>
-
-
-                    <span class="round-subtitle">
-
-                        ${config.subtitle}
-
-                    </span>
-
-                </div>
+                <span>
+                    ${config.subtitle}
+                </span>
 
             </div>
 
 
             <div class="matches">
 
-                ${matchesHTML}
+    `;
+
+
+    // --------------------------------------------------------
+    // MATCHES
+    // --------------------------------------------------------
+
+    for (
+        let i = 0;
+        i < config.matches;
+        i++
+    ) {
+
+        html +=
+            renderMatch(
+                round,
+                i
+            );
+
+    }
+
+
+    html += `
 
             </div>
 
         </section>
 
     `;
+
+
+    return html;
 
 }
 
@@ -835,10 +1068,14 @@ function renderRound(
 function renderBracket() {
 
     const bracket =
-        getElement("bracket");
+        getElement(
+            "bracket"
+        );
 
 
-    if (!bracket) {
+    if (
+        !bracket
+    ) {
 
         console.error(
             "Element #bracket tidak ditemukan."
@@ -867,309 +1104,6 @@ function renderBracket() {
 
 
 // ============================================================
-// DRAW BRACKET CONNECTOR
-// ============================================================
-
-function drawBracketLines() {
-
-    const wrapper =
-        document.getElementById(
-            "bracket-wrapper"
-        );
-
-    const svg =
-        document.getElementById(
-            "bracket-lines"
-        );
-
-
-    if (!wrapper || !svg) {
-
-        return;
-
-    }
-
-
-    // --------------------------------------------------------
-    // Bersihkan garis lama
-    // --------------------------------------------------------
-
-    svg.innerHTML = "";
-
-
-    // --------------------------------------------------------
-    // Ukuran wrapper
-    // --------------------------------------------------------
-
-    const wrapperRect =
-        wrapper.getBoundingClientRect();
-
-
-    const width =
-        wrapper.scrollWidth;
-
-
-    const height =
-        wrapper.scrollHeight;
-
-
-    svg.setAttribute(
-        "width",
-        width
-    );
-
-    svg.setAttribute(
-        "height",
-        height
-    );
-
-    svg.setAttribute(
-        "viewBox",
-        `0 0 ${width} ${height}`
-    );
-
-
-    // --------------------------------------------------------
-    // Hubungkan setiap ronde
-    // --------------------------------------------------------
-
-    const roundPairs = [
-
-        ["r1", "r2"],
-
-        ["r2", "r3"],
-
-        ["r3", "r4"],
-
-        ["r4", "r5"]
-
-    ];
-
-
-    roundPairs.forEach(
-        ([fromRound, toRound]) => {
-
-            const fromCount =
-                getRoundMatchCount(
-                    fromRound
-                );
-
-            const toCount =
-                getRoundMatchCount(
-                    toRound
-                );
-
-
-            for (
-                let targetIndex = 0;
-                targetIndex < toCount;
-                targetIndex++
-            ) {
-
-                const sourceA =
-                    targetIndex * 2;
-
-                const sourceB =
-                    targetIndex * 2 + 1;
-
-
-                if (
-                    sourceA >= fromCount ||
-                    sourceB >= fromCount
-                ) {
-
-                    continue;
-
-                }
-
-
-                connectMatches(
-                    fromRound,
-                    sourceA,
-                    fromRound,
-                    sourceB,
-                    toRound,
-                    targetIndex,
-                    wrapperRect,
-                    svg
-                );
-
-            }
-
-        }
-    );
-
-}
-
-
-// ============================================================
-// GET MATCH COUNT
-// ============================================================
-
-function getRoundMatchCount(
-    round
-) {
-
-    return (
-        ROUND_CONFIG[round]?.matches ||
-        0
-    );
-
-}
-
-
-// ============================================================
-// CONNECT TWO MATCHES TO ONE MATCH
-// ============================================================
-
-function connectMatches(
-    fromRound,
-    sourceAIndex,
-    fromRoundB,
-    sourceBIndex,
-    toRound,
-    targetIndex,
-    wrapperRect,
-    svg
-) {
-
-    const sourceA =
-        document.getElementById(
-            `match-${fromRound}-${sourceAIndex}`
-        );
-
-
-    const sourceB =
-        document.getElementById(
-            `match-${fromRoundB}-${sourceBIndex}`
-        );
-
-
-    const target =
-        document.getElementById(
-            `match-${toRound}-${targetIndex}`
-        );
-
-
-    if (
-        !sourceA ||
-        !sourceB ||
-        !target
-    ) {
-
-        return;
-
-    }
-
-
-    // --------------------------------------------------------
-    // Posisi
-    // --------------------------------------------------------
-
-    const rectA =
-        sourceA.getBoundingClientRect();
-
-
-    const rectB =
-        sourceB.getBoundingClientRect();
-
-
-    const rectTarget =
-        target.getBoundingClientRect();
-
-
-    const x1 =
-        rectA.right -
-        wrapperRect.left;
-
-
-    const y1 =
-        rectA.top +
-        rectA.height / 2 -
-        wrapperRect.top;
-
-
-    const x2 =
-        rectB.right -
-        wrapperRect.left;
-
-
-    const y2 =
-        rectB.top +
-        rectB.height / 2 -
-        wrapperRect.top;
-
-
-    const x3 =
-        rectTarget.left -
-        wrapperRect.left;
-
-
-    const y3 =
-        rectTarget.top +
-        rectTarget.height / 2 -
-        wrapperRect.top;
-
-
-    // --------------------------------------------------------
-    // Titik tengah
-    // --------------------------------------------------------
-
-    const middleX =
-        x1 +
-        (x3 - x1) / 2;
-
-
-    // --------------------------------------------------------
-    // SVG PATH
-    // --------------------------------------------------------
-
-    const path =
-        document.createElementNS(
-            "http://www.w3.org/2000/svg",
-            "path"
-        );
-
-
-    const d = [
-
-        `M ${x1} ${y1}`,
-
-        `H ${middleX}`,
-
-        `V ${y2}`,
-
-        `H ${x2}`,
-
-        `M ${middleX} ${y1}`,
-
-        `V ${y3}`,
-
-        `H ${x3}`
-
-    ].join(" ");
-
-
-    path.setAttribute(
-        "d",
-        d
-    );
-
-
-    path.setAttribute(
-        "class",
-        "bracket-line"
-    );
-
-
-    svg.appendChild(
-        path
-    );
-
-}
-
-
-// ============================================================
 // RENDER SEMUA
 // ============================================================
 
@@ -1179,145 +1113,51 @@ function render() {
 
     renderBracket();
 
-
-    // Tunggu DOM selesai dibuat
-    // sebelum menggambar garis.
-
-    requestAnimationFrame(() => {
-
-        drawBracketLines();
-
-    });
-
 }
 
 
 // ============================================================
-// FIREBASE REALTIME LISTENER
+// FIREBASE REALTIME
 // ============================================================
 
 onValue(
     tournamentRef,
+
     snapshot => {
 
-        try {
-
-            const data =
-                snapshot.val();
-
-
-            tournament =
-                normalizeData(
-                    data
-                );
-
-
-            render();
-
-            setLiveStatus(true);
-
-
-            console.log(
-                "Firebase data diterima:",
-                tournament
+        tournament =
+            normalizeData(
+                snapshot.val()
             );
 
-        } catch (error) {
 
-            console.error(
-                "Gagal membaca data Firebase:",
-                error
-            );
+        render();
 
-            setLiveStatus(false);
 
-        }
+        setLiveStatus(
+            true
+        );
 
     },
 
     error => {
 
         console.error(
-            "Firebase Realtime Database error:",
+            "Firebase error:",
             error
         );
 
-        setLiveStatus(false);
 
-    }
-);
+        tournament =
+            createDefaultData();
 
 
-// ============================================================
-// ERROR HANDLER
-// ============================================================
+        render();
 
-window.addEventListener(
-    "error",
-    event => {
 
-        console.error(
-            "Application Error:",
-            event.error
+        setLiveStatus(
+            false
         );
-
-    }
-);
-
-
-// ============================================================
-// INITIAL RENDER
-// ============================================================
-
-render();
-
-
-// ============================================================
-// DEBUG
-// ============================================================
-
-console.log(
-    "======================================"
-);
-
-console.log(
-    "PD AMPG BANTEN - PUBLIC BRACKET"
-);
-
-console.log(
-    "Firebase Realtime Database aktif"
-);
-
-console.log(
-    "======================================"
-);
-
-
-// ============================================================
-// REDRAW CONNECTOR SAAT RESIZE
-// ============================================================
-
-let resizeTimer;
-
-
-window.addEventListener(
-    "resize",
-    () => {
-
-        clearTimeout(
-            resizeTimer
-        );
-
-
-        resizeTimer =
-            setTimeout(
-                () => {
-
-                    drawBracketLines();
-
-                },
-                100
-            );
 
     }
 );
@@ -1331,14 +1171,22 @@ window.addEventListener(
     "load",
     () => {
 
-        setTimeout(
-            () => {
+        render();
 
-                drawBracketLines();
+    }
+);
 
-            },
-            300
-        );
+
+// ============================================================
+// RESIZE
+// ============================================================
+
+window.addEventListener(
+    "resize",
+    () => {
+
+        // Bracket menggunakan CSS Grid.
+        // Tidak perlu redraw data.
 
     }
 );
