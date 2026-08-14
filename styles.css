@@ -16,31 +16,22 @@ body {
 
     margin: 0;
 
+    min-height: 100vh;
+
     font-family:
         Arial,
         Helvetica,
         sans-serif;
 
     background:
-        #f3eadb;
+        linear-gradient(
+            180deg,
+            #f4ead9 0%,
+            #efe4d1 100%
+        );
 
-    color:
-        #17233c;
+    color: #14213d;
 
-}
-
-
-body.modal-open {
-    overflow: hidden;
-}
-
-
-/* =====================================================
-   HIDDEN
-===================================================== */
-
-.hidden {
-    display: none !important;
 }
 
 
@@ -48,49 +39,55 @@ body.modal-open {
    HEADER
 ===================================================== */
 
-.header {
+.main-header {
 
-    min-height: 105px;
-
-    padding:
-        20px 5%;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 20px;
+    width: 100%;
 
     background:
-        #09244d;
+        linear-gradient(
+            135deg,
+            #061d42,
+            #0b2d62
+        );
 
     color: white;
 
-    box-shadow:
-        0 4px 18px
-        rgba(0, 0, 0, 0.15);
+    border-bottom:
+        4px solid #d7a900;
 
 }
 
 
-.header-left {
+.header-inner {
 
-    display: flex;
+    width: min(
+        1500px,
+        96%
+    );
+
+    min-height: 120px;
+
+    margin: auto;
+
+    padding: 15px 20px;
+
+    display: grid;
+
+    grid-template-columns:
+        150px 1fr 220px;
 
     align-items: center;
 
-    gap: 15px;
+    gap: 20px;
 
 }
 
 
-.logo {
+/* =====================================================
+   LOGO
+===================================================== */
 
-    width: 50px;
-
-    height: 50px;
+.logo-container {
 
     display: flex;
 
@@ -98,110 +95,131 @@ body.modal-open {
 
     justify-content: center;
 
-    font-size: 30px;
-
-    background:
-        rgba(255, 255, 255, 0.12);
-
-    border-radius: 12px;
-
 }
 
 
-.header-info h1 {
+.logo {
 
-    margin: 0;
+    width: 95px;
 
-    font-size: 28px;
+    height: 95px;
 
-}
+    object-fit: contain;
 
-
-.header-info p {
-
-    margin:
-        5px 0 0;
-
-    opacity: 0.8;
-
-    font-size: 14px;
-
-}
-
-
-.header-right {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 12px;
+    filter:
+        drop-shadow(
+            0 4px 8px
+            rgba(0,0,0,.3)
+        );
 
 }
 
 
 /* =====================================================
-   STATUS
+   HEADER TITLE
 ===================================================== */
+
+.header-title {
+
+    text-align: center;
+
+}
+
+
+.header-title h1 {
+
+    margin: 0;
+
+    font-size:
+        clamp(
+            22px,
+            3vw,
+            38px
+        );
+
+    font-weight: 900;
+
+    letter-spacing:
+        1px;
+
+}
+
+
+.header-title p {
+
+    margin:
+        6px 0 0;
+
+    font-size: 12px;
+
+    letter-spacing:
+        2px;
+
+    opacity: .8;
+
+}
+
+
+/* =====================================================
+   HEADER ACTION
+===================================================== */
+
+.header-action {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+}
+
 
 .status {
 
     padding:
-        8px 12px;
+        7px 12px;
 
     border-radius:
         20px;
 
-    font-size:
-        13px;
+    font-size: 11px;
 
-    font-weight:
-        bold;
+    font-weight: 800;
 
 }
 
 
 .status.online {
 
-    background:
-        #16833c;
+    background: #188443;
 
-    color:
-        white;
+    color: white;
 
 }
 
 
 .status.offline {
 
-    background:
-        #b3261e;
+    background: #b42318;
 
-    color:
-        white;
-
-}
-
-
-/* =====================================================
-   BUTTON
-===================================================== */
-
-button {
-
-    font-family:
-        inherit;
+    color: white;
 
 }
 
 
 .admin-button {
 
-    border:
-        0;
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
 
     padding:
-        10px 16px;
+        10px 14px;
 
     border-radius:
         8px;
@@ -212,14 +230,17 @@ button {
     color:
         #09244d;
 
-    font-weight:
-        700;
+    text-decoration:
+        none;
 
-    cursor:
-        pointer;
+    font-size:
+        12px;
+
+    font-weight:
+        800;
 
     transition:
-        0.2s;
+        .2s;
 
 }
 
@@ -231,52 +252,65 @@ button {
 
     box-shadow:
         0 5px 15px
-        rgba(0, 0, 0, 0.2);
+        rgba(0,0,0,.2);
 
 }
 
 
 /* =====================================================
-   MAIN
+   TOURNAMENT INFO
 ===================================================== */
 
-.container {
+.tournament-info {
 
     width:
-        min(1500px, 94%);
+        min(
+            1500px,
+            94%
+        );
 
     margin:
-        25px auto 60px;
-
-}
-
-
-/* =====================================================
-   HERO
-===================================================== */
-
-.hero {
-
-    background:
-        white;
+        22px auto 18px;
 
     padding:
-        20px 25px;
+        18px 25px;
+
+    text-align:
+        center;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            .95
+        );
 
     border-radius:
-        16px;
+        14px;
 
     box-shadow:
-        0 8px 25px
-        rgba(0, 0, 0, 0.08);
+        0 6px 20px
+        rgba(
+            0,
+            0,
+            0,
+            .08
+        );
 
-    margin-bottom:
-        25px;
+    border:
+        1px solid
+        rgba(
+            0,
+            0,
+            0,
+            .06
+        );
 
 }
 
 
-.hero h2 {
+.tournament-info h2 {
 
     margin:
         0;
@@ -284,19 +318,52 @@ button {
     color:
         #09244d;
 
+    font-size:
+        22px;
+
+    font-weight:
+        900;
+
 }
 
 
-.hero p {
+.updated {
 
-    margin:
-        7px 0 0;
-
-    color:
-        #718096;
+    margin-top:
+        7px;
 
     font-size:
-        13px;
+        11px;
+
+    color:
+        #6b7280;
+
+}
+
+
+/* =====================================================
+   BRACKET WRAPPER
+===================================================== */
+
+.bracket-wrapper {
+
+    width:
+        96%;
+
+    max-width:
+        1600px;
+
+    margin:
+        0 auto 40px;
+
+    overflow-x:
+        auto;
+
+    overflow-y:
+        hidden;
+
+    padding:
+        8px 5px 25px;
 
 }
 
@@ -307,23 +374,26 @@ button {
 
 .bracket {
 
+    min-width:
+        1180px;
+
     display:
         grid;
 
     grid-template-columns:
-        repeat(5, minmax(210px, 1fr));
+        repeat(
+            5,
+            minmax(
+                190px,
+                1fr
+            )
+        );
 
     gap:
-        18px;
+        12px;
 
     align-items:
-        stretch;
-
-    overflow-x:
-        auto;
-
-    padding-bottom:
-        20px;
+        start;
 
 }
 
@@ -335,64 +405,99 @@ button {
 .round {
 
     min-width:
-        210px;
-
-}
-
-
-.round-header {
-
-    background:
-        #09244d;
-
-    color:
-        white;
-
-    border-radius:
-        10px;
-
-    padding:
-        12px;
-
-    margin-bottom:
-        15px;
-
-    text-align:
-        center;
-
-}
-
-
-.round-header h3 {
-
-    margin:
-        0;
-
-    font-size:
-        14px;
-
-}
-
-
-.round-header span {
-
-    display:
-        block;
-
-    margin-top:
-        4px;
-
-    opacity:
-        0.7;
-
-    font-size:
-        11px;
+        190px;
 
 }
 
 
 /* =====================================================
-   MATCHES
+   ROUND HEADER
+===================================================== */
+
+.round-header {
+
+    min-height:
+        62px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    text-align:
+        center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #061d42,
+            #0d326b
+        );
+
+    color:
+        white;
+
+    border-radius:
+        9px;
+
+    box-shadow:
+        0 4px 10px
+        rgba(
+            0,
+            0,
+            0,
+            .15
+        );
+
+    margin-bottom:
+        10px;
+
+}
+
+
+.round-title h3 {
+
+    margin:
+        0;
+
+    font-size:
+        15px;
+
+    font-weight:
+        900;
+
+    letter-spacing:
+        .5px;
+
+}
+
+
+.round-subtitle {
+
+    display:
+        block;
+
+    margin-top:
+        5px;
+
+    font-size:
+        11px;
+
+    font-weight:
+        700;
+
+    color:
+        #f5d45c;
+
+}
+
+
+/* =====================================================
+   MATCH LIST
 ===================================================== */
 
 .matches {
@@ -403,14 +508,15 @@ button {
     flex-direction:
         column;
 
-    justify-content:
-        space-around;
-
     gap:
-        12px;
+        8px;
 
 }
 
+
+/* =====================================================
+   MATCH
+===================================================== */
 
 .match {
 
@@ -418,37 +524,51 @@ button {
         white;
 
     border:
-        1px solid #d9dee7;
+        1px solid
+        #d9dee7;
 
     border-radius:
-        9px;
+        8px;
 
     overflow:
         hidden;
 
     box-shadow:
-        0 3px 10px
-        rgba(0, 0, 0, 0.06);
+        0 2px 6px
+        rgba(
+            0,
+            0,
+            0,
+            .05
+        );
 
 }
 
 
+/* =====================================================
+   MATCH NUMBER
+===================================================== */
+
 .match-number {
 
     padding:
-        6px 10px;
+        6px 9px;
 
     background:
-        #f3f5f8;
+        #f1f4f8;
+
+    border-bottom:
+        1px solid
+        #e0e5eb;
 
     color:
-        #718096;
+        #536174;
 
     font-size:
-        10px;
+        9px;
 
     font-weight:
-        bold;
+        800;
 
     text-transform:
         uppercase;
@@ -456,13 +576,17 @@ button {
 }
 
 
+/* =====================================================
+   TEAM
+===================================================== */
+
 .team {
 
     min-height:
-        34px;
+        31px;
 
     padding:
-        7px 10px;
+        6px 8px;
 
     display:
         flex;
@@ -474,13 +598,25 @@ button {
         space-between;
 
     gap:
-        8px;
+        5px;
 
-    border-top:
-        1px solid #edf0f4;
+    border-bottom:
+        1px solid
+        #edf0f4;
 
     font-size:
-        12px;
+        10px;
+
+    background:
+        white;
+
+}
+
+
+.team:last-child {
+
+    border-bottom:
+        none;
 
 }
 
@@ -490,11 +626,17 @@ button {
     overflow:
         hidden;
 
+    white-space:
+        nowrap;
+
     text-overflow:
         ellipsis;
 
-    white-space:
-        nowrap;
+    color:
+        #1f2937;
+
+    font-weight:
+        600;
 
 }
 
@@ -502,10 +644,16 @@ button {
 .team strong {
 
     min-width:
-        20px;
+        22px;
 
     text-align:
         center;
+
+    font-size:
+        11px;
+
+    color:
+        #09244d;
 
 }
 
@@ -513,566 +661,98 @@ button {
 .team.win {
 
     background:
-        #e8f7ed;
-
-    color:
-        #116329;
-
-    font-weight:
-        bold;
+        #eaf7ef;
 
 }
 
 
-.team.empty {
+.team.win .team-name {
 
     color:
-        #a0aec0;
+        #137333;
+
+    font-weight:
+        900;
+
+}
+
+
+.team.win strong {
+
+    color:
+        #137333;
+
+}
+
+
+.team-name.empty {
+
+    color:
+        #9ca3af;
+
+    font-style:
+        italic;
 
 }
 
 
 /* =====================================================
-   MODAL
+   ROUND SPACING
 ===================================================== */
 
-.modal {
+/*
+   Membuat bracket lebih menyerupai
+   bracket pertandingan sebenarnya.
+*/
 
-    position:
-        fixed;
 
-    inset:
-        0;
+.round:nth-child(2)
+.matches {
 
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    padding:
-        20px;
-
-    background:
-        rgba(5, 15, 35, 0.78);
-
-    z-index:
-        99999;
+    padding-top:
+        45px;
 
 }
 
 
-.modal-content {
+.round:nth-child(3)
+.matches {
 
-    position:
-        relative;
-
-    width:
-        min(850px, 100%);
-
-    max-height:
-        92vh;
-
-    overflow-y:
-        auto;
-
-    background:
-        #f8fafc;
-
-    border-radius:
-        18px;
-
-    padding:
-        30px;
-
-    box-shadow:
-        0 25px 80px
-        rgba(0, 0, 0, 0.35);
+    padding-top:
+        115px;
 
 }
 
 
-.close-button {
+.round:nth-child(4)
+.matches {
 
-    position:
-        absolute;
-
-    top:
-        14px;
-
-    right:
-        14px;
-
-    width:
-        38px;
-
-    height:
-        38px;
-
-    border:
-        0;
-
-    border-radius:
-        50%;
-
-    background:
-        #edf0f4;
-
-    color:
-        #17233c;
-
-    font-size:
-        25px;
-
-    cursor:
-        pointer;
+    padding-top:
+        260px;
 
 }
 
 
-.close-button:hover {
+.round:nth-child(5)
+.matches {
 
-    background:
-        #dfe4eb;
+    padding-top:
+        510px;
 
 }
 
 
 /* =====================================================
-   LOGIN
+   FOOTER
 ===================================================== */
 
-.login-panel {
-
-    width:
-        min(430px, 100%);
-
-    margin:
-        15px auto;
-
-    padding:
-        25px;
-
-    background:
-        white;
-
-    border-radius:
-        15px;
-
-    box-shadow:
-        0 8px 30px
-        rgba(0, 0, 0, 0.08);
-
-}
-
-
-.login-icon {
-
-    width:
-        65px;
-
-    height:
-        65px;
-
-    margin:
-        0 auto 15px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-    border-radius:
-        50%;
-
-    background:
-        #e9eef8;
-
-    font-size:
-        30px;
-
-}
-
-
-.login-panel h2 {
-
-    margin:
-        0;
-
-    text-align:
-        center;
-
-    color:
-        #09244d;
-
-}
-
-
-.login-description {
-
-    margin:
-        8px 0 25px;
-
-    text-align:
-        center;
-
-    color:
-        #718096;
-
-    font-size:
-        13px;
-
-}
-
-
-.form-group {
-
-    margin-bottom:
-        16px;
-
-}
-
-
-.form-group label {
-
-    display:
-        block;
-
-    margin-bottom:
-        7px;
-
-    font-size:
-        13px;
-
-    font-weight:
-        700;
-
-}
-
-
-input,
-select {
+.footer {
 
     width:
         100%;
 
-    border:
-        1px solid #ccd3df;
-
-    border-radius:
-        8px;
-
-    padding:
-        11px 12px;
-
-    background:
-        white;
-
-    color:
-        #17233c;
-
-    font-size:
-        14px;
-
-    outline:
-        none;
-
-}
-
-
-input:focus,
-select:focus {
-
-    border-color:
-        #315da8;
-
-    box-shadow:
-        0 0 0 3px
-        rgba(49, 93, 168, 0.12);
-
-}
-
-
-.primary-button {
-
-    border:
-        0;
-
-    border-radius:
-        9px;
-
-    padding:
-        12px 18px;
-
-    background:
-        #09244d;
-
-    color:
-        white;
-
-    font-weight:
-        700;
-
-    cursor:
-        pointer;
-
-    transition:
-        0.2s;
-
-}
-
-
-.login-panel .primary-button {
-
-    width:
-        100%;
-
-}
-
-
-.primary-button:hover {
-
-    background:
-        #12396f;
-
-    transform:
-        translateY(-1px);
-
-}
-
-
-.primary-button:disabled {
-
-    opacity:
-        0.6;
-
-    cursor:
-        not-allowed;
-
-}
-
-
-.error {
-
-    min-height:
-        20px;
-
-    margin:
-        12px 0 0;
-
-    color:
-        #c62828;
-
-    font-size:
-        13px;
-
-    text-align:
-        center;
-
-}
-
-
-/* =====================================================
-   ADMIN
-===================================================== */
-
-.admin-panel {
-
-    width:
-        100%;
-
-}
-
-
-.admin-header {
-
-    display:
-        flex;
-
-    justify-content:
-        space-between;
-
-    align-items:
-        flex-start;
-
-    gap:
-        20px;
-
-    margin-bottom:
-        20px;
-
-}
-
-
-.admin-header h2 {
-
-    margin:
-        8px 0 5px;
-
-    color:
-        #09244d;
-
-}
-
-
-.admin-header p {
-
-    margin:
-        0;
-
-    color:
-        #718096;
-
-}
-
-
-.admin-badge {
-
-    display:
-        inline-block;
-
-    padding:
-        5px 9px;
-
-    border-radius:
-        20px;
-
-    background:
-        #e8f7ed;
-
-    color:
-        #176b35;
-
-    font-size:
-        10px;
-
-    font-weight:
-        bold;
-
-}
-
-
-.logout-button {
-
-    padding:
-        9px 15px;
-
-    border:
-        1px solid #d8dee8;
-
-    border-radius:
-        8px;
-
-    background:
-        white;
-
-    color:
-        #a52a2a;
-
-    font-weight:
-        700;
-
-    cursor:
-        pointer;
-
-}
-
-
-/* =====================================================
-   ADMIN CARD
-===================================================== */
-
-.admin-card {
-
-    background:
-        white;
-
-    border:
-        1px solid #e0e5ec;
-
-    border-radius:
-        14px;
-
     padding:
         20px;
-
-    margin-bottom:
-        18px;
-
-}
-
-
-.admin-card h3 {
-
-    margin:
-        0 0 8px;
-
-    color:
-        #09244d;
-
-}
-
-
-.section-description {
-
-    margin:
-        0 0 15px;
-
-    color:
-        #718096;
-
-    font-size:
-        13px;
-
-}
-
-
-/* =====================================================
-   TEAMS
-===================================================== */
-
-.teams {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        repeat(2, 1fr);
-
-    gap:
-        8px;
-
-}
-
-
-.team-edit {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        8px;
-
-}
-
-
-.team-number {
-
-    min-width:
-        30px;
-
-    height:
-        30px;
 
     display:
         flex;
@@ -1083,1320 +763,146 @@ select:focus {
     justify-content:
         center;
 
-    border-radius:
-        7px;
-
-    background:
-        #edf1f7;
-
-    font-size:
-        12px;
-
-    font-weight:
-        bold;
-
-}
-
-
-/* =====================================================
-   MATCH EDITOR
-===================================================== */
-
-.editor-round {
-
-    margin-bottom:
+    gap:
         25px;
 
-}
-
-
-.editor-round-title {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        space-between;
-
-    margin-bottom:
-        10px;
-
-    padding:
-        10px 12px;
-
-    border-radius:
-        8px;
-
     background:
-        #09244d;
+        #061d42;
 
     color:
-        white;
-
-}
-
-
-.editor-round-title span {
+        rgba(
+            255,
+            255,
+            255,
+            .7
+        );
 
     font-size:
         11px;
 
-    opacity:
-        0.7;
-
-}
-
-
-.editor {
-
-    padding:
-        15px;
-
-    margin-bottom:
-        10px;
-
-    border:
-        1px solid #e0e5ec;
-
-    border-radius:
-        10px;
-
-    background:
-        #fafbfd;
-
-}
-
-
-.editor-title {
-
-    margin-bottom:
-        12px;
-
-    color:
-        #09244d;
-
-    font-size:
-        13px;
-
-}
-
-
-.score-row {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        1fr 40px 1fr;
-
-    align-items:
-        center;
-
-    gap:
-        10px;
-
-}
-
-
-.player {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        1fr 65px;
-
-    align-items:
-        center;
-
-    gap:
-        8px;
-
-}
-
-
-.player:last-child {
-
-    grid-template-columns:
-        65px 1fr;
-
-}
-
-
-.player span {
-
-    overflow:
-        hidden;
-
-    text-overflow:
-        ellipsis;
-
-    white-space:
-        nowrap;
-
-    font-size:
-        12px;
-
-}
-
-
-.player input {
-
-    text-align:
-        center;
-
-}
-
-
-.vs {
-
-    text-align:
-        center;
-
-    font-size:
-        11px;
-
-    font-weight:
-        bold;
-
-    color:
-        #718096;
-
-}
-
-
-.winner-row {
-
-    display:
-        grid;
-
-    grid-template-columns:
-        100px 1fr;
-
-    align-items:
-        center;
-
-    gap:
-        10px;
-
-    margin-top:
-        12px;
-
-}
-
-
-.winner-row label {
-
-    font-size:
-        12px;
-
-    font-weight:
-        bold;
-
 }
 
 
 /* =====================================================
-   ADMIN ACTION
+   SCROLLBAR
 ===================================================== */
 
-.admin-actions {
+.bracket-wrapper::-webkit-scrollbar {
 
-    display:
-        flex;
-
-    gap:
+    height:
         10px;
 
-    margin-top:
-        20px;
-
 }
 
 
-.admin-actions .primary-button {
+.bracket-wrapper::-webkit-scrollbar-track {
 
-    flex:
-        1;
-
-}
-
-
-.danger-button {
-
-    padding:
-        12px 18px;
-
-    border:
-        0;
+    background:
+        #e0d6c5;
 
     border-radius:
-        9px;
+        10px;
+
+}
+
+
+.bracket-wrapper::-webkit-scrollbar-thumb {
 
     background:
-        #c62828;
+        #09244d;
 
-    color:
-        white;
-
-    font-weight:
-        bold;
-
-    cursor:
-        pointer;
+    border-radius:
+        10px;
 
 }
 
 
-.danger-button:hover {
+.bracket-wrapper::-webkit-scrollbar-thumb:hover {
 
     background:
-        #a51f1f;
-
-}
-
-
-.message {
-
-    min-height:
-        20px;
-
-    margin:
-        15px 0 0;
-
-    font-size:
-        13px;
-
-    font-weight:
-        bold;
-
-}
-
-
-.success-message {
-
-    color:
-        #18733a;
-
-}
-
-
-.error-message {
-
-    color:
-        #c62828;
+        #174982;
 
 }
 
 
 /* =====================================================
-   RESPONSIVE TABLET
+   MOBILE
 ===================================================== */
 
 @media (
-    max-width: 1000px
+    max-width: 800px
 ) {
 
-    .bracket {
+    .header-inner {
 
         grid-template-columns:
-            repeat(5, 210px);
+            1fr;
 
-    }
-
-}
-
-
-/* =====================================================
-   RESPONSIVE MOBILE
-===================================================== */
-
-@media (
-    max-width: 700px
-) {
-
-
-    .header {
+        text-align:
+            center;
 
         padding:
             15px;
 
-        align-items:
-            flex-start;
-
-        flex-direction:
-            column;
-
     }
 
 
-    .header-right {
+    .logo-container {
 
-        width:
-            100%;
-
-        justify-content:
-            space-between;
-
-    }
-
-
-    .admin-button {
-
-        flex:
+        order:
             1;
 
     }
 
 
-    .container {
+    .header-title {
+
+        order:
+            2;
+
+    }
+
+
+    .header-action {
+
+        order:
+            3;
+
+        justify-content:
+            center;
+
+    }
+
+
+    .logo {
 
         width:
-            calc(100% - 24px);
+            75px;
 
-        margin-top:
-            15px;
-
-    }
-
-
-    .hero {
-
-        padding:
-            17px;
+        height:
+            75px;
 
     }
 
 
-    .hero h2 {
+    .tournament-info {
 
-        font-size:
-            20px;
-
-    }
-
-
-    .bracket {
-
-        grid-template-columns:
-            repeat(5, 210px);
+        width:
+            94%;
 
     }
 
 
-    .modal {
+    .bracket-wrapper {
 
-        padding:
+        width:
+            100%;
+
+        padding-left:
             10px;
 
-    }
-
-
-    .modal-content {
-
-        padding:
-            20px;
-
-        max-height:
-            95vh;
-
-    }
-
-
-    .teams {
-
-        grid-template-columns:
-            1fr;
-
-    }
-
-
-    .admin-header {
-
-        flex-direction:
-            column;
-
-    }
-
-
-    .logout-button {
-
-        width:
-            100%;
-
-    }
-
-
-    .score-row {
-
-        grid-template-columns:
-            1fr;
-
-    }
-
-
-    .player,
-    .player:last-child {
-
-        grid-template-columns:
-            1fr 65px;
-
-    }
-
-
-    .vs {
-
-        display:
-            none;
-
-    }
-
-
-    .winner-row {
-
-        grid-template-columns:
-            1fr;
-
-    }
-
-
-    .admin-actions {
-
-        flex-direction:
-            column;
-
-    }
-
-
-    .admin-actions button {
-
-        width:
-            100%;
-
-    }
-
-}
-
-
-/* =====================================================
-   SMALL MOBILE
-===================================================== */
-
-@media (
-    max-width: 400px
-) {
-
-    .header-info h1 {
-
-        font-size:
-            22px;
-
-    }
-
-
-    .status {
-
-        font-size:
-            11px;
-
-    }
-
-
-    .admin-button {
-
-        font-size:
-            12px;
-
-        padding:
-            9px;
-
-    }
-
-
-    .modal-content {
-
-        padding:
-            15px;
-
-    }
-
-}
-
-
-/* ==========================================
-   ADMIN LOGIN
-========================================== */
-
-.admin-login-page {
-
-    min-height: 100vh;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    padding: 20px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #09244d,
-            #12396f
-        );
-
-}
-
-
-.admin-login-card {
-
-    width: 100%;
-
-    max-width: 430px;
-
-    padding: 35px;
-
-    background: white;
-
-    border-radius: 18px;
-
-    box-shadow:
-        0 25px 70px
-        rgba(0,0,0,.3);
-
-}
-
-
-.admin-login-card
-.login-icon {
-
-    width: 70px;
-
-    height: 70px;
-
-    margin: 0 auto 20px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    border-radius: 50%;
-
-    background: #e9eef8;
-
-    font-size: 32px;
-
-}
-
-
-.admin-login-card h1 {
-
-    margin: 0;
-
-    text-align: center;
-
-    color: #09244d;
-
-}
-
-
-.admin-login-card p {
-
-    margin: 8px 0 25px;
-
-    text-align: center;
-
-    color: #718096;
-
-    font-size: 14px;
-
-}
-
-
-.admin-login-card label {
-
-    display: block;
-
-    margin:
-        15px 0 7px;
-
-    font-size: 13px;
-
-    font-weight: 700;
-
-}
-
-
-.admin-login-card input {
-
-    width: 100%;
-
-    padding: 13px;
-
-    border:
-        1px solid #ccd3df;
-
-    border-radius: 8px;
-
-    outline: none;
-
-    font-size: 14px;
-
-}
-
-
-.admin-login-card input:focus {
-
-    border-color: #315da8;
-
-    box-shadow:
-        0 0 0 3px
-        rgba(49,93,168,.12);
-
-}
-
-
-.admin-login-card button {
-
-    width: 100%;
-
-    margin-top: 22px;
-
-    padding: 13px;
-
-    border: 0;
-
-    border-radius: 8px;
-
-    background: #09244d;
-
-    color: white;
-
-    font-weight: 700;
-
-    cursor: pointer;
-
-}
-
-
-.admin-login-card button:hover {
-
-    background: #12396f;
-
-}
-
-
-.admin-login-card button:disabled {
-
-    opacity: .6;
-
-    cursor: not-allowed;
-
-}
-
-
-.admin-login-card .error {
-
-    min-height: 20px;
-
-    margin-top: 15px;
-
-    color: #c62828;
-
-    text-align: center;
-
-    font-size: 13px;
-
-}
-
-
-.admin-login-card > a {
-
-    display: block;
-
-    margin-top: 22px;
-
-    text-align: center;
-
-    color: #315da8;
-
-    text-decoration: none;
-
-    font-size: 13px;
-
-}
-
-
-/* =====================================================
-   ADMIN DASHBOARD
-===================================================== */
-
-.admin-dashboard-page {
-
-    margin: 0;
-
-    min-height: 100vh;
-
-    background: #f3eadb;
-
-}
-
-
-/* HEADER */
-
-.admin-dashboard-header {
-
-    min-height: 90px;
-
-    padding: 18px 5%;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 20px;
-
-    background: #09244d;
-
-    color: white;
-
-}
-
-
-.admin-dashboard-header h1 {
-
-    margin: 0;
-
-    font-size: 25px;
-
-}
-
-
-.admin-dashboard-header p {
-
-    margin: 5px 0 0;
-
-    opacity: .75;
-
-    font-size: 13px;
-
-}
-
-
-.admin-dashboard-actions {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 10px;
-
-}
-
-
-.dashboard-button {
-
-    padding: 10px 15px;
-
-    border-radius: 8px;
-
-    background: white;
-
-    color: #09244d;
-
-    text-decoration: none;
-
-    font-size: 13px;
-
-    font-weight: 700;
-
-}
-
-
-.admin-dashboard-actions
-.logout-button {
-
-    padding: 10px 15px;
-
-    border: 0;
-
-    border-radius: 8px;
-
-    background: #c62828;
-
-    color: white;
-
-    font-weight: 700;
-
-    cursor: pointer;
-
-}
-
-
-/* CONTAINER */
-
-.admin-dashboard-container {
-
-    width: min(1200px, 94%);
-
-    margin: 25px auto 60px;
-
-}
-
-
-/* CARD */
-
-.dashboard-card {
-
-    margin-bottom: 20px;
-
-    padding: 22px;
-
-    background: white;
-
-    border-radius: 14px;
-
-    border: 1px solid #e0e5ec;
-
-    box-shadow:
-        0 4px 15px
-        rgba(0,0,0,.05);
-
-}
-
-
-.dashboard-card h2 {
-
-    margin: 0 0 8px;
-
-    color: #09244d;
-
-    font-size: 19px;
-
-}
-
-
-.dashboard-card > label {
-
-    display: block;
-
-    margin: 15px 0 7px;
-
-    font-size: 13px;
-
-    font-weight: 700;
-
-}
-
-
-.dashboard-description {
-
-    margin: 0 0 18px;
-
-    color: #718096;
-
-    font-size: 13px;
-
-}
-
-
-/* TEAMS */
-
-.admin-teams {
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, 1fr);
-
-    gap: 9px;
-
-}
-
-
-.admin-team-row {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-}
-
-
-.admin-team-number {
-
-    min-width: 32px;
-
-    height: 32px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    border-radius: 7px;
-
-    background: #edf1f7;
-
-    color: #09244d;
-
-    font-size: 12px;
-
-    font-weight: 700;
-
-}
-
-
-/* ROUND */
-
-.admin-round {
-
-    margin-bottom: 25px;
-
-}
-
-
-.admin-round-header {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    margin-bottom: 10px;
-
-    padding: 11px 14px;
-
-    border-radius: 8px;
-
-    background: #09244d;
-
-    color: white;
-
-}
-
-
-.admin-round-header span {
-
-    font-size: 11px;
-
-    opacity: .75;
-
-}
-
-
-/* MATCH */
-
-.admin-match {
-
-    margin-bottom: 10px;
-
-    padding: 15px;
-
-    border: 1px solid #dfe4eb;
-
-    border-radius: 10px;
-
-    background: #fafbfd;
-
-}
-
-
-.admin-match-title {
-
-    margin-bottom: 12px;
-
-    color: #09244d;
-
-    font-size: 13px;
-
-    font-weight: 700;
-
-}
-
-
-/* SCORE */
-
-.admin-score-grid {
-
-    display: grid;
-
-    grid-template-columns:
-        1fr 45px 1fr;
-
-    align-items: center;
-
-    gap: 10px;
-
-}
-
-
-.admin-player {
-
-    display: grid;
-
-    grid-template-columns:
-        1fr 65px;
-
-    align-items: center;
-
-    gap: 8px;
-
-}
-
-
-.admin-player:nth-child(3) {
-
-    grid-template-columns:
-        65px 1fr;
-
-}
-
-
-.admin-player span {
-
-    overflow: hidden;
-
-    white-space: nowrap;
-
-    text-overflow: ellipsis;
-
-    font-size: 12px;
-
-}
-
-
-.admin-player input {
-
-    text-align: center;
-
-}
-
-
-.admin-vs {
-
-    text-align: center;
-
-    font-size: 11px;
-
-    font-weight: 700;
-
-    color: #718096;
-
-}
-
-
-/* WINNER */
-
-.admin-winner {
-
-    display: grid;
-
-    grid-template-columns:
-        100px 1fr;
-
-    align-items: center;
-
-    gap: 10px;
-
-    margin-top: 12px;
-
-}
-
-
-.admin-winner label {
-
-    font-size: 12px;
-
-    font-weight: 700;
-
-}
-
-
-/* SAVE */
-
-.dashboard-save {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 10px;
-
-    flex-wrap: wrap;
-
-}
-
-
-.save-button {
-
-    flex: 1;
-
-    min-width: 220px;
-
-    padding: 14px 20px;
-
-    border: 0;
-
-    border-radius: 9px;
-
-    background: #09244d;
-
-    color: white;
-
-    font-weight: 700;
-
-    cursor: pointer;
-
-}
-
-
-.save-button:hover {
-
-    background: #12396f;
-
-}
-
-
-.reset-button {
-
-    padding: 14px 20px;
-
-    border: 0;
-
-    border-radius: 9px;
-
-    background: #c62828;
-
-    color: white;
-
-    font-weight: 700;
-
-    cursor: pointer;
-
-}
-
-
-.dashboard-message {
-
-    width: 100%;
-
-    min-height: 20px;
-
-    margin-top: 5px;
-
-    font-size: 13px;
-
-    font-weight: 700;
-
-}
-
-
-.dashboard-message.success {
-
-    color: #18733a;
-
-}
-
-
-.dashboard-message.error {
-
-    color: #c62828;
-
-}
-
-
-/* MOBILE */
-
-@media (max-width: 700px) {
-
-    .admin-dashboard-header {
-
-        flex-direction: column;
-
-        align-items: stretch;
-
-    }
-
-
-    .admin-dashboard-actions {
-
-        width: 100%;
-
-    }
-
-
-    .dashboard-button,
-    .admin-dashboard-actions
-    .logout-button {
-
-        flex: 1;
-
-        text-align: center;
-
-    }
-
-
-    .admin-teams {
-
-        grid-template-columns: 1fr;
-
-    }
-
-
-    .admin-score-grid {
-
-        grid-template-columns: 1fr;
-
-    }
-
-
-    .admin-vs {
-
-        display: none;
-
-    }
-
-
-    .admin-player,
-    .admin-player:nth-child(3) {
-
-        grid-template-columns:
-            1fr 65px;
-
-    }
-
-
-    .admin-winner {
-
-        grid-template-columns: 1fr;
-
-    }
-
-
-    .dashboard-save {
-
-        flex-direction: column;
-
-    }
-
-
-    .save-button,
-    .reset-button {
-
-        width: 100%;
+        padding-right:
+            10px;
 
     }
 
