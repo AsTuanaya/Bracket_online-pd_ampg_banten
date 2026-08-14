@@ -175,13 +175,11 @@ function normalizeData(data) {
 
         title:
             source.title ||
-            DEFAULT_DATA.title,
+            "Turnamen PD AMPG Banten",
 
-        teams:
-            [],
+        teams: [],
 
-        matches:
-            {},
+        matches: {},
 
         updatedAt:
             source.updatedAt || null
@@ -189,9 +187,9 @@ function normalizeData(data) {
     };
 
 
-    // --------------------------------------------------------
-    // TEAMS
-    // --------------------------------------------------------
+    // ========================================================
+    // HANYA 20 PAIR
+    // ========================================================
 
     result.teams = Array.from(
         {
@@ -208,43 +206,41 @@ function normalizeData(data) {
     );
 
 
-    // --------------------------------------------------------
-    // MATCHES
-    // --------------------------------------------------------
+    // ========================================================
+    // MATCH
+    // ========================================================
 
     for (
         const [round, config]
         of Object.entries(ROUND_CONFIG)
     ) {
 
-        result.matches[round] = Array.from(
-            {
-                length: config.matches
-            },
-            (_, index) => {
+        result.matches[round] =
+            Array.from(
+                {
+                    length: config.matches
+                },
+                (_, index) => {
 
-                const match =
-                    source.matches?.[round]?.[index] ||
-                    {};
+                    const match =
+                        source.matches?.[round]?.[index] ||
+                        {};
 
-                return {
+                    return {
 
-                    sa:
-                        match.sa ??
-                        "",
+                        sa:
+                            match.sa ?? "",
 
-                    sb:
-                        match.sb ??
-                        "",
+                        sb:
+                            match.sb ?? "",
 
-                    winner:
-                        match.winner ??
-                        null
+                        winner:
+                            match.winner ?? null
 
-                };
+                    };
 
-            }
-        );
+                }
+            );
 
     }
 
