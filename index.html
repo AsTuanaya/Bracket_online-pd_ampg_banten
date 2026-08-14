@@ -19,8 +19,6 @@
         Bracket Online PD AMPG Banten
     </title>
 
-
-    <!-- CSS -->
     <link
         rel="stylesheet"
         href="styles.css"
@@ -32,9 +30,9 @@
 <body>
 
 
-<!-- =========================================================
+<!-- =====================================================
      HEADER
-========================================================= -->
+===================================================== -->
 
 <header class="header">
 
@@ -43,7 +41,6 @@
         <div class="logo">
             🏆
         </div>
-
 
         <div class="header-info">
 
@@ -62,17 +59,13 @@
 
     <div class="header-right">
 
-        <!-- STATUS FIREBASE -->
-
         <span
             id="status"
-            class="online"
+            class="status online"
         >
             ● LIVE
         </span>
 
-
-        <!-- PANEL PANITIA -->
 
         <button
             id="adminBtn"
@@ -89,34 +82,34 @@
 
 
 
-<!-- =========================================================
-     MAIN CONTENT
-========================================================= -->
+<!-- =====================================================
+     MAIN
+===================================================== -->
 
 <main class="container">
 
 
-    <!-- =====================================================
-         TITLE / INFO
-    ====================================================== -->
+    <!-- TITLE -->
 
     <section class="hero">
 
-        <h2 id="title">
-            Turnamen PD AMPG Banten
-        </h2>
+        <div>
 
-        <p id="updated">
-            Belum ada pembaruan.
-        </p>
+            <h2 id="title">
+                Turnamen PD AMPG Banten
+            </h2>
+
+            <p id="updated">
+                Belum ada pembaruan.
+            </p>
+
+        </div>
 
     </section>
 
 
 
-    <!-- =====================================================
-         BRACKET
-    ====================================================== -->
+    <!-- BRACKET -->
 
     <section
         id="bracket"
@@ -124,7 +117,7 @@
     >
 
         <!--
-            Bracket akan dibuat otomatis
+            Bracket dibuat otomatis
             oleh app.js
         -->
 
@@ -135,9 +128,9 @@
 
 
 
-<!-- =========================================================
-     MODAL PANEL PANITIA
-========================================================= -->
+<!-- =====================================================
+     ADMIN MODAL
+===================================================== -->
 
 <div
     id="modal"
@@ -148,9 +141,7 @@
     <div class="modal-content">
 
 
-        <!-- =================================================
-             CLOSE BUTTON
-        ================================================== -->
+        <!-- CLOSE -->
 
         <button
             id="close"
@@ -165,14 +156,13 @@
 
 
         <!-- =================================================
-             LOGIN PANITIA
+             LOGIN
         ================================================== -->
 
         <section
             id="login"
             class="login-panel"
         >
-
 
             <div class="login-icon">
                 🔐
@@ -189,38 +179,37 @@
             </p>
 
 
+            <div class="form-group">
 
-            <!-- EMAIL -->
+                <label for="email">
+                    Email Panitia
+                </label>
 
-            <label for="email">
-                Email Panitia
-            </label>
+                <input
+                    id="email"
+                    type="email"
+                    placeholder="Masukkan email"
+                    autocomplete="username"
+                >
 
-            <input
-                id="email"
-                type="email"
-                placeholder="Masukkan email panitia"
-                autocomplete="username"
-            >
-
-
-
-            <!-- PASSWORD -->
-
-            <label for="password">
-                Password
-            </label>
-
-            <input
-                id="password"
-                type="password"
-                placeholder="Masukkan password"
-                autocomplete="current-password"
-            >
+            </div>
 
 
+            <div class="form-group">
 
-            <!-- LOGIN BUTTON -->
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    id="password"
+                    type="password"
+                    placeholder="Masukkan password"
+                    autocomplete="current-password"
+                >
+
+            </div>
+
 
             <button
                 id="loginBtn"
@@ -231,14 +220,10 @@
             </button>
 
 
-
-            <!-- ERROR -->
-
             <p
                 id="error"
                 class="error"
             ></p>
-
 
         </section>
 
@@ -258,15 +243,18 @@
 
             <div class="admin-header">
 
-
                 <div>
+
+                    <span class="admin-badge">
+                        PANITIA
+                    </span>
 
                     <h2>
                         ⚙️ Panel Panitia
                     </h2>
 
                     <p>
-                        Kelola peserta dan hasil pertandingan.
+                        Kelola peserta, skor, dan pemenang.
                     </p>
 
                 </div>
@@ -280,21 +268,17 @@
                     Keluar
                 </button>
 
-
             </div>
 
 
 
-            <!-- =================================================
-                 NAMA TURNAMEN
-            ================================================== -->
+            <!-- NAMA TURNAMEN -->
 
-            <div class="admin-section">
+            <div class="admin-card">
 
                 <h3>
                     🏆 Nama Turnamen
                 </h3>
-
 
                 <input
                     id="titleInput"
@@ -306,77 +290,51 @@
 
 
 
-            <!-- =================================================
-                 DAFTAR PAIR
-            ================================================== -->
+            <!-- PESERTA -->
 
-            <div class="admin-section">
+            <div class="admin-card">
 
                 <h3>
                     👥 Daftar Pair
                 </h3>
 
-
                 <p class="section-description">
-                    Masukkan nama pasangan/peserta pertandingan.
+                    Masukkan nama 20 pair peserta.
                 </p>
-
 
                 <div
                     id="teams"
                     class="teams"
-                >
-
-                    <!--
-                        Data Pair akan dibuat
-                        oleh app.js
-                    -->
-
-                </div>
+                ></div>
 
             </div>
 
 
 
-            <!-- =================================================
-                 HASIL PERTANDINGAN
-            ================================================== -->
+            <!-- MATCH -->
 
-            <div class="admin-section">
+            <div class="admin-card">
 
                 <h3>
                     📝 Hasil Pertandingan
                 </h3>
 
-
                 <p class="section-description">
-                    Masukkan skor dan tentukan pemenang
-                    setiap pertandingan.
+                    Masukkan skor dan pilih pemenang.
                 </p>
-
 
                 <div
                     id="matches"
                     class="matches-editor"
-                >
-
-                    <!--
-                        Editor pertandingan
-                        dibuat oleh app.js
-                    -->
-
-                </div>
+                ></div>
 
             </div>
 
 
 
-            <!-- =================================================
-                 ACTION BUTTON
-            ================================================== -->
+            <!-- ACTION -->
 
             <div class="admin-actions">
-
 
                 <button
                     id="save"
@@ -395,14 +353,8 @@
                     ♻️ Reset Bracket
                 </button>
 
-
             </div>
 
-
-
-            <!-- =================================================
-                 MESSAGE
-            ================================================== -->
 
             <p
                 id="message"
@@ -419,9 +371,13 @@
 
 
 
-<!-- =========================================================
-     MODAL BACKGROUND CLICK
-========================================================= -->
+<!-- =====================================================
+     MODAL CONTROL
+     
+     Sengaja diletakkan sebelum app.js supaya
+     Panel Panitia tetap bisa dibuka walaupun Firebase
+     mengalami masalah.
+===================================================== -->
 
 <script>
 
@@ -430,25 +386,20 @@ function openAdminPanel() {
     const modal =
         document.getElementById("modal");
 
-
     if (!modal) {
 
         console.error(
-            "Elemen #modal tidak ditemukan."
+            "Element #modal tidak ditemukan."
         );
 
         return;
     }
 
-
     modal.classList.remove("hidden");
 
+    document.body.classList.add("modal-open");
 
-    console.log(
-        "Panel Panitia dibuka."
-    );
 }
-
 
 
 function closeAdminPanel() {
@@ -456,17 +407,15 @@ function closeAdminPanel() {
     const modal =
         document.getElementById("modal");
 
-
     if (!modal) {
-
         return;
     }
 
-
     modal.classList.add("hidden");
 
-}
+    document.body.classList.remove("modal-open");
 
+}
 
 
 document.addEventListener(
@@ -478,7 +427,6 @@ document.addEventListener(
 
 
         if (!modal) {
-
             return;
         }
 
@@ -498,6 +446,23 @@ document.addEventListener(
             }
         );
 
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (
+                    event.key === "Escape" &&
+                    !modal.classList.contains("hidden")
+                ) {
+
+                    closeAdminPanel();
+
+                }
+
+            }
+        );
+
     }
 );
 
@@ -505,9 +470,9 @@ document.addEventListener(
 
 
 
-<!-- =========================================================
-     FIREBASE / APPLICATION JAVASCRIPT
-========================================================= -->
+<!-- =====================================================
+     APP
+===================================================== -->
 
 <script
     type="module"
