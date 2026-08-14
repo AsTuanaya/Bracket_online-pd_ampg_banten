@@ -843,6 +843,10 @@ function renderMatch(
     index
 ) {
 
+    const isBye =
+    teamA === "BYE" ||
+    teamB === "BYE";
+
     const match =
         state.matches[round][index];
 
