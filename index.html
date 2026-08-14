@@ -10,17 +10,14 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <meta
-        name="description"
-        content="Turnamen PD AMPG Banten - Bracket Turnamen Online"
-    >
-
     <title>
         Turnamen PD AMPG Banten
     </title>
 
-
-    <!-- CSS -->
+    <meta
+        name="description"
+        content="Turnamen PD AMPG Banten - Bracket Turnamen Online"
+    >
 
     <link
         rel="stylesheet"
@@ -33,137 +30,134 @@
 <body>
 
 
-    <!-- =================================================
-         HEADER
-    ================================================== -->
+<!-- =====================================================
+     HEADER
+====================================================== -->
 
-    <header class="main-header">
+<header class="site-header">
 
-        <div class="header-inner">
-
-
-            <!-- LOGO -->
-
-            <div class="logo-container">
-
-                <img
-                    src="assets/logo-ampg.png"
-                    alt="Golongan Karya PD AMPG Banten"
-                    class="logo"
-                >
-
-            </div>
+    <div class="header-container">
 
 
-            <!-- JUDUL -->
+        <!-- LOGO -->
 
-            <div class="header-title">
+        <div class="logo-area">
 
-                <h1>
-                    TURNAMEN PD AMPG BANTEN
-                </h1>
+            <img
+                src="assets/logo-ampg.png"
+                alt="Golongan Karya PD AMPG Banten"
+                class="logo"
+            >
 
-                <p>
-                    BRACKET TURNAMEN ONLINE
-                </p>
-
-            </div>
+        </div>
 
 
-            <!-- PANEL PANITIA -->
+        <!-- JUDUL -->
 
-            <div class="header-action">
+        <div class="main-heading">
 
-                <div
-                    id="status"
-                    class="status online"
-                >
-                    ● LIVE
-                </div>
+            <h1>
+                TURNAMEN PD AMPG BANTEN
+            </h1>
 
-
-                <a
-                    href="admin.html"
-                    class="admin-button"
-                >
-                    ⚙ Panel Panitia
-                </a>
-
+            <div class="subtitle">
+                BRACKET TURNAMEN ONLINE
             </div>
 
         </div>
 
-    </header>
+
+        <!-- ACTION -->
+
+        <div class="header-actions">
+
+            <div
+                id="status"
+                class="live-status"
+            >
+                <span class="live-dot"></span>
+                LIVE
+            </div>
 
 
-
-    <!-- =================================================
-         INFORMASI TURNAMEN
-    ================================================== -->
-
-    <section class="tournament-info">
-
-        <h2 id="title">
-            TURNAMEN PD AMPG BANTEN
-        </h2>
-
-
-        <div
-            id="updated"
-            class="updated"
-        >
-            Belum ada pembaruan.
-        </div>
-
-    </section>
-
-
-
-    <!-- =================================================
-         BRACKET
-    ================================================== -->
-
-    <main class="bracket-wrapper">
-
-        <div
-            id="bracket"
-            class="bracket"
-        >
-
-            <!-- Firebase akan mengisi bracket di sini -->
+            <a
+                href="admin.html"
+                class="admin-button"
+            >
+                ⚙
+                <span>Panel Panitia</span>
+            </a>
 
         </div>
 
-    </main>
+    </div>
+
+</header>
 
 
 
-    <!-- =================================================
-         FOOTER
-    ================================================== -->
+<!-- =====================================================
+     INFORMASI TURNAMEN
+====================================================== -->
 
-    <footer class="footer">
+<section class="tournament-card">
 
-        <div>
-            © 2026 PD AMPG Banten
-        </div>
+    <h2 id="title">
+        Turnamen PD AMPG Banten
+    </h2>
 
-        <div>
-            Turnamen Online
-        </div>
+    <div
+        id="updated"
+        class="updated"
+    >
+        Terakhir diperbarui:
+    </div>
 
-    </footer>
+</section>
 
 
 
-    <!-- =================================================
-         JAVASCRIPT
-    ================================================== -->
+<!-- =====================================================
+     BRACKET
+====================================================== -->
 
-    <script
-        type="module"
-        src="app.js"
-    ></script>
+<main class="bracket-container">
+
+    <div
+        id="bracket"
+        class="bracket"
+    >
+
+        <!--
+            DATA BRACKET DIBUAT OTOMATIS OLEH app.js
+        -->
+
+    </div>
+
+</main>
+
+
+
+<!-- =====================================================
+     FOOTER
+====================================================== -->
+
+<footer class="site-footer">
+
+    Turnamen PD AMPG Banten
+
+</footer>
+
+
+
+<!-- =====================================================
+     APP
+====================================================== -->
+
+<script
+    type="module"
+    src="app.js"
+></script>
 
 
 </body>
