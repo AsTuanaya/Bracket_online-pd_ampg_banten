@@ -1,19 +1,356 @@
-<!doctype html>
-<html lang="id"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Bracket Turnamen — PD AMPG Banten</title>
-<link rel="stylesheet" href="styles.css">
-</head><body>
-<header><div><small>PD AMPG BANTEN</small><h1>Bracket Turnamen</h1><p>Hasil pertandingan diperbarui secara real-time.</p></div>
-<div><span id="status">Menghubungkan...</span> <button id="adminBtn">Panel Panitia</button></div></header>
-<main><section class="hero"><h2 id="title">Turnamen PD AMPG Banten</h2><p id="updated">Menunggu data...</p></section><section id="bracket"></section></main>
+<!DOCTYPE html>
+<html lang="id">
 
-<div id="modal" class="modal hidden"><div class="panel"><button id="close" class="x">×</button>
-<div id="login"><h2>Login Panitia</h2><input id="email" type="email" placeholder="Email panitia"><input id="password" type="password" placeholder="Password"><button id="loginBtn">Masuk</button><p id="error"></p></div>
-<div id="admin" class="hidden"><div class="adminhead"><h2>Panel Panitia</h2><button id="logout">Keluar</button></div>
-<label>Nama Turnamen<input id="titleInput"></label><h3>Peserta / Pair — Round 1</h3><div id="teams"></div>
-<h3>Hasil Pertandingan</h3><p class="muted">Isi skor dan pilih pemenang. Pemenang otomatis masuk ke babak berikutnya.</p><div id="matches"></div>
-<button id="save">Simpan Perubahan</button><button id="reset" class="danger">Reset Bracket</button><p id="message"></p></div>
-</div></div>
-<script type="module" src="app.js"></script>
-</body></html>
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Bracket Online PD AMPG Banten
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="styles.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- ==================================================
+     HEADER
+================================================== -->
+
+<header class="header">
+
+    <div class="header-left">
+
+        <div class="logo">
+            🏆
+        </div>
+
+        <div>
+
+            <h1>
+                PD AMPG Banten
+            </h1>
+
+            <p>
+                Bracket Turnamen Online
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="header-right">
+
+        <span
+            id="status"
+            class="online"
+        >
+            ● LIVE
+        </span>
+
+
+        <button
+            id="adminBtn"
+            type="button"
+            class="admin-button"
+        >
+            ⚙️ Panel Panitia
+        </button>
+
+    </div>
+
+</header>
+
+
+
+<!-- ==================================================
+     MAIN
+================================================== -->
+
+<main class="container">
+
+
+    <!-- TITLE -->
+
+    <section class="hero">
+
+        <h2 id="title">
+            Turnamen PD AMPG Banten
+        </h2>
+
+        <p id="updated">
+            Belum ada pembaruan.
+        </p>
+
+    </section>
+
+
+
+    <!-- BRACKET -->
+
+    <section
+        id="bracket"
+        class="bracket"
+    >
+
+        <!-- Diisi otomatis oleh app.js -->
+
+    </section>
+
+
+</main>
+
+
+
+<!-- ==================================================
+     ADMIN MODAL
+================================================== -->
+
+<div
+    id="modal"
+    class="modal hidden"
+>
+
+
+    <div class="modal-content">
+
+
+        <!-- CLOSE -->
+
+        <button
+            id="close"
+            type="button"
+            class="close-button"
+        >
+            ×
+        </button>
+
+
+
+        <!-- ==================================================
+             LOGIN PANITIA
+        ================================================== -->
+
+        <section
+            id="login"
+            class="login-panel"
+        >
+
+            <div class="login-icon">
+                🔐
+            </div>
+
+
+            <h2>
+                Login Panitia
+            </h2>
+
+
+            <p class="login-description">
+                Masuk untuk mengelola bracket pertandingan.
+            </p>
+
+
+            <label for="email">
+                Email Panitia
+            </label>
+
+            <input
+                id="email"
+                type="email"
+                placeholder="Masukkan email"
+                autocomplete="username"
+            >
+
+
+            <label for="password">
+                Password
+            </label>
+
+            <input
+                id="password"
+                type="password"
+                placeholder="Masukkan password"
+                autocomplete="current-password"
+            >
+
+
+            <button
+                id="loginBtn"
+                type="button"
+                class="primary-button"
+            >
+                🔐 Masuk
+            </button>
+
+
+            <p
+                id="error"
+                class="error"
+            ></p>
+
+        </section>
+
+
+
+        <!-- ==================================================
+             ADMIN PANEL
+        ================================================== -->
+
+        <section
+            id="admin"
+            class="admin-panel hidden"
+        >
+
+            <div class="admin-header">
+
+                <div>
+
+                    <h2>
+                        ⚙️ Panel Panitia
+                    </h2>
+
+                    <p>
+                        Kelola peserta dan hasil pertandingan.
+                    </p>
+
+                </div>
+
+
+                <button
+                    id="logout"
+                    type="button"
+                    class="logout-button"
+                >
+                    Keluar
+                </button>
+
+            </div>
+
+
+
+            <!-- TURNAMEN -->
+
+            <div class="admin-section">
+
+                <h3>
+                    Nama Turnamen
+                </h3>
+
+                <input
+                    id="titleInput"
+                    type="text"
+                    placeholder="Nama turnamen"
+                >
+
+            </div>
+
+
+
+            <!-- PESERTA -->
+
+            <div class="admin-section">
+
+                <h3>
+                    Peserta / Pair
+                </h3>
+
+                <div
+                    id="teams"
+                    class="teams"
+                >
+
+                    <!-- Diisi app.js -->
+
+                </div>
+
+            </div>
+
+
+
+            <!-- MATCH -->
+
+            <div class="admin-section">
+
+                <h3>
+                    Hasil Pertandingan
+                </h3>
+
+                <div
+                    id="matches"
+                    class="matches-editor"
+                >
+
+                    <!-- Diisi app.js -->
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ACTION -->
+
+            <div class="admin-actions">
+
+                <button
+                    id="save"
+                    type="button"
+                    class="primary-button"
+                >
+                    💾 Simpan Perubahan
+                </button>
+
+
+                <button
+                    id="reset"
+                    type="button"
+                    class="danger-button"
+                >
+                    ♻️ Reset Bracket
+                </button>
+
+            </div>
+
+
+            <p
+                id="message"
+                class="message"
+            ></p>
+
+
+        </section>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- ==================================================
+     JAVASCRIPT
+================================================== -->
+
+<script
+    type="module"
+    src="app.js"
+></script>
+
+
+</body>
+
+</html>
