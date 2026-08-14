@@ -1171,6 +1171,16 @@ function render() {
 
     renderBracket();
 
+
+    // Tunggu DOM selesai dibuat
+    // sebelum menggambar garis.
+
+    requestAnimationFrame(() => {
+
+        drawBracketLines();
+
+    });
+
 }
 
 
