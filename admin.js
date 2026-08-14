@@ -668,6 +668,29 @@ function getWinnerName(
     }
 
 
+    const winner =
+        getParticipant(
+            round,
+            matchIndex,
+            match.winner
+        );
+
+
+    if (
+        !winner ||
+        winner === "—"
+    ) {
+
+        return "—";
+
+    }
+
+
+    return winner;
+
+}
+
+
     return getParticipant(
         round,
         matchIndex,
