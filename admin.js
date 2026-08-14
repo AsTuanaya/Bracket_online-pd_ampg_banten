@@ -250,16 +250,22 @@ function normalizeData(data) {
 
                     return {
 
-                        sa:
-                            old?.sa ?? "",
+    teamA:
+        old?.teamA ?? "",
 
-                        sb:
-                            old?.sb ?? "",
+    teamB:
+        old?.teamB ?? "",
 
-                        winner:
-                            old?.winner ?? null
+    sa:
+        old?.sa ?? "",
 
-                    };
+    sb:
+        old?.sb ?? "",
+
+    winner:
+        old?.winner ?? null
+
+};
 
                 }
             );
