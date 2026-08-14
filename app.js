@@ -68,26 +68,45 @@ const ROUND_NAMES = {
 
 
 // =====================================================
-// DEFAULT DATA
+// DEFAULT MATCH
+// =====================================================
+
+function createMatch() {
+
+    return {
+
+        teamA: "",
+
+        teamB: "",
+
+        sa: "",
+
+        sb: "",
+
+        winner: null
+
+    };
+
+}
+
+
+// =====================================================
+// DEFAULT MATCHES
 // =====================================================
 
 function createMatches(count) {
 
     return Array.from(
         { length: count },
-        () => ({
-
-            sa: "",
-
-            sb: "",
-
-            winner: null
-
-        })
+        () => createMatch()
     );
 
 }
 
+
+// =====================================================
+// DEFAULT STATE
+// =====================================================
 
 function defaultState() {
 
@@ -105,15 +124,20 @@ function defaultState() {
 
         matches: {
 
-            r1: createMatches(20),
+            r1:
+                createMatches(20),
 
-            r2: createMatches(10),
+            r2:
+                createMatches(10),
 
-            r3: createMatches(5),
+            r3:
+                createMatches(5),
 
-            r4: createMatches(2),
+            r4:
+                createMatches(2),
 
-            r5: createMatches(1)
+            r5:
+                createMatches(1)
 
         },
 
@@ -162,20 +186,28 @@ function normalizeData(data) {
                 { length: count },
                 (_, i) => {
 
-                    const match =
-                        state.matches?.[round]?.[i];
+                    const old =
+                        state.matches
+                            ?.[round]
+                            ?.[i];
 
 
                     return {
 
+                        teamA:
+                            old?.teamA ?? "",
+
+                        teamB:
+                            old?.teamB ?? "",
+
                         sa:
-                            match?.sa ?? "",
+                            old?.sa ?? "",
 
                         sb:
-                            match?.sb ?? "",
+                            old?.sb ?? "",
 
                         winner:
-                            match?.winner ?? null
+                            old?.winner ?? null
 
                     };
 
@@ -200,7 +232,7 @@ function escapeHtml(value) {
         value ?? ""
     ).replace(
         /[&<>"']/g,
-        character => {
+        char => {
 
             const map = {
 
@@ -216,7 +248,7 @@ function escapeHtml(value) {
 
             };
 
-            return map[character];
+            return map[char];
 
         }
     );
@@ -225,19 +257,19 @@ function escapeHtml(value) {
 
 
 // =====================================================
-// NAMA PEMAIN / PAIR
+// PARTICIPANT OTOMATIS
 // =====================================================
 
-function getParticipant(
+function getAutomaticParticipant(
     state,
     round,
     matchIndex,
     side
 ) {
 
-    // ---------------------------------------------
+    // =============================================
     // ROUND 1
-    // ---------------------------------------------
+    // =============================================
 
     if (
         round === "r1"
@@ -254,15 +286,15 @@ function getParticipant(
 
         return (
             state.teams[index] ||
-            "—"
+            `PAIR ${index + 1}`
         );
 
     }
 
 
-    // ---------------------------------------------
-    // ROUND BERIKUTNYA
-    // ---------------------------------------------
+    // =============================================
+    // PREVIOUS ROUND
+    // =============================================
 
     const previousRound = {
 
@@ -277,7 +309,14 @@ function getParticipant(
     }[round];
 
 
-    const previousMatch =
+    if (!previousRound) {
+
+        return "—";
+
+    }
+
+
+    const previousMatchIndex =
         matchIndex * 2 +
         (
             side === "a"
@@ -286,17 +325,17 @@ function getParticipant(
         );
 
 
-    const previous =
+    const previousMatch =
         state.matches
             ?.[
                 previousRound
             ]
-            ?.[previousMatch];
+            ?.[previousMatchIndex];
 
 
     if (
-        !previous ||
-        !previous.winner
+        !previousMatch ||
+        !previousMatch.winner
     ) {
 
         return "—";
@@ -307,9 +346,123 @@ function getParticipant(
     return getParticipant(
         state,
         previousRound,
-        previousMatch,
-        previous.winner
+        previousMatchIndex,
+        previousMatch.winner
     );
+
+}
+
+
+// =====================================================
+// PARTICIPANT FINAL
+//
+// Manual teamA/teamB lebih utama.
+// Jika kosong → otomatis.
+// =====================================================
+
+function getParticipant(
+    state,
+    round,
+    matchIndex,
+    side
+) {
+
+    const match =
+        state.matches
+            ?.[
+                round
+            ]
+            ?.[matchIndex];
+
+
+    // =============================================
+    // MANUAL
+    // =============================================
+
+    if (match) {
+
+        if (
+            side === "a" &&
+            match.teamA?.trim()
+        ) {
+
+            return match.teamA.trim();
+
+        }
+
+
+        if (
+            side === "b" &&
+            match.teamB?.trim()
+        ) {
+
+            return match.teamB.trim();
+
+        }
+
+    }
+
+
+    // =============================================
+    // OTOMATIS
+    // =============================================
+
+    return getAutomaticParticipant(
+        state,
+        round,
+        matchIndex,
+        side
+    );
+
+}
+
+
+// =====================================================
+// RENDER HEADER
+// =====================================================
+
+function renderHeader(state) {
+
+    const title =
+        document.getElementById(
+            "title"
+        );
+
+
+    const updated =
+        document.getElementById(
+            "updated"
+        );
+
+
+    if (title) {
+
+        title.textContent =
+            state.title;
+
+    }
+
+
+    if (updated) {
+
+        if (state.updatedAt) {
+
+            updated.textContent =
+                "Terakhir diperbarui: " +
+                new Date(
+                    state.updatedAt
+                ).toLocaleString(
+                    "id-ID"
+                );
+
+        } else {
+
+            updated.textContent =
+                "Belum ada pembaruan.";
+
+        }
+
+    }
 
 }
 
@@ -364,6 +517,7 @@ function renderBracket(state) {
 
                 </div>
 
+
                 <div class="matches">
 
         `;
@@ -391,23 +545,37 @@ function renderBracket(state) {
                         );
 
 
+                    const winnerA =
+                        match.winner === "a";
+
+
+                    const winnerB =
+                        match.winner === "b";
+
+
                     html += `
 
-                        <article class="match">
+                        <article
+                            class="match"
+                        >
 
-                            <div class="match-number">
+                            <div
+                                class="match-number"
+                            >
                                 Match ${index + 1}
                             </div>
 
 
-                            <div class="
-                                team
-                                ${
-                                    match.winner === "a"
-                                        ? "win"
-                                        : ""
-                                }
-                            ">
+                            <!-- =================================
+                                 TEAM A
+                            ================================== -->
+
+                            <div
+                                class="
+                                    team
+                                    ${winnerA ? "win" : ""}
+                                "
+                            >
 
                                 <span
                                     class="
@@ -422,6 +590,7 @@ function renderBracket(state) {
                                     ${escapeHtml(teamA)}
                                 </span>
 
+
                                 <strong>
                                     ${escapeHtml(match.sa)}
                                 </strong>
@@ -429,14 +598,16 @@ function renderBracket(state) {
                             </div>
 
 
-                            <div class="
-                                team
-                                ${
-                                    match.winner === "b"
-                                        ? "win"
-                                        : ""
-                                }
-                            ">
+                            <!-- =================================
+                                 TEAM B
+                            ================================== -->
+
+                            <div
+                                class="
+                                    team
+                                    ${winnerB ? "win" : ""}
+                                "
+                            >
 
                                 <span
                                     class="
@@ -450,6 +621,7 @@ function renderBracket(state) {
                                 >
                                     ${escapeHtml(teamB)}
                                 </span>
+
 
                                 <strong>
                                     ${escapeHtml(match.sb)}
@@ -483,57 +655,7 @@ function renderBracket(state) {
 
 
 // =====================================================
-// UPDATE HEADER
-// =====================================================
-
-function updateHeader(state) {
-
-    const title =
-        document.getElementById(
-            "title"
-        );
-
-
-    const updated =
-        document.getElementById(
-            "updated"
-        );
-
-
-    if (title) {
-
-        title.textContent =
-            state.title;
-
-    }
-
-
-    if (updated) {
-
-        if (state.updatedAt) {
-
-            updated.textContent =
-                "Terakhir diperbarui: " +
-                new Date(
-                    state.updatedAt
-                ).toLocaleString(
-                    "id-ID"
-                );
-
-        } else {
-
-            updated.textContent =
-                "Belum ada pembaruan.";
-
-        }
-
-    }
-
-}
-
-
-// =====================================================
-// STATUS
+// LIVE STATUS
 // =====================================================
 
 function setStatus(
@@ -573,6 +695,19 @@ function setStatus(
 
 
 // =====================================================
+// RENDER SEMUA
+// =====================================================
+
+function render(state) {
+
+    renderHeader(state);
+
+    renderBracket(state);
+
+}
+
+
+// =====================================================
 // FIREBASE REALTIME
 // =====================================================
 
@@ -588,18 +723,21 @@ onValue(
             );
 
 
-        updateHeader(state);
-
-        renderBracket(state);
+        render(state);
 
         setStatus(true);
+
+
+        console.log(
+            "✓ Data bracket diperbarui."
+        );
 
     },
 
     error => {
 
         console.error(
-            "Firebase error:",
+            "FIREBASE DATABASE ERROR:",
             error
         );
 
@@ -608,9 +746,7 @@ onValue(
             defaultState();
 
 
-        updateHeader(state);
-
-        renderBracket(state);
+        render(state);
 
         setStatus(false);
 
@@ -620,9 +756,9 @@ onValue(
 
 
 // =====================================================
-// INITIAL
+// START
 // =====================================================
 
 console.log(
-    "✓ app.js — Public Bracket aktif."
+    "✓ app.js — Bracket Publik LIVE aktif."
 );
