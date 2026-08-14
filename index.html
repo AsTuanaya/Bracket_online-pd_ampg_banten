@@ -12,12 +12,15 @@
 
     <meta
         name="description"
-        content="Bracket Online Turnamen PD AMPG Banten"
+        content="Turnamen PD AMPG Banten - Bracket Turnamen Online"
     >
 
     <title>
-        Bracket Online PD AMPG Banten
+        Turnamen PD AMPG Banten
     </title>
+
+
+    <!-- CSS -->
 
     <link
         rel="stylesheet"
@@ -30,452 +33,137 @@
 <body>
 
 
-<!-- =====================================================
-     HEADER
-===================================================== -->
+    <!-- =================================================
+         HEADER
+    ================================================== -->
 
-<header class="header">
+    <header class="main-header">
 
-    <div class="header-left">
-
-        <div class="logo">
-            🏆
-        </div>
-
-        <div class="header-info">
-
-            <h1>
-                PD AMPG Banten
-            </h1>
-
-            <p>
-                Bracket Turnamen Online
-            </p>
-
-        </div>
-
-    </div>
+        <div class="header-inner">
 
 
-    <div class="header-right">
+            <!-- LOGO -->
 
-        <span
-            id="status"
-            class="status online"
-        >
-            ● LIVE
-        </span>
+            <div class="logo-container">
 
-
-        <a
-    href="admin.html"
-    class="admin-button"
->
-    ⚙️ Panel Panitia
-</a>
-
-    </div>
-
-</header>
-
-
-
-<!-- =====================================================
-     MAIN
-===================================================== -->
-
-<main class="container">
-
-
-    <!-- TITLE -->
-
-    <section class="hero">
-
-        <div>
-
-            <h2 id="title">
-                Turnamen PD AMPG Banten
-            </h2>
-
-            <p id="updated">
-                Belum ada pembaruan.
-            </p>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- BRACKET -->
-
-    <section
-        id="bracket"
-        class="bracket"
-    >
-
-        <!--
-            Bracket dibuat otomatis
-            oleh app.js
-        -->
-
-    </section>
-
-
-</main>
-
-
-
-<!-- =====================================================
-     ADMIN MODAL
-===================================================== -->
-
-<div
-    id="modal"
-    class="modal hidden"
->
-
-
-    <div class="modal-content">
-
-
-        <!-- CLOSE -->
-
-        <button
-            id="close"
-            type="button"
-            class="close-button"
-            onclick="closeAdminPanel()"
-            aria-label="Tutup"
-        >
-            ×
-        </button>
-
-
-
-        <!-- =================================================
-             LOGIN
-        ================================================== -->
-
-        <section
-            id="login"
-            class="login-panel"
-        >
-
-            <div class="login-icon">
-                🔐
-            </div>
-
-
-            <h2>
-                Login Panitia
-            </h2>
-
-
-            <p class="login-description">
-                Masuk untuk mengelola bracket pertandingan.
-            </p>
-
-
-            <div class="form-group">
-
-                <label for="email">
-                    Email Panitia
-                </label>
-
-                <input
-                    id="email"
-                    type="email"
-                    placeholder="Masukkan email"
-                    autocomplete="username"
+                <img
+                    src="assets/logo-ampg.png"
+                    alt="Golongan Karya PD AMPG Banten"
+                    class="logo"
                 >
 
             </div>
 
 
-            <div class="form-group">
+            <!-- JUDUL -->
 
-                <label for="password">
-                    Password
-                </label>
+            <div class="header-title">
 
-                <input
-                    id="password"
-                    type="password"
-                    placeholder="Masukkan password"
-                    autocomplete="current-password"
-                >
+                <h1>
+                    TURNAMEN PD AMPG BANTEN
+                </h1>
+
+                <p>
+                    BRACKET TURNAMEN ONLINE
+                </p>
 
             </div>
 
 
-            <button
-                id="loginBtn"
-                type="button"
-                class="primary-button"
-            >
-                🔐 Masuk
-            </button>
+            <!-- PANEL PANITIA -->
 
+            <div class="header-action">
 
-            <p
-                id="error"
-                class="error"
-            ></p>
-
-        </section>
-
-
-
-        <!-- =================================================
-             ADMIN PANEL
-        ================================================== -->
-
-        <section
-            id="admin"
-            class="admin-panel hidden"
-        >
-
-
-            <!-- ADMIN HEADER -->
-
-            <div class="admin-header">
-
-                <div>
-
-                    <span class="admin-badge">
-                        PANITIA
-                    </span>
-
-                    <h2>
-                        ⚙️ Panel Panitia
-                    </h2>
-
-                    <p>
-                        Kelola peserta, skor, dan pemenang.
-                    </p>
-
+                <div
+                    id="status"
+                    class="status online"
+                >
+                    ● LIVE
                 </div>
 
 
-                <button
-                    id="logout"
-                    type="button"
-                    class="logout-button"
+                <a
+                    href="admin.html"
+                    class="admin-button"
                 >
-                    Keluar
-                </button>
+                    ⚙ Panel Panitia
+                </a>
 
             </div>
 
+        </div>
 
+    </header>
 
-            <!-- NAMA TURNAMEN -->
 
-            <div class="admin-card">
 
-                <h3>
-                    🏆 Nama Turnamen
-                </h3>
+    <!-- =================================================
+         INFORMASI TURNAMEN
+    ================================================== -->
 
-                <input
-                    id="titleInput"
-                    type="text"
-                    placeholder="Nama turnamen"
-                >
+    <section class="tournament-info">
 
-            </div>
+        <h2 id="title">
+            TURNAMEN PD AMPG BANTEN
+        </h2>
 
 
+        <div
+            id="updated"
+            class="updated"
+        >
+            Belum ada pembaruan.
+        </div>
 
-            <!-- PESERTA -->
+    </section>
 
-            <div class="admin-card">
 
-                <h3>
-                    👥 Daftar Pair
-                </h3>
 
-                <p class="section-description">
-                    Masukkan nama 20 pair peserta.
-                </p>
+    <!-- =================================================
+         BRACKET
+    ================================================== -->
 
-                <div
-                    id="teams"
-                    class="teams"
-                ></div>
+    <main class="bracket-wrapper">
 
-            </div>
+        <div
+            id="bracket"
+            class="bracket"
+        >
 
+            <!-- Firebase akan mengisi bracket di sini -->
 
+        </div>
 
-            <!-- MATCH -->
+    </main>
 
-            <div class="admin-card">
 
-                <h3>
-                    📝 Hasil Pertandingan
-                </h3>
 
-                <p class="section-description">
-                    Masukkan skor dan pilih pemenang.
-                </p>
+    <!-- =================================================
+         FOOTER
+    ================================================== -->
 
-                <div
-                    id="matches"
-                    class="matches-editor"
-                ></div>
+    <footer class="footer">
 
-            </div>
+        <div>
+            © 2026 PD AMPG Banten
+        </div>
 
+        <div>
+            Turnamen Online
+        </div>
 
+    </footer>
 
-            <!-- ACTION -->
 
-            <div class="admin-actions">
 
-                <button
-                    id="save"
-                    type="button"
-                    class="primary-button"
-                >
-                    💾 Simpan Perubahan
-                </button>
+    <!-- =================================================
+         JAVASCRIPT
+    ================================================== -->
 
-
-                <button
-                    id="reset"
-                    type="button"
-                    class="danger-button"
-                >
-                    ♻️ Reset Bracket
-                </button>
-
-            </div>
-
-
-            <p
-                id="message"
-                class="message"
-            ></p>
-
-
-        </section>
-
-
-    </div>
-
-</div>
-
-
-
-<!-- =====================================================
-     MODAL CONTROL
-     
-     Sengaja diletakkan sebelum app.js supaya
-     Panel Panitia tetap bisa dibuka walaupun Firebase
-     mengalami masalah.
-===================================================== -->
-
-<script>
-
-function openAdminPanel() {
-
-    const modal =
-        document.getElementById("modal");
-
-    if (!modal) {
-
-        console.error(
-            "Element #modal tidak ditemukan."
-        );
-
-        return;
-    }
-
-    modal.classList.remove("hidden");
-
-    document.body.classList.add("modal-open");
-
-}
-
-
-function closeAdminPanel() {
-
-    const modal =
-        document.getElementById("modal");
-
-    if (!modal) {
-        return;
-    }
-
-    modal.classList.add("hidden");
-
-    document.body.classList.remove("modal-open");
-
-}
-
-
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-
-        const modal =
-            document.getElementById("modal");
-
-
-        if (!modal) {
-            return;
-        }
-
-
-        modal.addEventListener(
-            "click",
-            function (event) {
-
-                if (
-                    event.target === modal
-                ) {
-
-                    closeAdminPanel();
-
-                }
-
-            }
-        );
-
-
-        document.addEventListener(
-            "keydown",
-            function (event) {
-
-                if (
-                    event.key === "Escape" &&
-                    !modal.classList.contains("hidden")
-                ) {
-
-                    closeAdminPanel();
-
-                }
-
-            }
-        );
-
-    }
-);
-
-</script>
-
-
-
-<!-- =====================================================
-     APP
-===================================================== -->
-
-<script
-    type="module"
-    src="app.js"
-></script>
+    <script
+        type="module"
+        src="app.js"
+    ></script>
 
 
 </body>
