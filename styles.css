@@ -1054,3 +1054,96 @@ body {
     }
 
 }
+
+
+/* =====================================================
+   BRACKET CONNECTOR
+===================================================== */
+
+.bracket-wrapper {
+
+    position: relative;
+
+    width: 100%;
+
+}
+
+
+/* SVG */
+
+.bracket-lines {
+
+    position: absolute;
+
+    top: 0;
+
+    left: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    z-index: 1;
+
+    pointer-events: none;
+
+    overflow: visible;
+
+}
+
+
+/* Bracket berada di atas SVG */
+
+.bracket {
+
+    position: relative;
+
+    z-index: 2;
+
+}
+
+
+/* Kartu pertandingan */
+
+.match {
+
+    position: relative;
+
+    z-index: 3;
+
+}
+
+
+/* =====================================================
+   CONNECTOR LINE
+===================================================== */
+
+.bracket-line {
+
+    fill: none;
+
+    stroke: #777f8b;
+
+    stroke-width: 1.2;
+
+    vector-effect:
+        non-scaling-stroke;
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (
+    max-width: 800px
+) {
+
+    .bracket-wrapper {
+
+        min-width: 970px;
+
+    }
+
+}
