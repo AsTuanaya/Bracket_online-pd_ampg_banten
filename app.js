@@ -859,6 +859,309 @@ function renderBracket() {
 
 
 // ============================================================
+// DRAW BRACKET CONNECTOR
+// ============================================================
+
+function drawBracketLines() {
+
+    const wrapper =
+        document.getElementById(
+            "bracket-wrapper"
+        );
+
+    const svg =
+        document.getElementById(
+            "bracket-lines"
+        );
+
+
+    if (!wrapper || !svg) {
+
+        return;
+
+    }
+
+
+    // --------------------------------------------------------
+    // Bersihkan garis lama
+    // --------------------------------------------------------
+
+    svg.innerHTML = "";
+
+
+    // --------------------------------------------------------
+    // Ukuran wrapper
+    // --------------------------------------------------------
+
+    const wrapperRect =
+        wrapper.getBoundingClientRect();
+
+
+    const width =
+        wrapper.scrollWidth;
+
+
+    const height =
+        wrapper.scrollHeight;
+
+
+    svg.setAttribute(
+        "width",
+        width
+    );
+
+    svg.setAttribute(
+        "height",
+        height
+    );
+
+    svg.setAttribute(
+        "viewBox",
+        `0 0 ${width} ${height}`
+    );
+
+
+    // --------------------------------------------------------
+    // Hubungkan setiap ronde
+    // --------------------------------------------------------
+
+    const roundPairs = [
+
+        ["r1", "r2"],
+
+        ["r2", "r3"],
+
+        ["r3", "r4"],
+
+        ["r4", "r5"]
+
+    ];
+
+
+    roundPairs.forEach(
+        ([fromRound, toRound]) => {
+
+            const fromCount =
+                getRoundMatchCount(
+                    fromRound
+                );
+
+            const toCount =
+                getRoundMatchCount(
+                    toRound
+                );
+
+
+            for (
+                let targetIndex = 0;
+                targetIndex < toCount;
+                targetIndex++
+            ) {
+
+                const sourceA =
+                    targetIndex * 2;
+
+                const sourceB =
+                    targetIndex * 2 + 1;
+
+
+                if (
+                    sourceA >= fromCount ||
+                    sourceB >= fromCount
+                ) {
+
+                    continue;
+
+                }
+
+
+                connectMatches(
+                    fromRound,
+                    sourceA,
+                    fromRound,
+                    sourceB,
+                    toRound,
+                    targetIndex,
+                    wrapperRect,
+                    svg
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+// ============================================================
+// GET MATCH COUNT
+// ============================================================
+
+function getRoundMatchCount(
+    round
+) {
+
+    return (
+        ROUND_CONFIG[round]?.matches ||
+        0
+    );
+
+}
+
+
+// ============================================================
+// CONNECT TWO MATCHES TO ONE MATCH
+// ============================================================
+
+function connectMatches(
+    fromRound,
+    sourceAIndex,
+    fromRoundB,
+    sourceBIndex,
+    toRound,
+    targetIndex,
+    wrapperRect,
+    svg
+) {
+
+    const sourceA =
+        document.getElementById(
+            `match-${fromRound}-${sourceAIndex}`
+        );
+
+
+    const sourceB =
+        document.getElementById(
+            `match-${fromRoundB}-${sourceBIndex}`
+        );
+
+
+    const target =
+        document.getElementById(
+            `match-${toRound}-${targetIndex}`
+        );
+
+
+    if (
+        !sourceA ||
+        !sourceB ||
+        !target
+    ) {
+
+        return;
+
+    }
+
+
+    // --------------------------------------------------------
+    // Posisi
+    // --------------------------------------------------------
+
+    const rectA =
+        sourceA.getBoundingClientRect();
+
+
+    const rectB =
+        sourceB.getBoundingClientRect();
+
+
+    const rectTarget =
+        target.getBoundingClientRect();
+
+
+    const x1 =
+        rectA.right -
+        wrapperRect.left;
+
+
+    const y1 =
+        rectA.top +
+        rectA.height / 2 -
+        wrapperRect.top;
+
+
+    const x2 =
+        rectB.right -
+        wrapperRect.left;
+
+
+    const y2 =
+        rectB.top +
+        rectB.height / 2 -
+        wrapperRect.top;
+
+
+    const x3 =
+        rectTarget.left -
+        wrapperRect.left;
+
+
+    const y3 =
+        rectTarget.top +
+        rectTarget.height / 2 -
+        wrapperRect.top;
+
+
+    // --------------------------------------------------------
+    // Titik tengah
+    // --------------------------------------------------------
+
+    const middleX =
+        x1 +
+        (x3 - x1) / 2;
+
+
+    // --------------------------------------------------------
+    // SVG PATH
+    // --------------------------------------------------------
+
+    const path =
+        document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "path"
+        );
+
+
+    const d = [
+
+        `M ${x1} ${y1}`,
+
+        `H ${middleX}`,
+
+        `V ${y2}`,
+
+        `H ${x2}`,
+
+        `M ${middleX} ${y1}`,
+
+        `V ${y3}`,
+
+        `H ${x3}`
+
+    ].join(" ");
+
+
+    path.setAttribute(
+        "d",
+        d
+    );
+
+
+    path.setAttribute(
+        "class",
+        "bracket-line"
+    );
+
+
+    svg.appendChild(
+        path
+    );
+
+}
+
+
+// ============================================================
 // RENDER SEMUA
 // ============================================================
 
