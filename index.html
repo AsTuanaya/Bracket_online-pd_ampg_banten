@@ -10,10 +10,17 @@
         content="width=device-width, initial-scale=1.0"
     >
 
+    <meta
+        name="description"
+        content="Bracket Online Turnamen PD AMPG Banten"
+    >
+
     <title>
         Bracket Online PD AMPG Banten
     </title>
 
+
+    <!-- CSS -->
     <link
         rel="stylesheet"
         href="styles.css"
@@ -25,9 +32,9 @@
 <body>
 
 
-<!-- ==================================================
+<!-- =========================================================
      HEADER
-================================================== -->
+========================================================= -->
 
 <header class="header">
 
@@ -37,7 +44,8 @@
             🏆
         </div>
 
-        <div>
+
+        <div class="header-info">
 
             <h1>
                 PD AMPG Banten
@@ -54,6 +62,8 @@
 
     <div class="header-right">
 
+        <!-- STATUS FIREBASE -->
+
         <span
             id="status"
             class="online"
@@ -62,10 +72,13 @@
         </span>
 
 
+        <!-- PANEL PANITIA -->
+
         <button
             id="adminBtn"
             type="button"
             class="admin-button"
+            onclick="openAdminPanel()"
         >
             ⚙️ Panel Panitia
         </button>
@@ -76,14 +89,16 @@
 
 
 
-<!-- ==================================================
-     MAIN
-================================================== -->
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
 
 <main class="container">
 
 
-    <!-- TITLE -->
+    <!-- =====================================================
+         TITLE / INFO
+    ====================================================== -->
 
     <section class="hero">
 
@@ -99,14 +114,19 @@
 
 
 
-    <!-- BRACKET -->
+    <!-- =====================================================
+         BRACKET
+    ====================================================== -->
 
     <section
         id="bracket"
         class="bracket"
     >
 
-        <!-- Diisi otomatis oleh app.js -->
+        <!--
+            Bracket akan dibuat otomatis
+            oleh app.js
+        -->
 
     </section>
 
@@ -115,9 +135,9 @@
 
 
 
-<!-- ==================================================
-     ADMIN MODAL
-================================================== -->
+<!-- =========================================================
+     MODAL PANEL PANITIA
+========================================================= -->
 
 <div
     id="modal"
@@ -128,19 +148,23 @@
     <div class="modal-content">
 
 
-        <!-- CLOSE -->
+        <!-- =================================================
+             CLOSE BUTTON
+        ================================================== -->
 
         <button
             id="close"
             type="button"
             class="close-button"
+            onclick="closeAdminPanel()"
+            aria-label="Tutup"
         >
             ×
         </button>
 
 
 
-        <!-- ==================================================
+        <!-- =================================================
              LOGIN PANITIA
         ================================================== -->
 
@@ -148,6 +172,7 @@
             id="login"
             class="login-panel"
         >
+
 
             <div class="login-icon">
                 🔐
@@ -164,6 +189,9 @@
             </p>
 
 
+
+            <!-- EMAIL -->
+
             <label for="email">
                 Email Panitia
             </label>
@@ -171,10 +199,13 @@
             <input
                 id="email"
                 type="email"
-                placeholder="Masukkan email"
+                placeholder="Masukkan email panitia"
                 autocomplete="username"
             >
 
+
+
+            <!-- PASSWORD -->
 
             <label for="password">
                 Password
@@ -188,6 +219,9 @@
             >
 
 
+
+            <!-- LOGIN BUTTON -->
+
             <button
                 id="loginBtn"
                 type="button"
@@ -197,16 +231,20 @@
             </button>
 
 
+
+            <!-- ERROR -->
+
             <p
                 id="error"
                 class="error"
             ></p>
 
+
         </section>
 
 
 
-        <!-- ==================================================
+        <!-- =================================================
              ADMIN PANEL
         ================================================== -->
 
@@ -215,7 +253,11 @@
             class="admin-panel hidden"
         >
 
+
+            <!-- ADMIN HEADER -->
+
             <div class="admin-header">
+
 
                 <div>
 
@@ -238,17 +280,21 @@
                     Keluar
                 </button>
 
+
             </div>
 
 
 
-            <!-- TURNAMEN -->
+            <!-- =================================================
+                 NAMA TURNAMEN
+            ================================================== -->
 
             <div class="admin-section">
 
                 <h3>
-                    Nama Turnamen
+                    🏆 Nama Turnamen
                 </h3>
+
 
                 <input
                     id="titleInput"
@@ -260,20 +306,31 @@
 
 
 
-            <!-- PESERTA -->
+            <!-- =================================================
+                 DAFTAR PAIR
+            ================================================== -->
 
             <div class="admin-section">
 
                 <h3>
-                    Peserta / Pair
+                    👥 Daftar Pair
                 </h3>
+
+
+                <p class="section-description">
+                    Masukkan nama pasangan/peserta pertandingan.
+                </p>
+
 
                 <div
                     id="teams"
                     class="teams"
                 >
 
-                    <!-- Diisi app.js -->
+                    <!--
+                        Data Pair akan dibuat
+                        oleh app.js
+                    -->
 
                 </div>
 
@@ -281,20 +338,32 @@
 
 
 
-            <!-- MATCH -->
+            <!-- =================================================
+                 HASIL PERTANDINGAN
+            ================================================== -->
 
             <div class="admin-section">
 
                 <h3>
-                    Hasil Pertandingan
+                    📝 Hasil Pertandingan
                 </h3>
+
+
+                <p class="section-description">
+                    Masukkan skor dan tentukan pemenang
+                    setiap pertandingan.
+                </p>
+
 
                 <div
                     id="matches"
                     class="matches-editor"
                 >
 
-                    <!-- Diisi app.js -->
+                    <!--
+                        Editor pertandingan
+                        dibuat oleh app.js
+                    -->
 
                 </div>
 
@@ -302,9 +371,12 @@
 
 
 
-            <!-- ACTION -->
+            <!-- =================================================
+                 ACTION BUTTON
+            ================================================== -->
 
             <div class="admin-actions">
+
 
                 <button
                     id="save"
@@ -323,8 +395,14 @@
                     ♻️ Reset Bracket
                 </button>
 
+
             </div>
 
+
+
+            <!-- =================================================
+                 MESSAGE
+            ================================================== -->
 
             <p
                 id="message"
@@ -341,9 +419,95 @@
 
 
 
-<!-- ==================================================
-     JAVASCRIPT
-================================================== -->
+<!-- =========================================================
+     MODAL BACKGROUND CLICK
+========================================================= -->
+
+<script>
+
+function openAdminPanel() {
+
+    const modal =
+        document.getElementById("modal");
+
+
+    if (!modal) {
+
+        console.error(
+            "Elemen #modal tidak ditemukan."
+        );
+
+        return;
+    }
+
+
+    modal.classList.remove("hidden");
+
+
+    console.log(
+        "Panel Panitia dibuka."
+    );
+}
+
+
+
+function closeAdminPanel() {
+
+    const modal =
+        document.getElementById("modal");
+
+
+    if (!modal) {
+
+        return;
+    }
+
+
+    modal.classList.add("hidden");
+
+}
+
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const modal =
+            document.getElementById("modal");
+
+
+        if (!modal) {
+
+            return;
+        }
+
+
+        modal.addEventListener(
+            "click",
+            function (event) {
+
+                if (
+                    event.target === modal
+                ) {
+
+                    closeAdminPanel();
+
+                }
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+
+
+<!-- =========================================================
+     FIREBASE / APPLICATION JAVASCRIPT
+========================================================= -->
 
 <script
     type="module"
