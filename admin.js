@@ -606,92 +606,96 @@ function renderMatches() {
 
                     <div class="admin-score-grid">
 
-                        <div class="admin-player">
 
-    <input
-        type="number"
-        min="0"
-        data-score="${round}.${i}.sb"
-        value="${escapeHtml(match.sb)}"
-        placeholder="0"
-    >
+    <!-- =========================================
+         PLAYER / PAIR KIRI
+    ========================================== -->
 
-    <span>
-        ${escapeHtml(teamB)}
-    </span>
+    <div class="admin-player">
+
+        ${
+            round === "r1"
+
+            ? `
+                <input
+                    type="text"
+                    value="${escapeHtml(teamA)}"
+                    data-team-r1="${i * 2}"
+                    placeholder="Nama Pair"
+                >
+            `
+
+            : `
+                <input
+                    type="text"
+                    value="${escapeHtml(match.teamA || teamA)}"
+                    data-participant="${round}.${i}.teamA"
+                    placeholder="Nama Pair kiri"
+                >
+            `
+        }
+
+
+        <input
+            type="number"
+            min="0"
+            data-score="${round}.${i}.sa"
+            value="${escapeHtml(match.sa)}"
+            placeholder="0"
+        >
+
+    </div>
+
+
+    <!-- =========================================
+         VS
+    ========================================== -->
+
+    <div class="admin-vs">
+        VS
+    </div>
+
+
+    <!-- =========================================
+         PLAYER / PAIR KANAN
+    ========================================== -->
+
+    <div class="admin-player">
+
+        <input
+            type="number"
+            min="0"
+            data-score="${round}.${i}.sb"
+            value="${escapeHtml(match.sb)}"
+            placeholder="0"
+        >
+
+
+        ${
+            round === "r1"
+
+            ? `
+                <input
+                    type="text"
+                    value="${escapeHtml(teamB)}"
+                    data-team-r1="${i * 2 + 1}"
+                    placeholder="Nama Pair"
+                >
+            `
+
+            : `
+                <input
+                    type="text"
+                    value="${escapeHtml(match.teamB || teamB)}"
+                    data-participant="${round}.${i}.teamB"
+                    placeholder="Nama Pair kanan"
+                >
+            `
+        }
+
+    </div>
 
 </div>
-
-
-                        <div class="admin-vs">
-                            VS
-                        </div>
-
-
-                        <div class="admin-player">
-
-                            <input
-                                type="number"
-                                min="0"
-                                data-score="${round}.${i}.sb"
-                                value="${escapeHtml(match.sb)}"
-                                placeholder="0"
-                            >
-
-
-                            <span>
-                                ${escapeHtml(teamB)}
-                            </span>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="admin-winner">
-
-                        <label>
-                            Pemenang
-                        </label>
-
-
-                        <select
-                            data-winner="${round}.${i}"
-                        >
-
-                            <option value="">
-                                Belum dipilih
-                            </option>
-
-
-                            <option
-                                value="a"
-                                ${
-                                    match.winner === "a"
-                                        ? "selected"
-                                        : ""
-                                }
-                            >
-                                ${escapeHtml(teamA)}
-                            </option>
-
-
-                            <option
-                                value="b"
-                                ${
-                                    match.winner === "b"
-                                        ? "selected"
-                                        : ""
-                                }
-                            >
-                                ${escapeHtml(teamB)}
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                </div>
 
             `;
 
