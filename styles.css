@@ -1,559 +1,607 @@
-/* =====================================================
+/* =========================================================
+   PD AMPG BANTEN
+   BRACKET TURNAMEN ONLINE
+   MODERN UI
+========================================================= */
+
+:root {
+    --navy: #092957;
+    --navy-dark: #061d3e;
+    --navy-light: #123d75;
+
+    --gold: #f4c400;
+    --gold-light: #ffe477;
+
+    --green: #16883f;
+    --green-dark: #0d6b30;
+
+    --white: #ffffff;
+    --bg: #f3ead9;
+    --bg-light: #faf7f0;
+
+    --text: #10294d;
+    --text-light: #68758a;
+
+    --border: #dbe2eb;
+
+    --shadow:
+        0 10px 30px rgba(9, 41, 87, 0.10);
+
+    --shadow-hover:
+        0 14px 35px rgba(9, 41, 87, 0.18);
+
+    --radius: 12px;
+}
+
+
+/* =========================================================
    RESET
-===================================================== */
+========================================================= */
 
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 
 html {
-    margin: 0;
-    padding: 0;
+    scroll-behavior: smooth;
 }
 
 
 body {
-
-    margin: 0;
-
-    padding: 0;
-
-    min-height: 100vh;
-
     font-family:
         Arial,
         Helvetica,
         sans-serif;
 
     background:
-        #f0e5d3;
+        linear-gradient(
+            180deg,
+            #eee3d0 0%,
+            #f8f3e9 45%,
+            #eee3d0 100%
+        );
 
-    color:
-        #111827;
+    color: var(--text);
 
+    min-height: 100vh;
+
+    overflow-x: auto;
 }
 
 
-/* =====================================================
-   HEADER
-===================================================== */
+/* =========================================================
+   TOP BORDER
+========================================================= */
 
-.site-header {
+body::before {
+    content: "";
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
 
     width: 100%;
+    height: 4px;
 
     background:
-        #f0e5d3;
+        linear-gradient(
+            90deg,
+            var(--gold),
+            var(--navy),
+            var(--gold)
+        );
 
-    padding:
-        15px 20px 5px;
-
+    z-index: 9999;
 }
 
 
-.header-container {
+/* =========================================================
+   HEADER
+========================================================= */
 
+header,
+.top-header,
+.site-header {
     position: relative;
 
-    width:
-        min(
-            1100px,
-            100%
+    background:
+        linear-gradient(
+            135deg,
+            var(--navy-dark),
+            var(--navy)
         );
 
-    min-height:
-        145px;
-
-    margin:
-        0 auto;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    justify-content:
-        center;
-
-}
-
-
-/* =====================================================
-   LOGO
-===================================================== */
-
-.logo-area {
-
-    position:
-        absolute;
-
-    top:
-        0;
-
-    left:
-        50%;
-
-    transform:
-        translateX(-50%);
-
-    display:
-        flex;
-
-    justify-content:
-        center;
-
-    align-items:
-        center;
-
-}
-
-
-.logo {
-
-    width:
-        145px;
-
-    height:
-        145px;
-
-    object-fit:
-        contain;
-
-}
-
-
-/* =====================================================
-   TITLE
-===================================================== */
-
-.main-heading {
-
-    position:
-        absolute;
-
-    top:
-        130px;
-
-    left:
-        50%;
-
-    transform:
-        translateX(-50%);
-
-    width:
-        100%;
-
-    text-align:
-        center;
-
-    z-index:
-        2;
-
-}
-
-
-.main-heading h1 {
-
-    margin:
-        0;
-
-    color:
-        #09254d;
-
-    font-size:
-        27px;
-
-    font-weight:
-        900;
-
-    letter-spacing:
-        .5px;
-
-}
-
-
-.subtitle {
-
-    margin-top:
-        4px;
-
-    color:
-        #596579;
-
-    font-size:
-        11px;
-
-    font-weight:
-        700;
-
-    letter-spacing:
-        1.5px;
-
-}
-
-
-/* =====================================================
-   HEADER ACTIONS
-===================================================== */
-
-.header-actions {
-
-    position:
-        absolute;
-
-    right:
-        0;
-
-    top:
-        125px;
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        8px;
-
-    z-index:
-        5;
-
-}
-
-
-/* =====================================================
-   LIVE
-===================================================== */
-
-.live-status {
-
-    display:
-        flex;
-
-    align-items:
-        center;
-
-    gap:
-        5px;
+    color: white;
 
     padding:
-        6px 10px;
+        28px 30px 34px;
 
-    border-radius:
-        20px;
-
-    background:
-        #15803d;
-
-    color:
-        white;
-
-    font-size:
-        10px;
-
-    font-weight:
-        900;
-
-}
-
-
-.live-dot {
-
-    width:
-        7px;
-
-    height:
-        7px;
-
-    border-radius:
-        50%;
-
-    background:
-        #ffffff;
+    border-bottom:
+        4px solid var(--gold);
 
     box-shadow:
-        0 0 5px
-        rgba(
-            255,
-            255,
-            255,
-            .8
-        );
-
+        0 5px 20px rgba(0, 0, 0, 0.18);
 }
 
 
-/* =====================================================
-   PANEL PANITIA
-===================================================== */
+/* =========================================================
+   HEADER CONTAINER
+========================================================= */
 
-.admin-button {
+.header-inner,
+.header-container {
+    width: min(1400px, 94%);
 
-    display:
-        flex;
+    margin: auto;
 
-    align-items:
-        center;
+    display: flex;
 
-    gap:
-        5px;
+    align-items: center;
 
-    padding:
-        7px 12px;
+    justify-content: space-between;
 
-    background:
-        #ffffff;
+    gap: 25px;
+}
 
-    color:
-        #09254d;
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.logo,
+.logo img,
+.header-logo img {
+    width: 92px;
+    height: 92px;
+
+    object-fit: contain;
+
+    background: white;
+
+    border-radius: 50%;
+
+    padding: 4px;
 
     border:
-        1px solid
-        #d5dbe4;
+        3px solid var(--gold);
 
-    border-radius:
-        6px;
+    box-shadow:
+        0 5px 20px rgba(0, 0, 0, 0.25);
 
-    text-decoration:
-        none;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+.logo:hover img,
+.header-logo img:hover {
+    transform: scale(1.04);
+
+    box-shadow:
+        0 8px 25px rgba(244, 196, 0, 0.35);
+}
+
+
+/* =========================================================
+   TITLE AREA
+========================================================= */
+
+.title-area,
+.header-title {
+    flex: 1;
+
+    text-align: center;
+}
+
+
+.title-area h1,
+.header-title h1 {
+    color: white;
 
     font-size:
-        10px;
+        clamp(24px, 3vw, 40px);
+
+    font-weight: 900;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+
+    margin-bottom: 6px;
+
+    text-shadow:
+        0 3px 8px rgba(0, 0, 0, 0.25);
+}
+
+
+.title-area p,
+.header-title p {
+    color:
+        var(--gold-light);
+
+    font-size:
+        13px;
+
+    font-weight: 700;
+
+    letter-spacing:
+        3px;
+
+    text-transform:
+        uppercase;
+}
+
+
+/* =========================================================
+   HEADER ACTION
+========================================================= */
+
+.header-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    min-width: 170px;
+
+    justify-content: flex-end;
+}
+
+
+/* =========================================================
+   LIVE
+========================================================= */
+
+.live,
+#status,
+.status-live {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    background:
+        var(--green);
+
+    color: white;
+
+    padding:
+        9px 14px;
+
+    border-radius:
+        30px;
+
+    font-size:
+        12px;
 
     font-weight:
         800;
 
     box-shadow:
-        0 2px 5px
-        rgba(
-            0,
-            0,
-            0,
-            .08
-        );
+        0 4px 12px rgba(22, 136, 63, 0.25);
+}
 
-    cursor:
-        pointer;
 
-    transition:
-        .2s;
+.live::before,
+.status-live::before {
+    content: "";
+
+    width: 7px;
+    height: 7px;
+
+    background: white;
+
+    border-radius: 50%;
+
+    animation:
+        livePulse 1.5s infinite;
+}
+
+
+@keyframes livePulse {
+
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.4;
+        transform: scale(0.75);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
 
 }
 
 
-.admin-button:hover {
+/* =========================================================
+   PANEL PANITIA
+========================================================= */
 
-    background:
-        #09254d;
+button,
+.btn,
+#adminBtn,
+#admin-btn {
+    border: none;
 
-    color:
-        white;
+    cursor: pointer;
 
-    transform:
-        translateY(-1px);
-
+    font-family: inherit;
 }
 
 
-/* =====================================================
-   TOURNAMENT INFORMATION
-===================================================== */
+.admin-button,
+.panel-button,
+#adminBtn,
+#admin-btn {
+    display: inline-flex;
 
-.tournament-card {
+    align-items: center;
 
-    width:
-        min(
-            980px,
-            90%
-        );
+    justify-content: center;
 
-    margin:
-        25px auto 10px;
+    gap: 7px;
+
+    background: white;
+
+    color: var(--navy);
+
+    border:
+        1px solid #d7dee8;
 
     padding:
-        14px 18px;
-
-    background:
-        #ffffff;
+        10px 16px;
 
     border-radius:
         8px;
 
+    font-size:
+        12px;
+
+    font-weight:
+        800;
+
+    cursor: pointer;
+
+    transition:
+        all 0.25s ease;
+
     box-shadow:
-        0 4px 15px
-        rgba(
-            0,
-            0,
-            0,
-            .07
-        );
-
-    text-align:
-        left;
-
+        0 3px 10px rgba(0, 0, 0, 0.12);
 }
 
 
-.tournament-card h2 {
-
-    margin:
-        0 0 4px;
+.admin-button:hover,
+.panel-button:hover,
+#adminBtn:hover,
+#admin-btn:hover {
+    background:
+        var(--gold);
 
     color:
-        #09254d;
+        var(--navy);
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 7px 18px rgba(0, 0, 0, 0.18);
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+main,
+.main-container,
+.container {
+    width:
+        min(1450px, 96%);
+
+    margin:
+        28px auto 60px;
+}
+
+
+/* =========================================================
+   TOURNAMENT INFO
+========================================================= */
+
+.tournament-info,
+.info-card,
+#info {
+    position: relative;
+
+    background:
+        rgba(255, 255, 255, 0.96);
+
+    border:
+        1px solid rgba(9, 41, 87, 0.08);
+
+    border-radius:
+        14px;
+
+    padding:
+        22px 28px;
+
+    margin-bottom:
+        24px;
+
+    box-shadow:
+        var(--shadow);
+
+    overflow:
+        hidden;
+}
+
+
+.tournament-info::before,
+.info-card::before,
+#info::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 4px;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--gold),
+            var(--navy),
+            var(--gold)
+        );
+}
+
+
+.tournament-info h2,
+.info-card h2,
+#title {
+    text-align:
+        center;
+
+    color:
+        var(--navy);
 
     font-size:
-        18px;
+        clamp(20px, 2.3vw, 30px);
 
     font-weight:
         900;
 
+    margin-bottom:
+        8px;
 }
 
 
+#updated,
 .updated {
+    display:
+        block;
+
+    text-align:
+        center;
 
     color:
-        #667085;
+        var(--text-light);
 
     font-size:
-        9px;
-
+        12px;
 }
 
 
-/* =====================================================
-   BRACKET CONTAINER
-===================================================== */
+/* =========================================================
+   BRACKET AREA
+========================================================= */
 
-.bracket-container {
-
-    width:
-        min(
-            1000px,
-            92%
-        );
-
-    margin:
-        0 auto;
-
-    padding:
-        0 0 35px;
-
-    overflow-x:
-        auto;
-
-}
-
-
-/* =====================================================
-   BRACKET
-===================================================== */
-
+#bracket,
 .bracket {
-
-    min-width:
-        970px;
-
     display:
         grid;
 
     grid-template-columns:
-        1.2fr
-        1.2fr
-        1.2fr
-        1.2fr
-        1.2fr;
+        repeat(5, minmax(210px, 1fr));
 
     gap:
-        14px;
+        16px;
 
     align-items:
         start;
 
+    padding:
+        8px 2px 30px;
+
+    min-width:
+        1120px;
 }
 
 
-/* =====================================================
+/* =========================================================
    ROUND
-===================================================== */
+========================================================= */
 
 .round {
-
-    position:
-        relative;
+    position: relative;
 
     min-width:
         0;
-
 }
 
 
-/* =====================================================
+/* =========================================================
    ROUND HEADER
-===================================================== */
+========================================================= */
 
-.round-header {
+.round h3,
+.round-title {
+    position: sticky;
 
-    height:
-        38px;
+    top: 10px;
 
-    margin-bottom:
-        18px;
-
-    display:
-        flex;
-
-    justify-content:
-        center;
-
-    align-items:
-        center;
+    z-index: 10;
 
     background:
-        #09254d;
+        linear-gradient(
+            135deg,
+            var(--navy),
+            var(--navy-light)
+        );
 
     color:
         white;
 
+    border:
+        2px solid
+        rgba(244, 196, 0, 0.4);
+
     border-radius:
-        5px;
+        9px;
+
+    padding:
+        11px 8px;
 
     text-align:
         center;
 
-}
-
-
-.round-title {
-
-    line-height:
-        1;
-
-}
-
-
-.round-title h3 {
-
-    margin:
-        0;
-
     font-size:
-        11px;
+        14px;
 
     font-weight:
         900;
 
+    letter-spacing:
+        0.5px;
+
+    box-shadow:
+        0 5px 14px rgba(9, 41, 87, 0.18);
 }
 
 
-.round-subtitle {
-
+.round h3 small,
+.round-title small {
     display:
         block;
+
+    color:
+        var(--gold-light);
 
     margin-top:
         3px;
@@ -563,19 +611,14 @@ body {
 
     font-weight:
         700;
-
 }
 
 
-/* =====================================================
+/* =========================================================
    MATCH LIST
-===================================================== */
+========================================================= */
 
 .matches {
-
-    position:
-        relative;
-
     display:
         flex;
 
@@ -583,91 +626,87 @@ body {
         column;
 
     gap:
-        9px;
+        12px;
 
+    margin-top:
+        12px;
 }
 
 
-/* =====================================================
-   MATCH
-===================================================== */
+/* =========================================================
+   MATCH CARD
+========================================================= */
 
 .match {
-
-    position:
-        relative;
-
     background:
-        #ffffff;
+        rgba(255, 255, 255, 0.98);
 
     border:
         1px solid
-        #cdd4df;
+        var(--border);
 
     border-radius:
-        5px;
+        9px;
 
     overflow:
-        visible;
+        hidden;
 
     box-shadow:
-        0 1px 4px
-        rgba(
-            0,
-            0,
-            0,
-            .08
-        );
+        0 3px 10px rgba(9, 41, 87, 0.08);
 
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
 }
 
 
-/* =====================================================
-   MATCH NUMBER
-===================================================== */
+.match:hover {
+    transform:
+        translateY(-3px);
 
-.match-number {
+    border-color:
+        #aebed2;
 
-    height:
-        17px;
+    box-shadow:
+        var(--shadow-hover);
+}
 
-    display:
-        flex;
 
-    align-items:
-        center;
+/* =========================================================
+   MATCH META
+========================================================= */
 
-    padding:
-        0 7px;
-
+.match .meta {
     background:
-        #f3f5f8;
-
-    border-bottom:
-        1px solid
-        #e1e5eb;
+        #f1f5f9;
 
     color:
-        #546173;
+        #66758a;
+
+    padding:
+        6px 9px;
 
     font-size:
-        7px;
+        9px;
 
     font-weight:
         800;
 
+    text-transform:
+        uppercase;
+
+    border-bottom:
+        1px solid
+        var(--border);
 }
 
 
-/* =====================================================
+/* =========================================================
    TEAM
-===================================================== */
+========================================================= */
 
 .team {
-
-    min-height:
-        25px;
-
     display:
         flex;
 
@@ -678,33 +717,38 @@ body {
         space-between;
 
     gap:
-        5px;
+        8px;
+
+    min-height:
+        42px;
 
     padding:
-        4px 7px;
-
-    background:
-        #ffffff;
+        8px 10px;
 
     border-bottom:
         1px solid
-        #edf0f3;
+        #edf0f4;
 
+    font-size:
+        11px;
+
+    background:
+        white;
 }
 
 
 .team:last-child {
-
     border-bottom:
         none;
-
 }
 
 
-.team-name {
+.team span {
+    color:
+        var(--navy);
 
-    min-width:
-        0;
+    font-weight:
+        800;
 
     overflow:
         hidden;
@@ -714,436 +758,535 @@ body {
 
     white-space:
         nowrap;
-
-    color:
-        #1f2937;
-
-    font-size:
-        8px;
-
-    font-weight:
-        700;
-
 }
 
 
-.team-name.empty {
+.team b {
+    min-width:
+        25px;
+
+    height:
+        25px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        6px;
+
+    background:
+        #eef2f7;
 
     color:
-        #a2aab7;
+        var(--navy);
+
+    font-size:
+        11px;
+}
+
+
+/* =========================================================
+   WINNER
+========================================================= */
+
+.team.win {
+    background:
+        linear-gradient(
+            90deg,
+            #eaf8ef,
+            #ffffff
+        );
+
+    border-left:
+        4px solid
+        var(--green);
+}
+
+
+.team.win span {
+    color:
+        var(--green-dark);
+}
+
+
+.team.win b {
+    background:
+        var(--green);
+
+    color:
+        white;
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.team span.empty {
+    color:
+        #aab4c1;
+
+    font-weight:
+        500;
 
     font-style:
         italic;
-
 }
 
 
-.team strong {
+/* =========================================================
+   ROUND SPACING
+   Supaya bracket terlihat seperti bracket turnamen
+========================================================= */
 
-    flex:
-        0 0 20px;
-
-    text-align:
-        center;
-
-    color:
-        #09254d;
-
-    font-size:
-        9px;
-
+.round:nth-child(1) .match {
+    margin-bottom:
+        0;
 }
 
 
-/* =====================================================
-   WINNER
-===================================================== */
-
-.team.win {
-
-    background:
-        #edf8f0;
-
-}
-
-
-.team.win .team-name {
-
-    color:
-        #137333;
-
-    font-weight:
-        900;
-
-}
-
-
-.team.win strong {
-
-    color:
-        #137333;
-
-}
-
-
-/* =====================================================
-   BRACKET CONNECTOR
-===================================================== */
-
-/*
-    Garis penghubung antar ronde.
-*/
-
-.round:not(:last-child) .match::after {
-
-    content:
-        "";
-
-    position:
-        absolute;
-
-    right:
-        -15px;
-
-    top:
-        50%;
-
-    width:
-        14px;
-
-    height:
-        1px;
-
-    background:
-        #8c929b;
-
-}
-
-
-/* =====================================================
-   ROUND 2
-===================================================== */
-
-.round-r2 .matches {
-
+.round:nth-child(2) .matches {
     padding-top:
-        18px;
-
-    gap:
-        39px;
-
+        32px;
 }
 
 
-/* =====================================================
-   ROUND 3
-===================================================== */
-
-.round-r3 .matches {
-
+.round:nth-child(3) .matches {
     padding-top:
-        48px;
-
-    gap:
-        101px;
-
+        105px;
 }
 
 
-/* =====================================================
-   ROUND 4
-===================================================== */
-
-.round-r4 .matches {
-
+.round:nth-child(4) .matches {
     padding-top:
-        139px;
-
-    gap:
-        250px;
-
+        235px;
 }
 
 
-/* =====================================================
-   ROUND 5
-===================================================== */
-
-.round-r5 .matches {
-
+.round:nth-child(5) .matches {
     padding-top:
-        338px;
-
+        455px;
 }
 
 
-/* =====================================================
-   SPECIAL CONNECTOR
-===================================================== */
+/* =========================================================
+   BRACKET CONNECTOR EFFECT
+========================================================= */
 
-.round-r2 .match::before,
-.round-r3 .match::before,
-.round-r4 .match::before,
-.round-r5 .match::before {
+.round:not(:last-child)::after {
+    content: "";
 
-    content:
-        "";
+    position: absolute;
 
-    position:
-        absolute;
+    top: 48px;
 
-    left:
-        -15px;
+    right: -9px;
 
-    width:
-        14px;
+    width: 10px;
 
-    height:
-        1px;
+    height: calc(100% - 48px);
 
-    top:
-        50%;
+    border-right:
+        2px solid
+        rgba(9, 41, 87, 0.12);
 
-    background:
-        #8c929b;
-
+    pointer-events:
+        none;
 }
 
 
-/* =====================================================
+/* =========================================================
    FOOTER
-===================================================== */
+========================================================= */
 
-.site-footer {
+footer {
+    width:
+        min(1450px, 96%);
 
-    margin-top:
-        20px;
+    margin:
+        0 auto 30px;
 
     padding:
-        15px;
+        18px;
 
     text-align:
         center;
 
     color:
-        #687386;
+        #718096;
 
     font-size:
-        9px;
+        11px;
+}
+
+
+footer strong {
+    color:
+        var(--navy);
+}
+
+
+/* =========================================================
+   HIDDEN
+========================================================= */
+
+.hidden {
+    display:
+        none !important;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal {
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    z-index:
+        9990;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        20px;
+
+    background:
+        rgba(3, 18, 39, 0.72);
+
+    backdrop-filter:
+        blur(5px);
+}
+
+
+.modal.hidden {
+    display:
+        none;
+}
+
+
+.modal-content {
+    width:
+        min(480px, 100%);
+
+    background:
+        white;
+
+    border-radius:
+        16px;
+
+    padding:
+        28px;
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.35);
+
+    animation:
+        modalIn 0.25s ease;
+}
+
+
+@keyframes modalIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 
 }
 
 
-/* =====================================================
-   SCROLLBAR
-===================================================== */
+/* =========================================================
+   LOGIN
+========================================================= */
 
-.bracket-container::-webkit-scrollbar {
+#login {
+    width:
+        min(430px, 92%);
 
-    height:
+    margin:
+        50px auto;
+
+    background:
+        white;
+
+    border-radius:
+        16px;
+
+    padding:
+        30px;
+
+    box-shadow:
+        var(--shadow);
+}
+
+
+#login h2 {
+    text-align:
+        center;
+
+    color:
+        var(--navy);
+
+    margin-bottom:
+        20px;
+}
+
+
+#login input {
+    width:
+        100%;
+
+    padding:
+        12px 14px;
+
+    border:
+        1px solid
+        #d6dee8;
+
+    border-radius:
         8px;
 
+    margin-bottom:
+        12px;
+
+    outline:
+        none;
+
+    font-size:
+        13px;
 }
 
 
-.bracket-container::-webkit-scrollbar-track {
+#login input:focus {
+    border-color:
+        var(--navy);
 
-    background:
-        #ddd1bd;
+    box-shadow:
+        0 0 0 3px
+        rgba(9, 41, 87, 0.08);
+}
+
+
+#login button {
+    width:
+        100%;
+
+    padding:
+        12px;
 
     border-radius:
-        10px;
-
-}
-
-
-.bracket-container::-webkit-scrollbar-thumb {
+        8px;
 
     background:
-        #09254d;
+        var(--navy);
 
-    border-radius:
-        10px;
+    color:
+        white;
 
+    font-weight:
+        800;
 }
 
 
-/* =====================================================
-   RESPONSIVE
-===================================================== */
-
-@media (
-    max-width: 800px
-) {
-
-    .site-header {
-
-        padding:
-            10px;
-
-    }
+#login button:hover {
+    background:
+        var(--navy-light);
+}
 
 
+/* =========================================================
+   RESPONSIVE TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .header-inner,
     .header-container {
+        flex-wrap:
+            wrap;
 
-        min-height:
-            125px;
-
+        justify-content:
+            center;
     }
 
 
-    .logo {
-
+    .logo,
+    .logo img,
+    .header-logo img {
         width:
-            100px;
+            76px;
 
         height:
-            100px;
-
+            76px;
     }
 
 
-    .main-heading {
-
-        top:
-            92px;
-
-    }
-
-
-    .main-heading h1 {
-
-        font-size:
-            18px;
-
-    }
-
-
-    .subtitle {
-
-        font-size:
-            8px;
-
+    .title-area,
+    .header-title {
+        flex-basis:
+            70%;
     }
 
 
     .header-actions {
+        width:
+            100%;
 
-        top:
-            115px;
-
-        right:
-            5px;
-
+        justify-content:
+            center;
     }
 
 
-    .admin-button span {
+    #bracket,
+    .bracket {
+        grid-template-columns:
+            repeat(5, 205px);
 
-        display:
-            none;
+        min-width:
+            1080px;
+    }
 
+}
+
+
+/* =========================================================
+   RESPONSIVE MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    header,
+    .top-header,
+    .site-header {
+        padding:
+            22px 15px 25px;
     }
 
 
-    .tournament-card {
+    .header-inner,
+    .header-container {
+        width:
+            100%;
+
+        flex-direction:
+            column;
+    }
+
+
+    .logo,
+    .logo img,
+    .header-logo img {
+        width:
+            72px;
+
+        height:
+            72px;
+    }
+
+
+    .title-area h1,
+    .header-title h1 {
+        font-size:
+            22px;
+    }
+
+
+    .title-area p,
+    .header-title p {
+        font-size:
+            9px;
+
+        letter-spacing:
+            2px;
+    }
+
+
+    main,
+    .main-container,
+    .container {
+        width:
+            94%;
 
         margin-top:
-            45px;
+            18px;
+    }
 
+
+    .tournament-info,
+    .info-card,
+    #info {
+        padding:
+            18px;
+    }
+
+
+    #bracket,
+    .bracket {
+        grid-template-columns:
+            repeat(5, 190px);
+
+        gap:
+            10px;
+
+        min-width:
+            990px;
     }
 
 }
 
 
-/* =====================================================
-   BRACKET CONNECTOR
-===================================================== */
+/* =========================================================
+   SCROLLBAR
+========================================================= */
 
-.bracket-wrapper {
+::-webkit-scrollbar {
+    width:
+        9px;
 
-    position: relative;
-
-    width: 100%;
-
+    height:
+        9px;
 }
 
 
-/* SVG */
-
-.bracket-lines {
-
-    position: absolute;
-
-    top: 0;
-
-    left: 0;
-
-    width: 100%;
-
-    height: 100%;
-
-    z-index: 1;
-
-    pointer-events: none;
-
-    overflow: visible;
-
+::-webkit-scrollbar-track {
+    background:
+        #e7decd;
 }
 
 
-/* Bracket berada di atas SVG */
+::-webkit-scrollbar-thumb {
+    background:
+        var(--navy);
 
-.bracket {
-
-    position: relative;
-
-    z-index: 2;
-
+    border-radius:
+        10px;
 }
 
 
-/* Kartu pertandingan */
-
-.match {
-
-    position: relative;
-
-    z-index: 3;
-
-}
-
-
-/* =====================================================
-   CONNECTOR LINE
-===================================================== */
-
-.bracket-line {
-
-    fill: none;
-
-    stroke: #777f8b;
-
-    stroke-width: 1.2;
-
-    vector-effect:
-        non-scaling-stroke;
-
-}
-
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media (
-    max-width: 800px
-) {
-
-    .bracket-wrapper {
-
-        min-width: 970px;
-
-    }
-
+::-webkit-scrollbar-thumb:hover {
+    background:
+        var(--navy-light);
 }
