@@ -879,18 +879,23 @@ function renderMatch(
 
     card.innerHTML = `
 
-        <div class="admin-match-header">
+       <div class="admin-match-header">
 
-            <strong>
-                ${ROUND_CONFIG[round].title}
-            </strong>
+    <strong>
+        ${ROUND_CONFIG[round].title}
+    </strong>
 
-            <span>
-                Match ${index + 1}
-            </span>
+    <span>
+        Match ${index + 1}
+    </span>
 
-        </div>
+</div>
 
+${isBye ? `
+    <div class="bye-info">
+        AUTO ADVANCE / BYE
+    </div>
+` : ""}
 
         <div class="admin-team-row">
 
