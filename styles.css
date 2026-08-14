@@ -1624,3 +1624,210 @@ select:focus {
     }
 
 }
+
+
+/* ==========================================
+   ADMIN LOGIN
+========================================== */
+
+.admin-login-page {
+
+    min-height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #09244d,
+            #12396f
+        );
+
+}
+
+
+.admin-login-card {
+
+    width: 100%;
+
+    max-width: 430px;
+
+    padding: 35px;
+
+    background: white;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 25px 70px
+        rgba(0,0,0,.3);
+
+}
+
+
+.admin-login-card
+.login-icon {
+
+    width: 70px;
+
+    height: 70px;
+
+    margin: 0 auto 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #e9eef8;
+
+    font-size: 32px;
+
+}
+
+
+.admin-login-card h1 {
+
+    margin: 0;
+
+    text-align: center;
+
+    color: #09244d;
+
+}
+
+
+.admin-login-card p {
+
+    margin: 8px 0 25px;
+
+    text-align: center;
+
+    color: #718096;
+
+    font-size: 14px;
+
+}
+
+
+.admin-login-card label {
+
+    display: block;
+
+    margin:
+        15px 0 7px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+}
+
+
+.admin-login-card input {
+
+    width: 100%;
+
+    padding: 13px;
+
+    border:
+        1px solid #ccd3df;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    font-size: 14px;
+
+}
+
+
+.admin-login-card input:focus {
+
+    border-color: #315da8;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(49,93,168,.12);
+
+}
+
+
+.admin-login-card button {
+
+    width: 100%;
+
+    margin-top: 22px;
+
+    padding: 13px;
+
+    border: 0;
+
+    border-radius: 8px;
+
+    background: #09244d;
+
+    color: white;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+}
+
+
+.admin-login-card button:hover {
+
+    background: #12396f;
+
+}
+
+
+.admin-login-card button:disabled {
+
+    opacity: .6;
+
+    cursor: not-allowed;
+
+}
+
+
+.admin-login-card .error {
+
+    min-height: 20px;
+
+    margin-top: 15px;
+
+    color: #c62828;
+
+    text-align: center;
+
+    font-size: 13px;
+
+}
+
+
+.admin-login-card > a {
+
+    display: block;
+
+    margin-top: 22px;
+
+    text-align: center;
+
+    color: #315da8;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+}
